@@ -7,9 +7,9 @@
 
 #include "Motor.h"
 
+#define MAX_SPEED		20	//elméleti maximum: 50
 #define START_DUTYCCLE1 50
 #define START_DUTYCCLE2 50
-#define MAX_SPEED		20	//elméleti maximum: 50
 
 /* TIM3 - PWM */
 #define MAX_CLOCK		180				/* TIM3 max clock: 180MHz */

@@ -155,11 +155,47 @@ void RemoteController_Timer_Init()
 	  }
 }
 
+/* Sebességjel a távirányító alapján */
+void SetSpeed_RemoteControl()
+{
+	//sebességjel
+	static int8_t value=0;
+	//zajszûréshez idõmérés
+	static uint8_t temp=0;
+
+	//uwDutyCycle: 57..140 között.
+	//value: -20..21(21.5) között
+	if(uwDutyCycle < 150 && uwDutyCycle > 50)	//kitöltési tényezõ érték vizsgálat, tartományon belül legyen
+		value = (uwDutyCycle-97)>>1;			//sebességjel konverzó a kitöltési tényezõbõl: 57..140 -> -20..21.5
+	else
+		value = 0;
+	if(value<4 && value>-4)	//holtjáték a távirányótónak
+		value=0;
+
+	//távirányító zaj szûrés
+	if(value==0)	//ha nulla a sebesség, elölrõl kezdjük az idõmérést
+		temp=0;
+	else
+		temp++;
+	//nem kell neki nagyon sokaig számolni, túlcsordulás ellen is
+	if(temp>20)
+		temp=20;
+
+	//csak akkor küldjön sebességjelet, ha egy ideje(temp értéke) már veszi a jelet a távirányítótól,
+	//de a nulla értéket mindig küldeni kell neki, hogy ne az elõzõ érték ragadjon be, mivel value==0 esetén temp is nulla
+	if(temp>5 || value==0)
+	{
+		SetSpeed(value);
+		temp=0;
+	}
+}
+
 /**
   * @brief  Input Capture callback in non blocking mode
   * @param  htim : TIM IC handle
   * @retval None
   */
+//TODO:timers.c-be átrakni!
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2 && htim->Instance == TIM_REMOTE)

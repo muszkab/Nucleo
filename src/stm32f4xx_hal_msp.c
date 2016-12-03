@@ -25,6 +25,7 @@ void Periph_Init()
 	//Encoder_Init();
 	Motor_PWM_Init();
 	RemoteController_Timer_Init();
+	Szabalyzo_TIM_Init();
 }
 
 void HAL_MspInit()

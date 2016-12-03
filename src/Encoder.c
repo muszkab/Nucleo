@@ -37,7 +37,7 @@ static volatile int32_t 		speed=0;
 volatile int32_t		distance=0;
 /* Félperiódusidõ mérés */
 /* Félperiódus hossza, darabszám */
-volatile uint16_t		countHalfPeriod=0;
+uint16_t		countHalfPeriod=0;
 /* Sebesség: kisebb számérték -> nagyobb sebességérték */
 volatile uint16_t		speedHalfPeriod=0;
 
@@ -95,7 +95,7 @@ void Encoder_Init()
 
 	  /*## Configure the NVIC for TIM_ENC ########################################*/
 	  /* Set the TIM_ENC priority */
-	  HAL_NVIC_SetPriority(TIM2_IRQn, 4, 0);
+	  HAL_NVIC_SetPriority(TIM2_IRQn, 5, 0);
 
 	  /* Enable the TIM_ENC global Interrupt */
 	  HAL_NVIC_EnableIRQ(TIM2_IRQn);
@@ -160,7 +160,7 @@ void Timer11_Init()
 
 	  /*##-2- Configure the NVIC for TIM11 ########################################*/
 	  /* Set the TIM11 priority */
-	  HAL_NVIC_SetPriority(TIM1_TRG_COM_TIM11_IRQn, 5, 0);
+	  HAL_NVIC_SetPriority(TIM1_TRG_COM_TIM11_IRQn, 6, 0);
 
 	  /* Enable the TIM11 global Interrupt */
 	  HAL_NVIC_EnableIRQ(TIM1_TRG_COM_TIM11_IRQn);
@@ -196,15 +196,6 @@ void Timer11_Init()
 	  }
 }
 
-/* Timer megszakításkezezõ callback */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	/* TIM11: enkóder félperiódus mérés, f=2MHz, számláló növelés */
-	if(htim->Instance==TIM11)
-	{
-	  countHalfPeriod++;
-	}
-}
 /*
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {

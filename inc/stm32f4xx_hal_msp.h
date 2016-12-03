@@ -17,6 +17,8 @@
 #include "Encoder.h"
 #include "Motor.h"
 #include "RemoteControl.h"
+#include "Timers.h"
+#include "PositionControl.h"
 
 void Periph_Init();
 void HAL_MspInit();

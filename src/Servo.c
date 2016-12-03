@@ -24,8 +24,8 @@
 
 //100% - 20ms (f=50Hz, T=20ms)
 #define	PULSE_UNIT		(PERIOD+1)/200		//0.1ms
-#define PULSE_MIN		1240				//1.24ms
-#define PULSE_MAX		1680				//1.68ms
+#define PULSE_MIN		1260				//1.24ms left
+#define PULSE_MAX		1680				//1.68ms right
 #define PULSE_CENTER	1460				//1.46ms
 
 /* Private variables ---------------------------------------------------------*/
@@ -36,9 +36,10 @@ TIM_HandleTypeDef    TimHandle_Servo;
 TIM_OC_InitTypeDef sConfig_Servo;
 
 /* Szervo milyen helyzetben áll
- * 		ServoPos=0: left
- * 		ServoPos=255: right
- * 		ServoPos=127: center */
+ * 		ServoPos=0: 	center
+ * 		ServoPos=127:  	right
+ * 		ServoPos=-128: 	left*/
+//TODO kell?
 uint8_t ServoPos=127;
 
 void Servo_TIM10_PWM_Init()
@@ -101,13 +102,13 @@ void Servo_TIM10_PWM_Init()
 	  }
 }
 
-/* ServoPos=0: left
- * ServoPos=255: right
- * ServoPos=127: center*/
-void SetServoPWMPulse(const uint8_t ServoPos)
+/* ServoPos=0: 	  center
+ * ServoPos=127:  right
+ * ServoPos=-128: left*/
+void SetServoPWMPulse(const int8_t ServoPos)
 {
-	if(ServoPos>=0 && ServoPos<=255)
+	if(ServoPos>=-128 && ServoPos<=127)
 	{
-		TimHandle_Servo.Instance->CCR1=PULSE_MIN+(ServoPos)*(PULSE_MAX-PULSE_MIN)/255;
+		TimHandle_Servo.Instance->CCR1=PULSE_CENTER+(ServoPos)*(PULSE_MAX-PULSE_MIN)/255;
 	}
 }

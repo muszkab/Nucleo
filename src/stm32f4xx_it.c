@@ -91,3 +91,8 @@ void TIM_REMOTE_IRQHandler(void)
 {
 	HAL_TIM_IRQHandler(&TimHandle_Remote);
 }
+
+void TIM_SZABALYZO_IRQHandler(void)
+{
+	HAL_TIM_IRQHandler(&TimHandle_Szabalyzo);
+}

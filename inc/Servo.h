@@ -16,6 +16,6 @@ extern TIM_HandleTypeDef    TimHandle_Servo;
 extern uint8_t 				ServoPos;
 /*Functions*/
 void Servo_TIM10_PWM_Init();
-void SetServoPWMPulse(const uint8_t ServoPos);
+void SetServoPWMPulse(const int8_t ServoPos);
 
 #endif /* SERVO_H_ */

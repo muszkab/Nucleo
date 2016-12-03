@@ -29,7 +29,7 @@ static volatile int32_t 		speed;
 volatile int32_t		distance;
 /* Félperiódusidõ mérés */
 /* Félperiódus hossza, darabszám */
-volatile uint16_t		countHalfPeriod;
+extern uint16_t		countHalfPeriod;
 /* Sebesség: kisebb számérték -> nagyobb sebességérték */
 volatile uint16_t		speedHalfPeriod;
 
