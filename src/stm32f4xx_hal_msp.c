@@ -12,13 +12,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if(GPIO_Pin == USER_BUTTON_PIN)
 	{
-		//UART_SendString("Balazs");
+		StateQ1 = Corner;
 	}
 }
 
 /*Perifériák inicializálása */
 void Periph_Init()
 {
+	Leds_Init();
 	UART_Init();
 	CAN_Init();
 	Servo_TIM10_PWM_Init();

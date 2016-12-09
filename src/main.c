@@ -45,16 +45,25 @@ int main(void)
 	/*UART */
 	UART1_RecvStringNonBlocking();
 
-
 	for(;;)
 	{
 		HAL_Delay(10);
 
-		//teszt: PD szabályzó
+		//Vonalkövetés: PD szabályzó
 		Do_PositionControl();
 
-		//teszt: távirányító
-		SetSpeed_RemoteControl();
+		//teszt: vonaltípus
+		GetLineType();
+
+		//teszt: sebesség állítás vonaltípus alapján
+		Do_SpeedControl_FixSpeed();
+
+		//vészleállítás távirányítóval
+		if(uwDutyCycle<70)
+			StateQ1 = Stop;
+
+		//Sebesség: távirányító
+		//SetSpeed_RemoteControl();
 
 	/*	//Teszt: kormány követi a vonalat
 		if(FrontSensor_Data[0] != 0)

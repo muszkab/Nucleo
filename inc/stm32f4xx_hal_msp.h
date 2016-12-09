@@ -19,6 +19,9 @@
 #include "RemoteControl.h"
 #include "Timers.h"
 #include "PositionControl.h"
+#include "SpeedControl.h"
+#include "Leds.h"
+#include "LineType.h"
 
 void Periph_Init();
 void HAL_MspInit();

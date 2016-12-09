@@ -12,7 +12,27 @@
 #include "stm32f4xx_nucleo.h"
 
 /*Global variables*/
-extern uint8_t 		ServoPos;
+
+typedef enum{
+	NoLine = 0,
+	OneLine = 1,
+	TwoLine = 2,
+	ThreeLine =3
+}lineType;
+
+typedef enum
+{
+  Blue = 0,
+  Red = 1,
+  Yellow = 2,
+  Yellow2 = 3
+}ledType;
+
+typedef enum{
+	Stop,
+	Corner,
+	Straight
+}speedState;
 
 /*Functions*/
 void Error_Handler(void);

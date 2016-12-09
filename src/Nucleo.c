@@ -27,10 +27,10 @@ void ProcessMessage(char* message)
 	switch(*message)
 	{
 	case '+':
-		ServoPos += 10;
+		//ServoPos += 10;
 		break;
 	case '-':
-		ServoPos -= 10;
+		//ServoPos -= 10;
 		break;
 	default:
 		break;

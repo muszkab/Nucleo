@@ -35,13 +35,6 @@ TIM_HandleTypeDef    TimHandle_Servo;
 /* Timer Output Compare Configuration Structure declaration */
 TIM_OC_InitTypeDef sConfig_Servo;
 
-/* Szervo milyen helyzetben áll
- * 		ServoPos=0: 	center
- * 		ServoPos=127:  	right
- * 		ServoPos=-128: 	left*/
-//TODO kell?
-uint8_t ServoPos=127;
-
 void Servo_TIM10_PWM_Init()
 {
 	GPIO_InitTypeDef   GPIO_InitStruct;

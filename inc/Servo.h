@@ -13,7 +13,6 @@
 /*Global variables*/
 extern TIM_OC_InitTypeDef 	sConfig_Servo;
 extern TIM_HandleTypeDef    TimHandle_Servo;
-extern uint8_t 				ServoPos;
 /*Functions*/
 void Servo_TIM10_PWM_Init();
 void SetServoPWMPulse(const int8_t ServoPos);

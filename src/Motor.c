@@ -7,15 +7,15 @@
 
 #include "Motor.h"
 
-#define MAX_SPEED		20	//elméleti maximum: 50
+#define MAX_SPEED		35	//maximum: 45
 #define START_DUTYCCLE1 50
 #define START_DUTYCCLE2 50
 
 /* TIM3 - PWM */
-#define MAX_CLOCK		180				/* TIM3 max clock: 180MHz */
-#define PRESCALER		(4-1)			/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM3_freq=180MHZ/4 =45MHz
-#define PERIOD			(500-1)			/* PWM_frequency=TIM_freq/(Period+1)=45MHZ/500/4=22.5kHZ
-										 * 500/4: center aligned pwm miatt máshogy van a PERIOD érték*/
+#define MAX_CLOCK		90				/* TIM3 max clock: 90MHz */
+#define PRESCALER		(4-1)			/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM3_freq=90MHZ/4 =22.5MHz
+#define PERIOD			(500-1)			/* PWM_frequency=TIM_freq/(Period+1)=22.5MHZ/500/2=22.5kHZ
+										 * 500/2: center aligned pwm miatt máshogy van a PERIOD érték*/
 #define DUTY_1percent	(PERIOD+1)/100	/* 1%-os kitöltési tényezõ */
 
 
@@ -134,7 +134,7 @@ void Motor_PWM_Init()
 /* -40 és 40 közötti értéket vár */
 void SetSpeed(int8_t Speed)
 {
-	if(Speed<-40 || Speed>40)
+	if(Speed<-45 || Speed>45)
 	{
 		MotorStop();
 		Error_SendUart("Tartomanyon kivuli sebesseg ertek! \n\r");
@@ -149,7 +149,7 @@ void SetSpeed(int8_t Speed)
 			Speed = MAX_SPEED;
 
 			  /* Set the pulse value for channel 1 */
-			  sPWMConfig.Pulse = (50+Speed)*DUTY_1percent; //
+			  sPWMConfig.Pulse = (50-Speed)*DUTY_1percent; //
 			  if(HAL_TIM_PWM_ConfigChannel(&TimHandle_Motor, &sPWMConfig, TIM_CHANNEL_1) != HAL_OK)
 			  {
 				/* Configuration Error */
@@ -157,7 +157,7 @@ void SetSpeed(int8_t Speed)
 			  }
 
 			  /* Set the pulse value for channel 2 */
-			  sPWMConfig.Pulse = (50-Speed)*DUTY_1percent; //
+			  sPWMConfig.Pulse = (50+Speed)*DUTY_1percent; //
 			  if(HAL_TIM_PWM_ConfigChannel(&TimHandle_Motor, &sPWMConfig, TIM_CHANNEL_2) != HAL_OK)
 			  {
 				/* Configuration Error */

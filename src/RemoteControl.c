@@ -185,7 +185,7 @@ void SetSpeed_RemoteControl()
 	//de a nulla értéket mindig küldeni kell neki, hogy ne az elõzõ érték ragadjon be, mivel value==0 esetén temp is nulla
 	if(temp>5 || value==0)
 	{
-		SetSpeed(value);
+		SetSpeed(2*value);
 		temp=0;
 	}
 }

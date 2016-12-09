@@ -8,12 +8,17 @@
 #include "Timers.h"
 
 /* TIM6_freq=10kHz */
-#define MAX_CLOCK		180				/* TIM6 max clock: 180MHz */
-#define PRESCALER		(MAX_CLOCK-1)	/* TIM6_freq=180MHZ / (PRESCALER+1) /  (PEROD+1) */
-#define PERIOD			(100-1)			/* TIM6_freq=180MHZ / (180) / (100)=10kHz */
+#define MAX_CLOCK		90				/* TIM6 max clock: 90MHz */
+#define PRESCALER		(MAX_CLOCK-1)	/* TIM6_freq=90MHZ / (PRESCALER+1) /  (PEROD+1) */
+#define PERIOD			(1000-1)		/* TIM6_freq=90MHZ / 90 / 1000 = 1kHz */
 
-/* Számláló 0.1ms-vel */
-uint32_t Szabcount=0;
+/* Számlálók 1ms-vel */
+uint16_t TimePositionControl=0;
+uint16_t TimeSpeedControl=0;
+uint16_t TimeLineType=0;
+uint16_t TimeSpeedState=0;
+uint16_t TimeAccelerate=0;
+uint16_t TimeBrake=0;
 
 /* Timer handler declaration */
 TIM_HandleTypeDef    TimHandle_Szabalyzo;
@@ -44,10 +49,10 @@ void Szabalyzo_TIM_Init()
 	TIM_SZABALYZO_CLK_ENABLE();
 
 	  /*##-1- Configure the TIM peripheral #######################################*/
-	  /* f=10kHz =180MHz/180/100 */
+	  /* f=1kHz =90MHz/90/1000 */
 	  /* Initialize TIMx peripheral as follows:
-		   + Prescaler = 180 - 1
-		   + Period = 100 - 1
+		   + Prescaler = 90 - 1
+		   + Period = 1000 - 1
 		   + ClockDivision = 1
 		   + Counter direction = Up
 	  */
@@ -79,9 +84,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 	  countHalfPeriod++;
 	}
-	/* TIM6: szabályzó timer, f=10kHZ */
+	/* TIM6: szabályzó timer, f=1kHZ */
 	if(htim->Instance==TIM_SZABALYZO)
 	{
-		Szabcount++;
+		TimePositionControl++;
+		TimeSpeedControl++;
+		TimeLineType++;
+		TimeSpeedState++;
+		TimeAccelerate++;
+		TimeBrake++;
 	}
 }
