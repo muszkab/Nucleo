@@ -24,8 +24,8 @@
 
 //100% - 20ms (f=50Hz, T=20ms)
 #define	PULSE_UNIT		(PERIOD+1)/200		//0.1ms
-#define PULSE_MIN		1260				//1.24ms left
-#define PULSE_MAX		1680				//1.68ms right
+#define PULSE_MIN		1250//1260				//1.24ms left
+#define PULSE_MAX		1690//1680				//1.68ms right
 #define PULSE_CENTER	1460				//1.46ms
 
 /* Private variables ---------------------------------------------------------*/

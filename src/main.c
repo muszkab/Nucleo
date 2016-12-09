@@ -47,7 +47,7 @@ int main(void)
 
 	for(;;)
 	{
-		HAL_Delay(10);
+		//HAL_Delay(10);
 
 		//Vonalkövetés: PD szabályzó
 		Do_PositionControl();

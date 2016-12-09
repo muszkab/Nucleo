@@ -148,37 +148,42 @@ void SetSpeed(int8_t Speed)
 		if(Speed>MAX_SPEED)
 			Speed = MAX_SPEED;
 
-			  /* Set the pulse value for channel 1 */
-			  sPWMConfig.Pulse = (50-Speed)*DUTY_1percent; //
+		TimHandle_Motor.Instance->CCR1=(50-Speed)*DUTY_1percent;
+		TimHandle_Motor.Instance->CCR2=(50+Speed)*DUTY_1percent;
+		/*
+			  // Set the pulse value for channel 1
+			  sPWMConfig.Pulse = (50-Speed)*DUTY_1percent;
 			  if(HAL_TIM_PWM_ConfigChannel(&TimHandle_Motor, &sPWMConfig, TIM_CHANNEL_1) != HAL_OK)
 			  {
-				/* Configuration Error */
+				// Configuration Error
 				Error_Handler();
 			  }
 
-			  /* Set the pulse value for channel 2 */
+			  // Set the pulse value for channel 2
 			  sPWMConfig.Pulse = (50+Speed)*DUTY_1percent; //
 			  if(HAL_TIM_PWM_ConfigChannel(&TimHandle_Motor, &sPWMConfig, TIM_CHANNEL_2) != HAL_OK)
 			  {
-				/* Configuration Error */
+				// Configuration Error
 				Error_Handler();
 			  }
 
 
-			  /*##-3- Start PWM signals generation #######################################*/
-			  /* Start channel 1 */
+			  //##-3- Start PWM signals generation #######################################
+			  // Start channel 1
 			  if(HAL_TIM_PWM_Start(&TimHandle_Motor, TIM_CHANNEL_1) != HAL_OK)
 			  {
-				/* Starting Error */
+				// Starting Error
 				Error_Handler();
 			  }
 
-			  /* Start channel 2 */
+			  // Start channel 2
 			  if(HAL_TIM_PWM_Start(&TimHandle_Motor, TIM_CHANNEL_2) != HAL_OK)
 			  {
-				/* Starting Error */
+				// Starting Error
 				Error_Handler();
 			  }
+		*/
+
 	}
 }
 

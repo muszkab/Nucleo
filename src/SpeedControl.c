@@ -7,15 +7,21 @@
 
 #include "SpeedControl.h"
 
-//egyenesben a sebesség
-#define STRAIGHTSPEED 	20
-//kanyarban a sebesség
-#define CORNERSPEED 	9
+#define STRAIGHTSPEED 	25	//egyenesben a sebesség
+#define CORNERSPEED 	7	//kanyarban a sebesség
+//TODO: kanyarbejáraton(7) és kijároton(9) kül. kanyarsebesség
 
-//szabályzó paraméterek
-#define T_SPEEDCONTROL	3			//T*1ms
-#define T_ACCELERATE	100			//T*1ms
-#define T_BRAKE			6			//T*1ms
+/*
+ * T_ACCELERATE > T_SPEEDCONTROL és T_BRAKE > T_SPEEDCONTROL mindenképp, ha kisebbre van véve akkor is,
+ * mert a SpeedControl függvényen belül futnak le a lassító és gyorstító függvények.
+ * Sõt, egész számú többszöröse kell legyen T_SPEEDCONTROL-nek.
+ */
+#define T_SPEEDCONTROL	10		//1ms az egység
+#define T_ACCELERATE	(10	*T_SPEEDCONTROL)
+#define T_BRAKE			(1	*T_SPEEDCONTROL)
+//egy ciklusban hány egységgel változzon a sebesség
+#define ACCELERATE_UNIT	1
+#define BRAKE_UNIT		2
 
 /* Változók */
 //állapotváltozó: kanyar vagy egyenes van épp
@@ -72,7 +78,7 @@ void Accelerate(uint8_t MaxSpeed)
 		TimeAccelerate=0;
 		//gyorsítás MaxSpeed-ig
 		if(SpeedNow<MaxSpeed)
-			SpeedNow++;
+			SpeedNow+=ACCELERATE_UNIT;
 	}
 }
 
@@ -83,6 +89,6 @@ void Brake(uint8_t MinSpeed)
 		TimeBrake=0;
 		//lassítás MinSpeedig
 		if(SpeedNow>MinSpeed)
-			SpeedNow-=3;
+			SpeedNow-=BRAKE_UNIT;
 	}
 }

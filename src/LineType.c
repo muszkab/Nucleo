@@ -13,8 +13,8 @@
 //hány másodpercig tartson egy állapotot biztosan
 #define SECONDLIMIT	2
 //kanyart jelzõ három folytonos vonal érzékelési ideje
-#define ContinousMinTime_folyt	20/T_GETLINE	//ContinousMinTime*1ms=100ms
-#define ContinousMinTime_szagg	2/T_GETLINE
+#define ContinousMinTime_folyt	20/T_GETLINE	//ContinousMinTime*1ms
+#define ContinousMinTime_szagg	10/T_GETLINE
 //vonaldarabszám szûréshez használt tömb mérete
 #define ARRAYSIZE	3
 //vonaldarabszám szûrésnél, mennyi érték lehet különbözõ a tömbben, amikor még egyértelmûnek mondjuk a tömböt
@@ -104,12 +104,12 @@ void SetSpeedState()
 			OneLineTime=0;
 			ThreeLineTime=0;
 			//teszt
-			Led_On(Red);
+			//Led_On(Red);
 		}
 		else
 		{
 			/* kanyarból váltson egyenesbe */
-			if(StateQ1==Corner && LineNumber==ThreeLine)
+			if(StateQ1==Corner && (ThreeLineTime > ContinousMinTime_szagg))
 			{
 				StateQ1 = Straight;
 				second=0;
@@ -118,7 +118,7 @@ void SetSpeedState()
 				ThreeLineTime=0;
 
 				//teszt
-				Led_Off(Red);
+				//Led_Off(Red);
 			}
 		}
 	}
