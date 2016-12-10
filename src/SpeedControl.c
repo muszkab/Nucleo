@@ -7,8 +7,8 @@
 
 #include "SpeedControl.h"
 
-#define STRAIGHTSPEED 	29	//egyenesben a sebesség
-#define CORNERSPEED_IN 	7	//kanyarbejáratban a sebesség
+#define STRAIGHTSPEED 	25	//egyenesben a sebesség
+#define CORNERSPEED_IN 	6	//kanyarbejáratban a sebesség
 #define CORNERSPEED_OUT 10	//kanyarkijáratban a sebesség
 //TODO: kanyarbejáraton(7) és kijároton(9) kül. kanyarsebesség
 

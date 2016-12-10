@@ -13,8 +13,6 @@
 #define D			20.0f
 #define T			10		//T*1ms
 
-#define ONELINETIME_High_P 100
-
 void Do_PositionControl()
 {
 	if((TimePositionControl > T) && FrontSensor_Data[1]!=0)
@@ -25,7 +23,7 @@ void Do_PositionControl()
 		//P értéke attól függõen milyen állapotban vagyunk: kanyarban magassabb, egyenesben kisebb P
 		static float P = P_CORNER;
 		//ha kanyarsebességet elérte és már csak egy vonal van, legyen nagyobb P
-		if(SpeedNow <= CornerSpeed && LineNumber!=ThreeLine) /*&& OneLineTime > ONELINETIME_High_P*/
+		if(SpeedNow <= CornerSpeed && LineNumber!=ThreeLine)
 		{
 			P=P_CORNER;
 			Led_On(Red);

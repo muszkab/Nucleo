@@ -23,8 +23,6 @@ extern uint16_t TimePositionControl;
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;
 
-extern uint32_t OneLineTime;
-
 /* Függvények */
 void SetServoPWMPulse(const int8_t ServoPos);
 void Do_PositionControl();
