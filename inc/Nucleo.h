@@ -30,7 +30,8 @@ typedef enum
 
 typedef enum{
 	Stop,
-	Corner,
+	CornerIn,
+	CornerOut,
 	Straight
 }speedState;
 

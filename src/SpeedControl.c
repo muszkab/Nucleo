@@ -8,7 +8,8 @@
 #include "SpeedControl.h"
 
 #define STRAIGHTSPEED 	25	//egyenesben a sebesség
-#define CORNERSPEED 	7	//kanyarban a sebesség
+#define CORNERSPEED_IN 	7	//kanyarbejáratban a sebesség
+#define CORNERSPEED_OUT 9	//kanyarkijáratban a sebesség
 //TODO: kanyarbejáraton(7) és kijároton(9) kül. kanyarsebesség
 
 /*
@@ -29,7 +30,7 @@ speedState StateQ1 = Stop;
 //egyenesben a sebesség
 uint8_t StraigthSpeed = STRAIGHTSPEED;
 //kanyarban a sebesség
-uint8_t CornerSpeed = CORNERSPEED;
+uint8_t CornerSpeed = CORNERSPEED_IN;
 //adott pillanatban a sebesség
 uint8_t SpeedNow;
 
@@ -47,7 +48,16 @@ void Do_SpeedControl_FixSpeed()
 					SpeedNow=0;
 					break;
 
-			case(Corner):
+			case(CornerIn):
+					CornerSpeed=CORNERSPEED_IN;
+					if(SpeedNow>CornerSpeed)
+						Brake(CornerSpeed);
+					if(SpeedNow<CornerSpeed)
+						Accelerate(CornerSpeed);
+					break;
+
+			case(CornerOut):
+					CornerSpeed=CORNERSPEED_OUT;
 					if(SpeedNow>CornerSpeed)
 						Brake(CornerSpeed);
 					if(SpeedNow<CornerSpeed)

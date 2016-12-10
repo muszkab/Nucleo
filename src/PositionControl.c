@@ -10,8 +10,10 @@
 //szabályzó paraméterek
 #define	P_CORNER	1.5f	//TODO: még késõbb kapcsoljon nagyobb P-re
 #define	P_STRAIGHT	1.0f
-#define D			15.0f
+#define D			10.0f
 #define T			20		//T*1ms
+
+#define ONELINETIME_High_P 100
 
 void Do_PositionControl()
 {
@@ -23,7 +25,7 @@ void Do_PositionControl()
 		//P értéke attól függõen milyen állapotban vagyunk: kanyarban magassabb, egyenesben kisebb P
 		static float P = P_CORNER;
 		//ha kanyarsebességet elérte és már csak egy vonal van, legyen nagyobb P
-		if(SpeedNow <= CornerSpeed && LineNumber!=ThreeLine)
+		if(SpeedNow <= CornerSpeed && LineNumber!=ThreeLine) /*&& OneLineTime > ONELINETIME_High_P*/
 		{
 			P=P_CORNER;
 			Led_On(Red);
