@@ -15,7 +15,7 @@
 //kanyart jelzõ három folytonos vonal érzékelési ideje
 #define ContinousMinTime_folyt	6/T_GETLINE	//ContinousMinTime*1ms
 #define ContinousMinTime_szagg	10/T_GETLINE
-#define CornerSpeedHigh_Time	2000/T_GETLINE	//2 másodperc
+#define CornerSpeedHigh_Time	1000/T_GETLINE	//1 másodperc
 //vonaldarabszám szûréshez használt tömb mérete
 #define ARRAYSIZE	3
 //vonaldarabszám szûrésnél, mennyi érték lehet különbözõ a tömbben, amikor még egyértelmûnek mondjuk a tömböt
@@ -121,16 +121,17 @@ void SetSpeedState()
 				//teszt
 				//Led_Off(Red);
 			}
-			//kanyarbejáratból váltson kijáratba
-			if(StateQ1==CornerIn && (OneLineTime > CornerSpeedHigh_Time))
-			{
-				StateQ1=CornerOut;
-				second=0;
-
-				OneLineTime=0;
-				ThreeLineTime=0;
-			}
 		}
+	}
+
+	//kanyarbejáratból váltson kijáratba
+	if(StateQ1==CornerIn && (OneLineTime > CornerSpeedHigh_Time))
+	{
+		StateQ1=CornerOut;
+		//second=0;
+
+		OneLineTime=0;
+		ThreeLineTime=0;
 	}
 
 	//teszt
