@@ -13,7 +13,7 @@
 //hány másodpercig tartson egy állapotot biztosan
 #define SECONDLIMIT	2
 //kanyart jelzõ három folytonos vonal érzékelési ideje
-#define ContinousMinTime_folyt	20/T_GETLINE	//ContinousMinTime*1ms
+#define ContinousMinTime_folyt	6/T_GETLINE	//ContinousMinTime*1ms
 #define ContinousMinTime_szagg	10/T_GETLINE
 #define CornerSpeedHigh_Time	2000/T_GETLINE	//2 másodperc
 //vonaldarabszám szûréshez használt tömb mérete

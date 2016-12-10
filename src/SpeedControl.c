@@ -7,9 +7,9 @@
 
 #include "SpeedControl.h"
 
-#define STRAIGHTSPEED 	25	//egyenesben a sebesség
+#define STRAIGHTSPEED 	29	//egyenesben a sebesség
 #define CORNERSPEED_IN 	7	//kanyarbejáratban a sebesség
-#define CORNERSPEED_OUT 9	//kanyarkijáratban a sebesség
+#define CORNERSPEED_OUT 10	//kanyarkijáratban a sebesség
 //TODO: kanyarbejáraton(7) és kijároton(9) kül. kanyarsebesség
 
 /*
@@ -18,11 +18,11 @@
  * Sõt, egész számú többszöröse kell legyen T_SPEEDCONTROL-nek.
  */
 #define T_SPEEDCONTROL	10		//1ms az egység
-#define T_ACCELERATE	(10	*T_SPEEDCONTROL)
+#define T_ACCELERATE	(5	*T_SPEEDCONTROL)
 #define T_BRAKE			(1	*T_SPEEDCONTROL)
 //egy ciklusban hány egységgel változzon a sebesség
 #define ACCELERATE_UNIT	1
-#define BRAKE_UNIT		2
+#define BRAKE_UNIT		3
 
 /* Változók */
 //állapotváltozó: kanyar vagy egyenes van épp
