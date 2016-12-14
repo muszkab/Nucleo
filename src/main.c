@@ -34,7 +34,7 @@ int main(void)
 	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_3);
 
 	/* Configure the system clock to 180 MHz */
-	//SystemClock_Config();
+	SystemClock_Config();
 
 	/* Perifériák inicializálása */
 	Periph_Init();
