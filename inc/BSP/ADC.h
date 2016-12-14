@@ -16,10 +16,15 @@
 #define ADC1_FORCE_RESET()              __HAL_RCC_ADC_FORCE_RESET()
 #define ADC1_RELEASE_RESET()            __HAL_RCC_ADC_RELEASE_RESET()
 /* Definition for ADC1 Channel Pin */
-#define ADC1_CHANNEL_PIN1               GPIO_PIN_3
-#define ADC1_CHANNEL_PIN2				GPIO_PIN_4
-#define ADC1_CHANNEL_PIN3				GPIO_PIN_5
-#define ADC1_CHANNEL_GPIO_PORT          GPIOC
+/* Left:  PC3
+ * Right: PC4
+ * Front: PA4 */
+#define ADC1_CHANNEL1_PIN               GPIO_PIN_3
+#define ADC1_CHANNEL2_PIN				GPIO_PIN_4
+#define ADC1_CHANNEL3_PIN				GPIO_PIN_4
+#define ADC1_CHANNEL1_GPIO_PORT    		GPIOC
+#define ADC1_CHANNEL2_GPIO_PORT    		GPIOC
+#define ADC1_CHANNEL3_GPIO_PORT   		GPIOA
 /* Definition for ADC1's Channel */
 #define ADC1_CHANNEL1                   ADC_CHANNEL_13
 #define ADC1_CHANNEL2					ADC_CHANNEL_14

@@ -25,7 +25,7 @@ typedef enum
   Blue = 0,
   Red = 1,
   Yellow = 2,
-  Yellow2 = 3
+  Green = 3
 }ledType;
 
 typedef enum{

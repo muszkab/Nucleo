@@ -35,10 +35,16 @@ void ADC1_Init()
 
 	  /*##-2- Configure peripheral GPIO ##########################################*/
 	  /* ADC Channel GPIO pin configuration */
-	  GPIO_InitStruct.Pin = ADC1_CHANNEL_PIN1 | ADC1_CHANNEL_PIN2 | ADC1_CHANNEL_PIN3;
+	  GPIO_InitStruct.Pin = ADC1_CHANNEL1_PIN;
 	  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 	  GPIO_InitStruct.Pull = GPIO_NOPULL;
-	  HAL_GPIO_Init(ADC1_CHANNEL_GPIO_PORT, &GPIO_InitStruct);
+	  HAL_GPIO_Init(ADC1_CHANNEL1_GPIO_PORT, &GPIO_InitStruct);
+
+	  GPIO_InitStruct.Pin = ADC1_CHANNEL2_PIN;
+	  HAL_GPIO_Init(ADC1_CHANNEL2_GPIO_PORT, &GPIO_InitStruct);
+
+	  GPIO_InitStruct.Pin = ADC1_CHANNEL3_PIN;
+	  HAL_GPIO_Init(ADC1_CHANNEL3_GPIO_PORT, &GPIO_InitStruct);
 
 	  /*##-3- Configure the NVIC #################################################*/
 	  /* NVIC configuration for ADC interrupt */

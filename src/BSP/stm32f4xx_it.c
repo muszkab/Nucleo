@@ -62,7 +62,7 @@ void EXTI15_10_IRQHandler(void)
 
 void USART2_IRQHandler(void)
 {
-	HAL_UART_IRQHandler(&UartHandle);
+	HAL_UART_IRQHandler(&UartHandle_Cable);
 }
 
 void CAN1_TX_IRQHandler(void)

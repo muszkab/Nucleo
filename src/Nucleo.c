@@ -6,6 +6,7 @@
  */
 
 #include "Nucleo.h"
+#include "UART.h"
 
 void Error_Handler(void)
 {
@@ -19,7 +20,7 @@ void Error_Handler(void)
 void Error_SendUart(char* string)
 {
 	BSP_LED_On(LED2);
-	UART1_SendStringBlocking(string);
+	UART_SendStringBlocking(string, &UartHandle_Cable);
 }
 
 void ProcessMessage(char* message)

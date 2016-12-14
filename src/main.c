@@ -28,12 +28,13 @@ int main(void)
 	   - Set NVIC Group Priority to 4
 	   - Low Level Initialization
 	 */
+
 	HAL_Init();
 	/* Set NVIC Group Priority to 3 */
 	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_3);
 
 	/* Configure the system clock to 180 MHz */
-	SystemClock_Config();
+	//SystemClock_Config();
 
 	/* Perifériák inicializálása */
 	Periph_Init();
@@ -42,8 +43,9 @@ int main(void)
 	if(CAN_ReceiveIT() != HAL_OK)
 		Error_Handler();
 
+
 	/*UART */
-	UART1_RecvStringNonBlocking();
+	//UART_RecvStringNonBlocking(&UartHandle_Cable);
 
 	for(;;)
 	{
@@ -65,47 +67,15 @@ int main(void)
 		//Sebesség: távirányító
 		//SetSpeed_RemoteControl();
 
-	/*	//Teszt: kormány követi a vonalat
-		if(FrontSensor_Data[0] != 0)
-		{
-			temp = (FrontSensor_Data[0]-127)*3;
-			if(temp>127)
-				temp=127;
-			if(temp<-127)
-				temp=-127;
-			ServoPos=-temp+127;
-		}
+		//teszt: UART és RobotDiagnostic
+		static int temp=0;
+		//UART_SendStringBlocking("Balazs", &UartHandle_Cable);
 
-		UART1_SendNumberBlocking(ServoPos);
-		UART1_SendStringBlocking("\n\r");
+		//UART_SendNumberBlocking(temp++, &UartHandle_Cable);
+		UART_SendNumberBlocking(temp++, &UartHandle_Bluetooth);
 
-		UART1_SendNumberBlocking(FrontSensor_Data[0]);
-		UART1_SendStringBlocking("\n\r");
+		//UART_SendStringBlocking("\n\r", &UartHandle_Cable);
+		HAL_Delay(500);
 
-		SetServoPWMPulse(ServoPos);
-	*/
-		//Motorvezérlõ teszt + távirányító
-		//uwDutyCycle: 57-140 között.
-	/*	static int8_t value;
-		if(uwDutyCycle < 150 && uwDutyCycle > 50)
-			value = (uwDutyCycle-97)>>1;
-		else
-			value = 0;
-		if(value<4 && value>-4)
-			value=0;
-
-		//távirányító zaj szûrés
-		if(value==0)	//ha nulla a sebesség, elölrõl kezdjük az idõmérést
-			temp=0;
-		else
-			temp++;
-		//csak akkor küldjön sebességjelet, ha egy ideje(temp értéke) már veszi a jelet a távirányítótól,
-		//de a nulla értéket mindig küldeni kell neki, hogy ne az elõzõ érték ragadjon be
-		if(temp>5 || value==0)
-		{
-			SetSpeed(value);
-			temp=0;
-		}
-		*/
 	}//for
 }//main

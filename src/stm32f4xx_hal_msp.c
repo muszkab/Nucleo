@@ -20,11 +20,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void Periph_Init()
 {
 	Leds_Init();
-	UART_Init();
+	UART_Cable_Init();
+	UART_Bluetooth_Init();
 	CAN_Init();
 	Servo_TIM10_PWM_Init();
 	//Encoder_Init();
-	Motor_PWM_Init();
+	//Motor_PWM_Init();
 	RemoteController_Timer_Init();
 	Szabalyzo_TIM_Init();
 }
