@@ -69,6 +69,7 @@ void TIM_Encoder_IRQHandler(void);
 void TIM_HalfPeriod_IRQHandler(void);
 void TIM_REMOTE_IRQHandler(void);
 void TIM_SZABALYZO_IRQHandler(void);
+void SPI_IMU_IRQHandler(void);
 
 #ifdef __cplusplus
 }

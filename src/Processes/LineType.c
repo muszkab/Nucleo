@@ -65,7 +65,6 @@ void GetLineType()
 			ThreeLineTime++;
 			//OneLineTime=0;
 		}
-		if(OneLineTime)
 
 		//sebességállapot állítás
 		SetSpeedState();
@@ -135,10 +134,11 @@ void SetSpeedState()
 	}
 
 	//teszt
-	/*if(second>SECONDLIMIT)
+/*	if(second>SECONDLIMIT)
 		Led_On(Red);
 	else
-		Led_Off(Red);*/
+		Led_Off(Red);
+*/
 }
 
 /* Idõbeli szûrés a vonaltípusra, akkor állítjuk biztosra hogy hány darab vonal van,

@@ -96,3 +96,8 @@ void TIM_SZABALYZO_IRQHandler(void)
 {
 	HAL_TIM_IRQHandler(&TimHandle_Szabalyzo);
 }
+
+void SPI_IMU_IRQHandler(void)
+{
+	HAL_SPI_IRQHandler(&SpiHandle_IMU);
+}

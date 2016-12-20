@@ -22,6 +22,8 @@
 #include "SpeedControl.h"
 #include "Leds.h"
 #include "LineType.h"
+#include "IMU.h"
+#include "LSM6DS3_ACC_GYRO_driver_HL.h"
 
 void Periph_Init();
 void HAL_MspInit();

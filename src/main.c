@@ -47,6 +47,17 @@ int main(void)
 	/*UART */
 	//UART_RecvStringNonBlocking(&UartHandle_Cable);
 
+	//teszt: IMU
+	uint8_t TX=143;
+	uint8_t RX=4;
+	SPI_IMU_TransmitReceiveNonBlocking(&SpiHandle_IMU, &TX, &RX, 1);
+
+	DrvContextTypeDef handle;
+	uint8_t who=3;
+
+	//LSM6DS3_G_Drv.Get_WhoAmI(&handle, &who);
+	UART_SendNumberBlocking(RX, &UartHandle_Cable);
+
 	for(;;)
 	{
 		//HAL_Delay(10);
@@ -68,14 +79,13 @@ int main(void)
 		//SetSpeed_RemoteControl();
 
 		//teszt: UART és RobotDiagnostic
-		static int temp=0;
-		//UART_SendStringBlocking("Balazs", &UartHandle_Cable);
-
-		//UART_SendNumberBlocking(temp++, &UartHandle_Cable);
+	/*	static int temp=0;
 		UART_SendNumberBlocking(temp++, &UartHandle_Bluetooth);
-
-		//UART_SendStringBlocking("\n\r", &UartHandle_Cable);
-		HAL_Delay(500);
+	*/
+		//teszt: IMU
+		SPI_IMU_TransmitReceiveNonBlocking(&SpiHandle_IMU, &TX, &RX, 1);
+		UART_SendNumberBlocking(RX, &UartHandle_Cable);
+		HAL_Delay(1000);
 
 	}//for
 }//main

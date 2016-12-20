@@ -79,6 +79,14 @@ void UART_Cable_Init()
 	    Error_Handler();
 	  }
 
+	  //TODO ?
+	  /*
+	   *  UartHandle.pRxBuffPtr = ( uint8_t * )UART_RxBuffer;
+  	  	  UartHandle.RxXferSize = UART_BufferSize;
+  	  	  UartHandle.ErrorCode  = HAL_UART_ERROR_NONE;
+	   */
+
+
 	  /* Output a message on Hyperterminal using printf function */
 	  //printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
 }
@@ -125,7 +133,7 @@ void UART_Bluetooth_Init()
 	      - Hardware flow control disabled (RTS and CTS signals) */
 	  UartHandle_Bluetooth.Instance          = USART_BlUETOOTH;
 
-	  UartHandle_Bluetooth.Init.BaudRate     = (9600);
+	  UartHandle_Bluetooth.Init.BaudRate     = 115200;
 	  UartHandle_Bluetooth.Init.WordLength   = UART_WORDLENGTH_8B;
 	  UartHandle_Bluetooth.Init.StopBits     = UART_STOPBITS_1;
 	  UartHandle_Bluetooth.Init.Parity       = UART_PARITY_NONE;
