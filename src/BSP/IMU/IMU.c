@@ -40,6 +40,10 @@ void SPI_IMU_Init()
 
 	/* SPI NSS GPIO pin configuration */
 	GPIO_InitStruct.Pin = SPI_IMU_MISO_PIN;
+	GPIO_InitStruct.Mode      = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull      = GPIO_PULLUP;
+	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
+	//GPIO_InitStruct.Alternate =
 	HAL_GPIO_Init(SPI_IMU_GPIO_PORT, &GPIO_InitStruct);
 
 	/*##-3- Configure the NVIC for SPI #########################################*/
@@ -54,8 +58,8 @@ void SPI_IMU_Init()
 	SpiHandle_IMU.Init.DataSize = SPI_DATASIZE_8BIT;
 	SpiHandle_IMU.Init.CLKPolarity = SPI_POLARITY_HIGH;
 	SpiHandle_IMU.Init.CLKPhase = SPI_PHASE_2EDGE;
-	SpiHandle_IMU.Init.NSS = SPI_NSS_HARD_OUTPUT;
-	SpiHandle_IMU.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+	SpiHandle_IMU.Init.NSS = SPI_NSS_SOFT;
+	SpiHandle_IMU.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
 	SpiHandle_IMU.Init.FirstBit = SPI_FIRSTBIT_MSB;
 	SpiHandle_IMU.Init.TIMode = SPI_TIMODE_DISABLE;
 	SpiHandle_IMU.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -64,6 +68,17 @@ void SPI_IMU_Init()
 	if (HAL_SPI_Init(&SpiHandle_IMU) != HAL_OK){
 		Error_SendUart("SPI_IMU init error. \n\r");
 	}
+}
+
+//Szoftveres chip select
+void IMU_CS_High()
+{
+	HAL_GPIO_WritePin(SPI_IMU_GPIO_PORT, SPI_IMU_NSS_PIN, GPIO_PIN_SET);
+}
+
+void IMU_CS_Low()
+{
+	HAL_GPIO_WritePin(SPI_IMU_GPIO_PORT, SPI_IMU_NSS_PIN, GPIO_PIN_RESET);
 }
 
 //csak küldés
@@ -75,13 +90,22 @@ void SPI_IMU_TransmitNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, ui
 	}
 }
 
+//csak fogadás
+void SPI_IMU_ReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length)
+{
+	if(HAL_SPI_Receive_IT(handle, pBuffer, length) != HAL_OK)
+	{
+		Error_SendUart("SPI IMU nonblocking receive error. \n\r");
+	}
+}
+
 //küldés és fogadás
 void SPI_IMU_TransmitReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* TxBuffer, uint8_t* RxBuffer, uint16_t length)
 {
-	//length: küldött és fogadott byte-ok darabszáma összesen??
+	//length: küldött és fogadott byte-ok darabszáma összesen vagy fejenként?? -> fejenként!
 	if(HAL_SPI_TransmitReceive_IT(handle, TxBuffer, RxBuffer, length) != HAL_OK)
 	{
-		Error_SendUart("SPI IMU nonblocking transmit error. \n\r");
+		Error_SendUart("SPI IMU nonblocking transmit-receive error. \n\r");
 	}
 }
 
@@ -99,8 +123,12 @@ uint8_t Sensor_IO_Write(void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint1
 		for(int i=0;i<nBytesToWrite;i++)
 			data[i+1] = pBuffer[i];
 
+		//szoftver chip select
+		IMU_CS_Low();
 		//küldés, a hossz eggyel nagyobb a cím miatt
 		SPI_IMU_TransmitNonBlocking(&SpiHandle_IMU, data, (nBytesToWrite+1));
+		IMU_CS_High();
+
 		//ACC_GYRO driver miatt
 		return 0;
 	//}
@@ -114,11 +142,18 @@ uint8_t Sensor_IO_Read(void *handle, uint8_t ReadAddr, uint8_t *pBuffer, uint16_
 	//if(handle == &SpiHandle_IMU)
 	//{
 		//küldünk: 8 bites cím
-		uint8_t TxBuffer[1];
+		uint8_t Address;
+		uint8_t DUMMY=0;
 		//elsõ byte a cím, olvasás: MSB=1
-		TxBuffer[0] = ReadAddr + (1<<7); //(10000000b)
+		Address = ReadAddr + (1<<7); //(10000000b)
 
-		SPI_IMU_TransmitReceiveNonBlocking(&SpiHandle_IMU, TxBuffer, pBuffer, (nBytesToRead));
+		//szoftver chip select
+		IMU_CS_Low();
+		//cím küldése
+		SPI_IMU_TransmitNonBlocking(&SpiHandle_IMU, &Address, 1);
+		//adat fogadása
+		SPI_IMU_TransmitReceiveNonBlocking(&SpiHandle_IMU, &DUMMY, pBuffer, nBytesToRead);
+		IMU_CS_High();
 
 		//ACC_GYRO driver miatt
 		return 0;

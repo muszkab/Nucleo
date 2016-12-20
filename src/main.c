@@ -45,18 +45,13 @@ int main(void)
 
 
 	/*UART */
-	//UART_RecvStringNonBlocking(&UartHandle_Cable);
+	UART_RecvStringNonBlocking(&UartHandle_Cable);
 
 	//teszt: IMU
-	uint8_t TX=143;
-	uint8_t RX=4;
-	SPI_IMU_TransmitReceiveNonBlocking(&SpiHandle_IMU, &TX, &RX, 1);
-
-	DrvContextTypeDef handle;
+/*	DrvContextTypeDef handle;
 	uint8_t who=3;
-
-	//LSM6DS3_G_Drv.Get_WhoAmI(&handle, &who);
-	UART_SendNumberBlocking(RX, &UartHandle_Cable);
+	LSM6DS3_G_Drv.Get_WhoAmI(&handle, &who);
+*/
 
 	for(;;)
 	{
@@ -83,9 +78,11 @@ int main(void)
 		UART_SendNumberBlocking(temp++, &UartHandle_Bluetooth);
 	*/
 		//teszt: IMU
-		SPI_IMU_TransmitReceiveNonBlocking(&SpiHandle_IMU, &TX, &RX, 1);
-		UART_SendNumberBlocking(RX, &UartHandle_Cable);
-		HAL_Delay(1000);
+		static uint8_t Address=0x0F; //who_am_i regiszter cím
+		static uint8_t RX=4;		 //105-öt kéne visszakapni
 
+		Sensor_IO_Read(NULL, Address, &RX, 1);
+		HAL_Delay(1000);
+		UART_SendNumberBlocking(RX, &UartHandle_Cable);
 	}//for
 }//main
