@@ -41,7 +41,7 @@ void SPI_IMU_Init()
 	/* SPI NSS GPIO pin configuration */
 	GPIO_InitStruct.Pin = SPI_IMU_MISO_PIN;
 	GPIO_InitStruct.Mode      = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull      = GPIO_PULLUP;
+	GPIO_InitStruct.Pull      = GPIO_NOPULL;
 	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
 	//GPIO_InitStruct.Alternate =
 	HAL_GPIO_Init(SPI_IMU_GPIO_PORT, &GPIO_InitStruct);
