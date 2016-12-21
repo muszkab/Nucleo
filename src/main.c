@@ -53,6 +53,10 @@ int main(void)
 	LSM6DS3_G_Drv.Get_WhoAmI(&handle, &who);
 */
 
+	Led_On(Green);
+	Led_On(Blue);
+	Led_On(Yellow);
+
 	for(;;)
 	{
 		//HAL_Delay(10);

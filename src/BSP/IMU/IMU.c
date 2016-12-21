@@ -21,28 +21,19 @@ void SPI_IMU_Init()
 	/* Enable SPI clock */
 	SPI_IMU_CLK_ENABLE();
 
-	/* SPI SCLK GPIO pin configuration  */
-	GPIO_InitStruct.Pin       = SPI_IMU_SCLK_PIN;
+	/* SPI SCLK, MOSI, MISO GPIO pin configuration  */
+	GPIO_InitStruct.Pin       = SPI_IMU_SCLK_PIN | SPI_IMU_MOSI_PIN | SPI_IMU_MISO_PIN;
 	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Pull      = GPIO_PULLUP;
-	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
-	GPIO_InitStruct.Alternate = SPI_IMU_GPIO_AF;
-	HAL_GPIO_Init(SPI_IMU_GPIO_PORT, &GPIO_InitStruct);
-
-	/* SPI MOSI GPIO pin configuration */
-	GPIO_InitStruct.Pin = SPI_IMU_MOSI_PIN;
-	HAL_GPIO_Init(SPI_IMU_GPIO_PORT, &GPIO_InitStruct);
-
-	/* SPI MISO GPIO pin configuration */
-	GPIO_InitStruct.Pin = SPI_IMU_MISO_PIN;
-	GPIO_InitStruct.Pull      = GPIO_NOPULL;
+	GPIO_InitStruct.Pull      = GPIO_PULLDOWN;
+	GPIO_InitStruct.Speed     = GPIO_SPEED_MEDIUM;
+	GPIO_InitStruct.Alternate = SPI_IMU_GPIO_AF;	//TODO: AF6
 	HAL_GPIO_Init(SPI_IMU_GPIO_PORT, &GPIO_InitStruct);
 
 	/* SPI NSS GPIO pin configuration */
-	GPIO_InitStruct.Pin = SPI_IMU_MISO_PIN;
+	GPIO_InitStruct.Pin 	  = SPI_IMU_NSS_PIN;
 	GPIO_InitStruct.Mode      = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull      = GPIO_NOPULL;
-	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStruct.Speed     = GPIO_SPEED_MEDIUM;
 	//GPIO_InitStruct.Alternate =
 	HAL_GPIO_Init(SPI_IMU_GPIO_PORT, &GPIO_InitStruct);
 
@@ -56,14 +47,14 @@ void SPI_IMU_Init()
 	SpiHandle_IMU.Init.Mode = SPI_MODE_MASTER;
 	SpiHandle_IMU.Init.Direction = SPI_DIRECTION_2LINES;
 	SpiHandle_IMU.Init.DataSize = SPI_DATASIZE_8BIT;
-	SpiHandle_IMU.Init.CLKPolarity = SPI_POLARITY_HIGH;
-	SpiHandle_IMU.Init.CLKPhase = SPI_PHASE_2EDGE;
+	SpiHandle_IMU.Init.CLKPolarity = SPI_POLARITY_LOW;
+	SpiHandle_IMU.Init.CLKPhase = SPI_PHASE_1EDGE;
 	SpiHandle_IMU.Init.NSS = SPI_NSS_SOFT;
 	SpiHandle_IMU.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
 	SpiHandle_IMU.Init.FirstBit = SPI_FIRSTBIT_MSB;
 	SpiHandle_IMU.Init.TIMode = SPI_TIMODE_DISABLE;
 	SpiHandle_IMU.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	SpiHandle_IMU.Init.CRCPolynomial = 10;
+	SpiHandle_IMU.Init.CRCPolynomial = 7;
 
 	if (HAL_SPI_Init(&SpiHandle_IMU) != HAL_OK){
 		Error_SendUart("SPI_IMU init error. \n\r");
