@@ -28,7 +28,7 @@ void Periph_Init()
 	Motor_PWM_Init();
 	RemoteController_Timer_Init();
 	Szabalyzo_TIM_Init();
-	SPI_IMU_Init();
+	IMU_Init();
 }
 
 void HAL_MspInit()

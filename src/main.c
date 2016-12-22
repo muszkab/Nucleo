@@ -47,12 +47,6 @@ int main(void)
 	/*UART */
 	UART_RecvStringNonBlocking(&UartHandle_Cable);
 
-	//teszt: IMU
-/*	DrvContextTypeDef handle;
-	uint8_t who=3;
-	LSM6DS3_G_Drv.Get_WhoAmI(&handle, &who);
-*/
-
 	Led_On(Green);
 	Led_On(Blue);
 	Led_On(Yellow);
@@ -81,12 +75,15 @@ int main(void)
 	/*	static int temp=0;
 		UART_SendNumberBlocking(temp++, &UartHandle_Bluetooth);
 	*/
-		//teszt: IMU
-		static uint8_t Address=0x0F; //who_am_i regiszter cím
-		static uint8_t RX=4;		 //105-öt kéne visszakapni
 
-		Sensor_IO_Read(NULL, Address, &RX, 1);
+		//teszt: IMU
+		static uint8_t who=3;
+
+		GYRO_Driver->Get_WhoAmI(&GYRO_SensorHandle, &who);
+		if( !ACCELERO_Driver->Check_WhoAmI(&ACCELERO_SensorHandle) )
+			UART_SendStringBlocking("Siker!", &UartHandle_Cable);
+		//LSM6DS3_G_Drv.Get_Axes_Status
+		UART_SendNumberBlocking(who, &UartHandle_Cable);
 		HAL_Delay(1000);
-		UART_SendNumberBlocking(RX, &UartHandle_Cable);
 	}//for
 }//main
