@@ -47,9 +47,16 @@ int main(void)
 	/*UART */
 	UART_RecvStringNonBlocking(&UartHandle_Cable);
 
-	Led_On(Green);
-	Led_On(Blue);
-	Led_On(Yellow);
+	//teszt: IMU
+	static uint8_t who=3;
+	static SensorAxes_t SensorAxes;
+
+	GYRO_Driver->Get_WhoAmI(&GYRO_SensorHandle, &who);
+
+	//if( GYRO_Driver->Init(&GYRO_SensorHandle) != COMPONENT_OK )
+		//Error_SendUart("GYRO Init error!");
+	//if( GYRO_Driver->Sensor_Enable(&GYRO_SensorHandle) != COMPONENT_OK )
+		//Error_SendUart("GYRO Enable error!");
 
 	for(;;)
 	{
@@ -77,13 +84,10 @@ int main(void)
 	*/
 
 		//teszt: IMU
-		static uint8_t who=3;
-
-		GYRO_Driver->Get_WhoAmI(&GYRO_SensorHandle, &who);
-		if( !ACCELERO_Driver->Check_WhoAmI(&ACCELERO_SensorHandle) )
-			UART_SendStringBlocking("Siker!", &UartHandle_Cable);
+		GYRO_Driver->Get_Axes(&GYRO_SensorHandle, &SensorAxes);
 		//LSM6DS3_G_Drv.Get_Axes_Status
-		UART_SendNumberBlocking(who, &UartHandle_Cable);
-		HAL_Delay(1000);
+		UART_SendNumberBlocking(SensorAxes.AXIS_X, &UartHandle_Cable);
+		UART_SendStringBlocking("\n\r", &UartHandle_Cable);
+		HAL_Delay(100);
 	}//for
 }//main
