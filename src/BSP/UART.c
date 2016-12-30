@@ -15,144 +15,201 @@
   #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif /* __GNUC__ */
 
-  /* UART handler declaration */
-  UART_HandleTypeDef UartHandle_Cable;
-  UART_HandleTypeDef UartHandle_Bluetooth;
-  /* Uart receive message buffer */
-  uint8_t UART_rxBuff[1]={'0'};
+/* UART handler declaration */
+UART_HandleTypeDef UartHandle_Cable;
+UART_HandleTypeDef UartHandle_Bluetooth;
+UART_HandleTypeDef UartHandle_Radio;
+/* Uart receive message buffer */
+uint8_t UART_rxBuff[1]={'0'};
+uint32_t UARTMessageNumber=0;
 
-  uint32_t UARTMessageNumber=0;
+/**
+  * @brief UART Cable USART2 Initialization
+  */
+void UART_Cable_Init(){
+	GPIO_InitTypeDef  GPIO_InitStruct;
 
-void UART_Cable_Init()
-{
-	  GPIO_InitTypeDef  GPIO_InitStruct;
+	/*##-1- Enable peripherals and GPIO Clocks #################################*/
+	/* Enable GPIO TX/RX clock */
+	USART_CABLE_TX_GPIO_CLK_ENABLE();
+	USART_CABLE_RX_GPIO_CLK_ENABLE();
 
-	  /*##-1- Enable peripherals and GPIO Clocks #################################*/
-	  /* Enable GPIO TX/RX clock */
-	  USART_CABLE_TX_GPIO_CLK_ENABLE();
-	  USART_CABLE_RX_GPIO_CLK_ENABLE();
+	/* Enable USART2 clock */
+	USART_CABLE_CLK_ENABLE();
 
+	 /*##-2- Configure peripheral GPIO ##########################################*/
+	/* UART TX GPIO pin configuration  */
+	GPIO_InitStruct.Pin       = USART_CABLE_TX_PIN;
+	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull      = GPIO_PULLUP;
+	GPIO_InitStruct.Speed     = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Alternate = USART_CABLE_TX_AF;
 
-	  /* Enable USARTx clock */
-	  USART_CABLE_CLK_ENABLE();
+	HAL_GPIO_Init(USART_CABLE_TX_GPIO_PORT, &GPIO_InitStruct);
 
-	  /*##-2- Configure peripheral GPIO ##########################################*/
-	  /* UART TX GPIO pin configuration  */
-	  GPIO_InitStruct.Pin       = USART_CABLE_TX_PIN;
-	  GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-	  GPIO_InitStruct.Pull      = GPIO_PULLUP;
-	  GPIO_InitStruct.Speed     = GPIO_SPEED_HIGH;
-	  GPIO_InitStruct.Alternate = USART_CABLE_TX_AF;
+	/* UART RX GPIO pin configuration  */
+	GPIO_InitStruct.Pin = USART_CABLE_RX_PIN;
+	GPIO_InitStruct.Alternate = USART_CABLE_RX_AF;
 
-	  HAL_GPIO_Init(USART_CABLE_TX_GPIO_PORT, &GPIO_InitStruct);
+	HAL_GPIO_Init(USART_CABLE_RX_GPIO_PORT, &GPIO_InitStruct);
 
-	  /* UART RX GPIO pin configuration  */
-	  GPIO_InitStruct.Pin = USART_CABLE_RX_PIN;
-	  GPIO_InitStruct.Alternate = USART_CABLE_RX_AF;
+	/* Peripheral interrupt init */
+	HAL_NVIC_SetPriority(USART_CABLE_IRQn,1,0);
+	HAL_NVIC_EnableIRQ(USART_CABLE_IRQn);
 
-	  HAL_GPIO_Init(USART_CABLE_RX_GPIO_PORT, &GPIO_InitStruct);
+	/*##-3- Configure the UART peripheral ######################################*/
+	/* Put the USART peripheral in the Asynchronous mode (UART Mode) */
+	/* UART1 configured as follows:
+	  - Word Length = 8 Bits
+	  - Stop Bit = One Stop bit
+	  - Parity = No parity
+	  - BaudRate = 9600 baud
+	  - Hardware flow control disabled (RTS and CTS signals) */
+	UartHandle_Cable.Instance          = USART_CABLE;
+	UartHandle_Cable.Init.BaudRate     = 9600;
+	UartHandle_Cable.Init.WordLength   = UART_WORDLENGTH_8B;
+	UartHandle_Cable.Init.StopBits     = UART_STOPBITS_1;
+	UartHandle_Cable.Init.Parity       = UART_PARITY_NONE;
+	UartHandle_Cable.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
+	UartHandle_Cable.Init.Mode         = UART_MODE_TX_RX;
+	UartHandle_Cable.Init.OverSampling = UART_OVERSAMPLING_16;
 
-	  HAL_NVIC_SetPriority(USART_CABLE_IRQn,1,0);
-	  HAL_NVIC_EnableIRQ(USART_CABLE_IRQn);
+	if(HAL_UART_Init(&UartHandle_Cable) != HAL_OK){
+		/* Initialization Error */
+		Error_Handler();
+	}
 
-	  /*##-3- Configure the UART peripheral ######################################*/
-	  /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-	  /* UART1 configured as follows:
-	      - Word Length = 8 Bits
-	      - Stop Bit = One Stop bit
-	      - Parity = No parity
-	      - BaudRate = 9600 baud
-	      - Hardware flow control disabled (RTS and CTS signals) */
-	  UartHandle_Cable.Instance          = USART_CABLE;
-
-	  UartHandle_Cable.Init.BaudRate     = 9600;
-	  UartHandle_Cable.Init.WordLength   = UART_WORDLENGTH_8B;
-	  UartHandle_Cable.Init.StopBits     = UART_STOPBITS_1;
-	  UartHandle_Cable.Init.Parity       = UART_PARITY_NONE;
-	  UartHandle_Cable.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
-	  UartHandle_Cable.Init.Mode         = UART_MODE_TX_RX;
-	  UartHandle_Cable.Init.OverSampling = UART_OVERSAMPLING_16;
-
-	  if(HAL_UART_Init(&UartHandle_Cable) != HAL_OK)
-	  {
-	    /* Initialization Error */
-	    Error_Handler();
-	  }
-
-	  //TODO ?
-	  /*
-	   *  UartHandle.pRxBuffPtr = ( uint8_t * )UART_RxBuffer;
-  	  	  UartHandle.RxXferSize = UART_BufferSize;
-  	  	  UartHandle.ErrorCode  = HAL_UART_ERROR_NONE;
-	   */
-
-
-	  /* Output a message on Hyperterminal using printf function */
-	  //printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
+	//TODO ?
+	/*
+	*  UartHandle.pRxBuffPtr = ( uint8_t * )UART_RxBuffer;
+	  UartHandle.RxXferSize = UART_BufferSize;
+	  UartHandle.ErrorCode  = HAL_UART_ERROR_NONE;
+	*/
+	/* Output a message on Hyperterminal using printf function */
+	//printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
 }
 
-void UART_Bluetooth_Init()
-{
-	  GPIO_InitTypeDef  GPIO_InitStruct;
+/**
+  * @brief UART Bluetooth USART1 Initialization
+  */
+void UART_Bluetooth_Init(){
+	GPIO_InitTypeDef  GPIO_InitStruct;
 
-	  /*##-1- Enable peripherals and GPIO Clocks #################################*/
-	  /* Enable GPIO TX/RX clock */
-	  USART_BlUETOOTH_RX_GPIO_CLK_ENABLE();
-	  USART_BlUETOOTH_TX_GPIO_CLK_ENABLE();
+	/*##-1- Enable peripherals and GPIO Clocks #################################*/
+	/* Enable GPIO TX/RX clock */
+	USART_BlUETOOTH_RX_GPIO_CLK_ENABLE();
+	USART_BlUETOOTH_TX_GPIO_CLK_ENABLE();
 
+	/* Enable USART1 clock */
+	USART_BlUETOOTH_CLK_ENABLE();
 
-	  /* Enable USARTx clock */
-	  USART_BlUETOOTH_CLK_ENABLE();
+	/*##-2- Configure peripheral GPIO ##########################################*/
+	/* UART TX GPIO pin configuration  */
+	GPIO_InitStruct.Pin       = USART_BlUETOOTH_TX_PIN;
+	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull      = GPIO_PULLUP;
+	GPIO_InitStruct.Speed     = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Alternate = USART_BlUETOOTH_TX_AF;
 
-	  /*##-2- Configure peripheral GPIO ##########################################*/
-	  /* UART TX GPIO pin configuration  */
-	  GPIO_InitStruct.Pin       = USART_BlUETOOTH_TX_PIN;
-	  GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-	  GPIO_InitStruct.Pull      = GPIO_PULLUP;
-	  GPIO_InitStruct.Speed     = GPIO_SPEED_HIGH;
-	  GPIO_InitStruct.Alternate = USART_BlUETOOTH_TX_AF;
+	HAL_GPIO_Init(USART_BlUETOOTH_TX_GPIO_PORT, &GPIO_InitStruct);
 
-	  HAL_GPIO_Init(USART_BlUETOOTH_TX_GPIO_PORT, &GPIO_InitStruct);
+	/* UART RX GPIO pin configuration  */
+	GPIO_InitStruct.Pin = USART_BlUETOOTH_RX_PIN;
+	GPIO_InitStruct.Alternate = USART_BlUETOOTH_RX_AF;
 
-	  /* UART RX GPIO pin configuration  */
-	  GPIO_InitStruct.Pin = USART_BlUETOOTH_RX_PIN;
-	  GPIO_InitStruct.Alternate = USART_BlUETOOTH_RX_AF;
+	HAL_GPIO_Init(USART_BlUETOOTH_RX_GPIO_PORT, &GPIO_InitStruct);
 
-	  HAL_GPIO_Init(USART_BlUETOOTH_RX_GPIO_PORT, &GPIO_InitStruct);
+	/* Peripheral interrupt init */
+	HAL_NVIC_SetPriority(USART_BlUETOOTH_IRQn,1,0);
+	HAL_NVIC_EnableIRQ(USART_BlUETOOTH_IRQn);
 
-	  HAL_NVIC_SetPriority(USART_BlUETOOTH_IRQn,1,0);
-	  HAL_NVIC_EnableIRQ(USART_BlUETOOTH_IRQn);
+	/*##-3- Configure the UART peripheral ######################################*/
+	/* Put the USART peripheral in the Asynchronous mode (UART Mode) */
+	/* UART1 configured as follows:
+	  - Word Length = 8 Bits
+	  - Stop Bit = One Stop bit
+	  - Parity = No parity
+	  - BaudRate = 115200 baud
+	  - Hardware flow control disabled (RTS and CTS signals) */
+	UartHandle_Bluetooth.Instance          = USART_BlUETOOTH;
+	UartHandle_Bluetooth.Init.BaudRate     = 115200;
+	UartHandle_Bluetooth.Init.WordLength   = UART_WORDLENGTH_8B;
+	UartHandle_Bluetooth.Init.StopBits     = UART_STOPBITS_1;
+	UartHandle_Bluetooth.Init.Parity       = UART_PARITY_NONE;
+	UartHandle_Bluetooth.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
+	UartHandle_Bluetooth.Init.Mode         = UART_MODE_TX_RX;
+	UartHandle_Bluetooth.Init.OverSampling = UART_OVERSAMPLING_16;
 
-	  /*##-3- Configure the UART peripheral ######################################*/
-	  /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-	  /* UART1 configured as follows:
-	      - Word Length = 8 Bits
-	      - Stop Bit = One Stop bit
-	      - Parity = No parity
-	      - BaudRate = 9600 baud
-	      - Hardware flow control disabled (RTS and CTS signals) */
-	  UartHandle_Bluetooth.Instance          = USART_BlUETOOTH;
+	if(HAL_UART_Init(&UartHandle_Bluetooth) != HAL_OK){
+		/* Initialization Error */
+		Error_Handler();
+	}
+}
 
-	  UartHandle_Bluetooth.Init.BaudRate     = 115200;
-	  UartHandle_Bluetooth.Init.WordLength   = UART_WORDLENGTH_8B;
-	  UartHandle_Bluetooth.Init.StopBits     = UART_STOPBITS_1;
-	  UartHandle_Bluetooth.Init.Parity       = UART_PARITY_NONE;
-	  UartHandle_Bluetooth.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
-	  UartHandle_Bluetooth.Init.Mode         = UART_MODE_TX_RX;
-	  UartHandle_Bluetooth.Init.OverSampling = UART_OVERSAMPLING_16;
+/**
+  * @brief UART Radio UART5 Initialization
+  */
+void UART_Radio_Init(){
+	GPIO_InitTypeDef  GPIO_InitStruct;
 
-	  if(HAL_UART_Init(&UartHandle_Bluetooth) != HAL_OK)
-	  {
-	    /* Initialization Error */
-	    Error_Handler();
-	  }
+	/*##-1- Enable peripherals and GPIO Clocks #################################*/
+	/* Enable GPIO TX/RX clock */
+	USART_RADIO_RX_GPIO_CLK_ENABLE();
+	USART_RADIO_TX_GPIO_CLK_ENABLE();
 
-	  /* Output a message on Hyperterminal using printf function */
-	  //printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
+	/* Enable UART5 clock */
+	USART_RADIO_CLK_ENABLE();
+
+	/*##-2- Configure peripheral GPIO ##########################################*/
+	/* UART TX GPIO pin configuration  */
+	GPIO_InitStruct.Pin       = USART_RADIO_TX_PIN;
+	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull      = GPIO_PULLUP;
+	GPIO_InitStruct.Speed     = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Alternate = USART_RADIO_TX_AF;
+
+	HAL_GPIO_Init(USART_RADIO_TX_GPIO_PORT, &GPIO_InitStruct);
+
+	/* UART RX GPIO pin configuration  */
+	GPIO_InitStruct.Pin = USART_RADIO_RX_PIN;
+	GPIO_InitStruct.Alternate = USART_RADIO_RX_AF;
+
+	HAL_GPIO_Init(USART_RADIO_RX_GPIO_PORT, &GPIO_InitStruct);
+
+	/* Peripheral interrupt init */
+	HAL_NVIC_SetPriority(USART_RADIO_IRQn,4,0);
+	HAL_NVIC_EnableIRQ(USART_RADIO_IRQn);
+
+	/*##-3- Configure the UART peripheral ######################################*/
+	/* Put the USART peripheral in the Asynchronous mode (UART Mode) */
+	/* UART5 configured as follows:
+	  - Word Length = 8 Bits
+	  - Stop Bit = One Stop bit
+	  - Parity = No parity
+	  - BaudRate = 115200 baud
+	  - Hardware flow control disabled (RTS and CTS signals) */
+	UartHandle_Radio.Instance          = USART_RADIO;
+	UartHandle_Radio.Init.BaudRate     = 115200;
+	UartHandle_Radio.Init.WordLength   = UART_WORDLENGTH_8B;
+	UartHandle_Radio.Init.StopBits     = UART_STOPBITS_1;
+	UartHandle_Radio.Init.Parity       = UART_PARITY_NONE;
+	UartHandle_Radio.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
+	UartHandle_Radio.Init.Mode         = UART_MODE_TX_RX;
+	UartHandle_Radio.Init.OverSampling = UART_OVERSAMPLING_16;
+
+	if(HAL_UART_Init(&UartHandle_Radio) != HAL_OK){
+		/* Initialization Error */
+		Error_Handler();
+	}
+
+	//TODO Indítani nem itt kell, buffer át kell állítani
+	if(HAL_UART_Receive_IT(&UartHandle_Radio,UART_rxBuff, sizeof(UART_rxBuff)) != HAL_OK){
+		Error_Handler();
+	}
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-	if ( huart->Instance == USART2)	{
+	if ( huart->Instance == USART_CABLE)	{
 		UART_SendStringNonBlocking((char*)UART_rxBuff, huart);
 		UART_RecvStringNonBlocking(huart);
 	}

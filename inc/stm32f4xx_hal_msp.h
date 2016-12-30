@@ -8,13 +8,16 @@
 #ifndef STM32F4XX_HAL_MSP_H_
 #define STM32F4XX_HAL_MSP_H_
 
+//TODO majd logikusabb sorrendben kéne meghívni
 #include "stm32f4xx.h"
-#include "stm32f4xx_nucleo.h"
+#include "stm32f4xx_nucleo.h" //TODO Ebben mi van, mi lesz? Neve alapján nem lehet behatárolni
+#include "stm32f4xx_it.h"
+#include "Encoder.h"
 #include "ADC.h"
 #include "UART.h"
+#include "Buttons.h"
 #include "CAN.h"
 #include "Servo.h"
-#include "Encoder.h"
 #include "Motor.h"
 #include "RemoteControl.h"
 #include "Timers.h"

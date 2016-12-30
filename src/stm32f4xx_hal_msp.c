@@ -17,13 +17,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 }
 
 /*Perifériák inicializálása */
-void Periph_Init()
-{
+void Periph_Init(){
 	Leds_Init();
+	Encoder_Init();
+	//ADC1_Init(); TODO startot el kell dönteni milyen legyen. timer trigger?
+	//Buttons_Init(BUTTON_MODE_EXTI); TODO forrasztás után mehet az init
 	UART_Cable_Init();
 	UART_Bluetooth_Init();
+	UART_Radio_Init();
 	CAN_Init();
 	Servo_TIM10_PWM_Init();
+	Servo_Sharp_TIM4_PWM_Init();
 	//Encoder_Init();
 	Motor_PWM_Init();
 	RemoteController_Timer_Init();

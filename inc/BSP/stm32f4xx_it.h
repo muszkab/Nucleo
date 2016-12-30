@@ -44,11 +44,13 @@
 #endif 
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f4xx_hal_msp.h"
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
+/* System IRQ Handlers */
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void MemManage_Handler(void);
@@ -59,17 +61,19 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 
-void ADC_IRQHandler(void);
-void EXTI15_10_IRQHandler(void);
-void USART2_IRQHandler(void);
-void CAN1_TX_IRQHandler(void);
-void CAN1_RX0_IRQHandler(void);
-void TIM_HalfPeriod_IRQHandler(void);
-void TIM_Encoder_IRQHandler(void);
-void TIM_HalfPeriod_IRQHandler(void);
+/* Used IRQ Handlers */
+void EXTI0_IRQHandler(void); 			// User Button 0 interrupt request
+void EXTI1_IRQHandler(void); 			// User Button 0 interrupt request
+void EXTI15_10_IRQHandler(void); 		// Nucleo User Button interrupt request
+void DMA2_Stream0_IRQHandler(void); 	// ADC1 DMA interrupt request
+void USART2_IRQHandler(void); 			// USART2 (Cable) interrupt request
+void USART1_IRQHandler(void);			// USART1 (Bluetooth) interrupt request
+void UART5_IRQHandler(void);			// UART5 (Radio) interrupt request
+void CAN1_TX_IRQHandler(void);			// CAN1 TX interrupt request
+void CAN1_RX0_IRQHandler(void);			// CAN1 RX0 interrupt request
 void TIM_REMOTE_IRQHandler(void);
 void TIM_SZABALYZO_IRQHandler(void);
-void SPI_IMU_IRQHandler(void);
+void SPI_IMU_IRQHandler(void);        	//TODO ha nem IT-vel megy, akkor nem kell, Csorvásit meg kell kérdezni
 
 #ifdef __cplusplus
 }
