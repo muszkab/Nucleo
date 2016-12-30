@@ -38,9 +38,6 @@ void Leds_Init()
 	  GPIO_InitStruct.Pin = GREEN_LED_PIN;
 	  HAL_GPIO_Init(GREEN_LED_PORT, &GPIO_InitStruct);
 	  HAL_GPIO_WritePin(GREEN_LED_PORT, GREEN_LED_PIN, GPIO_PIN_RESET);
-
-
-	  //TODO: Blue, yellow: SB48,SB49
 }
 
 void Led_On(ledType Led)

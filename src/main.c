@@ -28,8 +28,8 @@ int main(void)
 	   - Set NVIC Group Priority to 4
 	   - Low Level Initialization
 	 */
-
 	HAL_Init();
+
 	/* Set NVIC Group Priority to 3 */
 	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_3);
 
@@ -63,7 +63,7 @@ int main(void)
 		//HAL_Delay(10);
 
 		//Vonalkövetés: PD szabályzó
-		Do_PositionControl();
+		//Do_PositionControl();
 
 		//teszt: vonaltípus
 		GetLineType();
@@ -84,10 +84,18 @@ int main(void)
 	*/
 
 		//teszt: IMU
-		GYRO_Driver->Get_Axes(&GYRO_SensorHandle, &SensorAxes);
+	/*	GYRO_Driver->Get_Axes(&GYRO_SensorHandle, &SensorAxes);
 		//LSM6DS3_G_Drv.Get_Axes_Status
 		UART_SendNumberBlocking(SensorAxes.AXIS_X, &UartHandle_Cable);
 		UART_SendStringBlocking("\n\r", &UartHandle_Cable);
 		HAL_Delay(100);
+	*/
+
+	/*	//teszt: új szervo kipróbálásra
+		SetServoPWMPulse(100);
+		HAL_Delay(500);
+		SetServoPWMPulse(-100);
+		HAL_Delay(500);
+	*/
 	}//for
 }//main

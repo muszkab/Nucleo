@@ -109,62 +109,52 @@ void SPI_IMU_TransmitReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* TxBu
 //ACC_GYRO driverhez
 uint8_t Sensor_IO_Write(void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint16_t nBytesToWrite)
 {
-	//if(handle == &SpiHandle_IMU)
-	//{
-		//SPI adatcsomag összeállítás
-		uint8_t data[nBytesToWrite+1];
-		//elsõ byte a cím, írás: MSB=0
-		data[0] = WriteAddr + 0;
-		//adat átmásolás
-		for(int i=0;i<nBytesToWrite;i++)
-			data[i+1] = pBuffer[i];
+	//SPI adatcsomag összeállítás
+	uint8_t data[nBytesToWrite+1];
+	//elsõ byte a cím, írás: MSB=0
+	data[0] = WriteAddr + 0;
+	//adat átmásolás
+	for(int i=0;i<nBytesToWrite;i++)
+		data[i+1] = pBuffer[i];
 
-		//szoftver chip select
-		IMU_CS_Low();
-		//TxCpltCallback-ben fusson le a IMU_CS_High(), ha a state==write, több kommunikáció már nem lesz
-		State = Write;
-		//küldés, a hossz eggyel nagyobb a cím miatt
-		SPI_IMU_TransmitNonBlocking(&SpiHandle_IMU, data, (nBytesToWrite+1));
-		//callback függvényben van az IMU_CS_High()
-		IMU_CS_High();
+	//szoftver chip select
+	IMU_CS_Low();
+	//TxCpltCallback-ben fusson le a IMU_CS_High(), ha a state==write, több kommunikáció már nem lesz
+	State = Write;
+	//küldés, a hossz eggyel nagyobb a cím miatt
+	SPI_IMU_TransmitNonBlocking(&SpiHandle_IMU, data, (nBytesToWrite+1));
+	//callback függvényben van az IMU_CS_High()
+	IMU_CS_High();
 
-		//ACC_GYRO driver miatt
-		return 0;
-	//}
 	//ACC_GYRO driver miatt
-	//return 1;
+	return 0;
 }
 
 //ACC_GYRO driverhez
 uint8_t Sensor_IO_Read(void *handle, uint8_t ReadAddr, uint8_t *pBuffer, uint16_t nBytesToRead)
 {
-	//if(handle == &SpiHandle_IMU)
-	//{
-		//küldünk: 8 bites cím
-		uint8_t Address;
-		uint8_t DUMMY=0;
-		//elsõ byte a cím, olvasás: MSB=1
-		Address = ReadAddr + (1<<7); //(10000000b)
+	//küldünk: 8 bites cím
+	uint8_t Address;
+	uint8_t DUMMY=0;
+	//elsõ byte a cím, olvasás: MSB=1
+	Address = ReadAddr + (1<<7); //(10000000b)
 
-		//szoftver chip select
-		IMU_CS_Low();
-		//IMU_CS_High() jó helyen fusson le a callbackben, ne a sima transmit után
-		State = Read;
-		//cím küldése
-		SPI_IMU_TransmitNonBlocking(&SpiHandle_IMU, &Address, 1);
-		//adat fogadása
-		SPI_IMU_TransmitReceiveNonBlocking(&SpiHandle_IMU, &DUMMY, pBuffer, nBytesToRead);
-		//callback függvényben van az IMU_CS_High()
-		IMU_CS_High();
+	//szoftver chip select
+	IMU_CS_Low();
+	//IMU_CS_High() jó helyen fusson le a callbackben, ne a sima transmit után
+	State = Read;
+	//cím küldése
+	SPI_IMU_TransmitNonBlocking(&SpiHandle_IMU, &Address, 1);
+	//adat fogadása
+	SPI_IMU_TransmitReceiveNonBlocking(&SpiHandle_IMU, &DUMMY, pBuffer, nBytesToRead);
+	//callback függvényben van az IMU_CS_High()
+	IMU_CS_High();
 
-		//ACC_GYRO driver miatt
-		return 0;
-	//}
 	//ACC_GYRO driver miatt
-	//return 1;
+	return 0;
 }
 
-
+//TODO: ha nincs IT, a callback-eket törölni! (IOState State is)
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
 	if(hspi->Instance == SPI_IMU)
