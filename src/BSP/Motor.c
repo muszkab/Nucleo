@@ -116,7 +116,7 @@ void Motor_PWM_Init()
 
 /* -40 és 40 közötti értéket vár */
 void SetSpeed(int8_t Speed)
-{
+{   //TODO zavaró lehet 2 limit a sebességnek, elég lenne csak egy
 	if(Speed<-45 || Speed>45)
 	{
 		MotorStop();
@@ -136,6 +136,7 @@ void SetSpeed(int8_t Speed)
 	}
 }
 
+//TODO alsó fetek vezetnek ilyenkor
 /* Motor szabadon fut, minden FET zárva */
 void MotorStop()
 {

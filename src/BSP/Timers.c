@@ -67,11 +67,6 @@ void Szabalyzo_TIM_Init()
 /* Timer megszakításkezezõ callback */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	/* TIM11: enkóder félperiódus mérés, f=2MHz, számláló növelés */
-	if(htim->Instance==TIM11)
-	{
-	  countHalfPeriod++;
-	}
 	/* TIM6: szabályzó timer, f=1kHZ */
 	if(htim->Instance==TIM_SZABALYZO)
 	{

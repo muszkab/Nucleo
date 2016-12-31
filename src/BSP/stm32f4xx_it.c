@@ -15,8 +15,6 @@
 #include <cmsis_os.h>
 #endif
 #include "stm32f4xx_it.h"
-#include "stm32f4xx_hal_msp.h"
-
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -43,60 +41,87 @@ void SysTick_Handler(void)
 #endif
 }
 
+/******************************************************************************/
+/*                 STM32F4xx Peripherals Interrupt Handlers                   */
+/*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
+/*  available peripheral interrupt handler's name please refer to the startup */
+/*  file (startup_stm32f446xx.s).                                             */
+/******************************************************************************/
+
 /**
-  * @brief  This function handles ADC interrupt request.
-  * @param  None
-  * @retval None
+  * @brief  This function handles User Button 0 Interrupt request
   */
-void ADC_IRQHandler(void)
-{
-  //HAL_ADC_IRQHandler(&AdcHandle);
+void EXTI0_IRQHandler(void){
+	/* User Button 0 */
+	HAL_GPIO_EXTI_IRQHandler(USER_BUTTON0_PIN);
 }
 
-void EXTI15_10_IRQHandler(void)
-{
-	/* User Button*/
+/**
+  * @brief  This function handles User Button 1 Interrupt request
+  */
+void EXTI1_IRQHandler(void){
+	/* User Button 1 */
+	HAL_GPIO_EXTI_IRQHandler(USER_BUTTON1_PIN);
+}
+
+/**
+  * @brief  This function handles Nucleo User Button Interrupt request
+  */
+void EXTI15_10_IRQHandler(void){
+	/* User Button */
 	HAL_GPIO_EXTI_IRQHandler(USER_BUTTON_PIN);
 }
 
-void USART2_IRQHandler(void)
-{
+/**
+* @brief  This function handles ADC1 DMA interrupt request.
+*/
+void DMA2_Stream0_IRQHandler(void){
+	HAL_DMA_IRQHandler(Adc1Handle.DMA_Handle);
+}
+
+/**
+* @brief This function handles USART2 (Cable) global interrupt.
+*/
+void USART2_IRQHandler(void){
 	HAL_UART_IRQHandler(&UartHandle_Cable);
 }
 
-void CAN1_TX_IRQHandler(void)
-{
+/**
+* @brief This function handles USART1 (Bluetooth) global interrupt.
+*/
+void USART1_IRQHandler(void){
+	HAL_UART_IRQHandler(&UartHandle_Bluetooth);
+}
+
+/**
+* @brief This function handles UART5 (Radio) global interrupt.
+*/
+void UART5_IRQHandler(void){
+	HAL_UART_IRQHandler(&UartHandle_Radio);
+}
+
+/**
+* @brief  This function handles CAN1 TX interrupt request.
+*/
+void CAN1_TX_IRQHandler(void){
 	HAL_CAN_IRQHandler(&CanHandle);
 }
 
-void CAN1_RX0_IRQHandler(void)
-{
+/**
+* @brief  This function handles CAN1 RX0 interrupt request.
+*/
+void CAN1_RX0_IRQHandler(void){
 	HAL_CAN_IRQHandler(&CanHandle);
 }
 
-void TIM_HalfPeriod_IRQHandler(void)
-{
-	/* Segéd timer, f=2MHz */
-	HAL_TIM_IRQHandler(&TimHandle_HalfPeriod);
-}
-
-void TIM_Encoder_IRQHandler(void)
-{
-	/* Enkóder A csatorna élváltás */
-	HAL_TIM_IRQHandler(&TimHandle_Encoder);
-}
-
-void TIM_REMOTE_IRQHandler(void)
-{
+void TIM_REMOTE_IRQHandler(void){
 	HAL_TIM_IRQHandler(&TimHandle_Remote);
 }
 
-void TIM_SZABALYZO_IRQHandler(void)
-{
+void TIM_SZABALYZO_IRQHandler(void){
 	HAL_TIM_IRQHandler(&TimHandle_Szabalyzo);
 }
 
-void SPI_IMU_IRQHandler(void)
-{
+void SPI_IMU_IRQHandler(void){
 	HAL_SPI_IRQHandler(&SpiHandle_IMU);
 }
