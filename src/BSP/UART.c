@@ -123,7 +123,7 @@ void UART_Bluetooth_Init(){
 	  - BaudRate = 115200 baud
 	  - Hardware flow control disabled (RTS and CTS signals) */
 	UartHandle_Bluetooth.Instance          = USART_BlUETOOTH;
-	UartHandle_Bluetooth.Init.BaudRate     = 115200;	//TODO 9600??
+	UartHandle_Bluetooth.Init.BaudRate     = 115200;
 	UartHandle_Bluetooth.Init.WordLength   = UART_WORDLENGTH_8B;
 	UartHandle_Bluetooth.Init.StopBits     = UART_STOPBITS_1;
 	UartHandle_Bluetooth.Init.Parity       = UART_PARITY_NONE;

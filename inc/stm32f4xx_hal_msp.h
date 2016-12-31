@@ -11,7 +11,6 @@
 //TODO majd logikusabb sorrendben kéne meghívni
 #include "stm32f4xx.h"
 #include "stm32f4xx_nucleo.h" //TODO Ebben mi van, mi lesz? Neve alapján nem lehet behatárolni
-#include "stm32f4xx_it.h"
 #include "Encoder.h"
 #include "ADC.h"
 #include "UART.h"
