@@ -6,6 +6,8 @@
  */
 #include "UART.h"
 
+#define DEBUG_UART 	(&UartHandle_Cable)
+
 /* Private function prototypes -----------------------------------------------*/
 #ifdef __GNUC__
   /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
@@ -328,7 +330,7 @@ PUTCHAR_PROTOTYPE
 {
   /* Place your implementation of fputc here */
   /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&UartHandle_Cable, (uint8_t *)&ch, 1, 0xFFFF);
+  HAL_UART_Transmit(DEBUG_UART, (uint8_t *)&ch, 1, 0xFFFF);
 
   return ch;
 }

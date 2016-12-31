@@ -58,6 +58,21 @@ int main(void)
 	//if( GYRO_Driver->Sensor_Enable(&GYRO_SensorHandle) != COMPONENT_OK )
 		//Error_SendUart("GYRO Enable error!");
 
+	//teszt változók
+	Messagetype message[2];
+	message[0].Name="Value:P_Corner";
+	message[0].Data=3.456;
+
+	message[1].Name="Value:P_Straight";
+	message[1].Data=150;
+
+	message[2].Name="Value:Time";
+	message[2].Data=0;
+
+	Messagetype messageGraph[1];
+	messageGraph[0].Name="Graph:Linepos";
+	messageGraph[0].Data=1;
+
 	for(;;)
 	{
 		//HAL_Delay(10);
@@ -85,5 +100,17 @@ int main(void)
 		UART_SendStringBlocking("\n\r", &UartHandle_Cable);
 		HAL_Delay(100);
 	*/
+
+		//teszt: Debugszoftver
+		SendDebugMessage_Array(message, 3);
+		message[2].Data++;
+		message[1].Data--;
+
+		SendDebugMessage_Array(messageGraph, 1);
+		if(messageGraph[0].Data>-50)
+			messageGraph[0].Data--;
+
+		HAL_Delay(200);
+
 	}//for
 }//main
