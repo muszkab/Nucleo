@@ -28,7 +28,13 @@
 #define YELLOW_LED_PORT					GPIOC
 #define YELLOW_LED_GPIO_CLK_ENABLE()	__HAL_RCC_GPIOC_CLK_ENABLE()
 
-
+typedef enum
+{
+  Blue = 0,
+  Red = 1,
+  Yellow = 2,
+  Green = 3
+}ledType;
 
 /* Függvények */
 void Leds_Init();

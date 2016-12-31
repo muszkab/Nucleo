@@ -10,7 +10,6 @@
 #define STRAIGHTSPEED 	25	//egyenesben a sebesség
 #define CORNERSPEED_IN 	6	//kanyarbejáratban a sebesség
 #define CORNERSPEED_OUT 10	//kanyarkijáratban a sebesség
-//TODO: kanyarbejáraton(7) és kijároton(9) kül. kanyarsebesség
 
 /*
  * T_ACCELERATE > T_SPEEDCONTROL és T_BRAKE > T_SPEEDCONTROL mindenképp, ha kisebbre van véve akkor is,

@@ -8,7 +8,7 @@
 #include "PositionControl.h"
 
 //szabályzó paraméterek
-#define	P_CORNER	1.5f	//TODO: még késõbb kapcsoljon nagyobb P-re
+#define	P_CORNER	1.5f
 #define	P_STRAIGHT	1.0f
 #define D			20.0f
 #define T			10		//T*1ms

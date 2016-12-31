@@ -8,9 +8,9 @@
 #include "Timers.h"
 
 /* TIM6_freq=10kHz */
-#define MAX_CLOCK		90				/* TIM6 max clock: 90MHz */
-#define PRESCALER		(MAX_CLOCK-1)	/* TIM6_freq=90MHZ / (PRESCALER+1) /  (PEROD+1) */
-#define PERIOD			(1000-1)		/* TIM6_freq=90MHZ / 90 / 1000 = 1kHz */
+#define MAX_CLOCK_TIM6			90				/* TIM6 max clock: 90MHz */
+#define PRESCALER_SZABALYZO		(MAX_CLOCK_TIM6-1)	/* TIM6_freq=90MHZ / (PRESCALER+1) /  (PEROD+1) */
+#define PERIOD_SZABALYZO		(1000-1)		/* TIM6_freq=90MHZ / 90 / 1000 = 1kHz */
 
 /* Számlálók 1ms-vel */
 uint16_t TimePositionControl=0;
@@ -22,18 +22,6 @@ uint16_t TimeBrake=0;
 
 /* Timer handler declaration */
 TIM_HandleTypeDef    TimHandle_Szabalyzo;
-
-/* Definition for TIMx clock resources */
-#define TIM_SZABALYZO                           TIM6
-#define TIM_SZABALYZO_CLK_ENABLE()              __HAL_RCC_TIM6_CLK_ENABLE()
-#define TIM_SZABALYZO_IRQn						TIM6_DAC_IRQn
-
-/* Definition for TIMx Channel Pins
-#define TIMx_CHANNEL_GPIO_PORT()       __HAL_RCC_GPIOB_CLK_ENABLE()
-#define TIMx_GPIO_PORT_CHANNEL1        GPIOB
-#define TIMx_GPIO_PIN_CHANNEL1         GPIO_PIN_8
-#define TIMx_GPIO_AF_CHANNEL1          GPIO_AF3_TIM10
-*/
 
 void Szabalyzo_TIM_Init()
 {
@@ -58,8 +46,8 @@ void Szabalyzo_TIM_Init()
 	  */
 	TimHandle_Szabalyzo.Instance = TIM_SZABALYZO;
 
-	TimHandle_Szabalyzo.Init.Prescaler         = PRESCALER;
-	TimHandle_Szabalyzo.Init.Period            = PERIOD;
+	TimHandle_Szabalyzo.Init.Prescaler         = PRESCALER_SZABALYZO;
+	TimHandle_Szabalyzo.Init.Period            = PERIOD_SZABALYZO;
 	TimHandle_Szabalyzo.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
 	TimHandle_Szabalyzo.Init.CounterMode       = TIM_COUNTERMODE_UP;
 	  if (HAL_TIM_Base_Init(&TimHandle_Szabalyzo) != HAL_OK)

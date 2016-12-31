@@ -9,8 +9,6 @@
 #define SPEEDCONTROL_H_
 
 #include "Nucleo.h"
-#include "Leds.h"
-#include "Motor.h"
 #include "Timers.h"
 
 /* Változók */
@@ -30,6 +28,7 @@ extern uint8_t CornerSpeed;
 void Do_SpeedControl_FixSpeed();
 void Accelerate(uint8_t MaxSpeed);
 void Brake(uint8_t MinSpeed);
+void SetSpeed(int8_t Speed);	//Motor.c
 
 
 #endif /* SPEEDCONTROL_H_ */

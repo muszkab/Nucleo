@@ -35,7 +35,6 @@ void HAL_MspInit()
 {
 	BSP_LED_Init(LED2);
 	BSP_PB_Init(BUTTON_KEY,BUTTON_MODE_EXTI);
-	//ADC1_Init();	//??? folyamatos megszakítás? nem fut tovább
 }
 
 /** System Clock Configuration

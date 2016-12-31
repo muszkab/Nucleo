@@ -10,23 +10,15 @@
 
 #include "stm32f4xx.h"
 #include "stm32f4xx_nucleo.h"
+#include "Leds.h"
 
 /*Global variables*/
-
 typedef enum{
 	NoLine = 0,
 	OneLine = 1,
 	TwoLine = 2,
 	ThreeLine =3
 }lineType;
-
-typedef enum
-{
-  Blue = 0,
-  Red = 1,
-  Yellow = 2,
-  Green = 3
-}ledType;
 
 typedef enum{
 	Stop,
@@ -39,6 +31,5 @@ typedef enum{
 void Error_Handler(void);
 void Error_SendUart(char* string);
 void ProcessMessage(char* message);
-void UART1_SendStringBlocking(char* string);
 
 #endif /* NUCLEO_H_ */

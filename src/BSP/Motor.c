@@ -18,23 +18,6 @@
 										 * 500/2: center aligned pwm miatt máshogy van a PERIOD érték*/
 #define DUTY_1percent	(PERIOD+1)/100	/* 1%-os kitöltési tényezõ */
 
-
-/* TIM3_CH2:	PA7
- * TIM3_CH1:	PC6
- * PWM freq:	20kHz */
-/* Definition for TIMx clock resources */
-#define TIM_MOTOR                           TIM3
-#define TIM_MOTOR_CLK_ENABLE()              __HAL_RCC_TIM3_CLK_ENABLE()
-
-/* Definition for TIMx Channel Pins  */
-#define TIM_MOTOR_CHANNEL1_GPIO_PORT()       __HAL_RCC_GPIOA_CLK_ENABLE()
-#define TIM_MOTOR_CHANNEL2_GPIO_PORT()       __HAL_RCC_GPIOC_CLK_ENABLE()
-#define TIM_MOTOR_GPIO_PORT_CHANNEL1        GPIOA
-#define TIM_MOTOR_GPIO_PORT_CHANNEL2        GPIOC
-#define TIM_MOTOR_GPIO_PIN_CHANNEL1         GPIO_PIN_7
-#define TIM_MOTOR_GPIO_PIN_CHANNEL2         GPIO_PIN_6
-#define TIM_MOTOR_GPIO_AF					GPIO_AF2_TIM3
-
 /* Private variables ---------------------------------------------------------*/
 /* Timer handler declaration */
 TIM_HandleTypeDef    TimHandle_Motor;
@@ -150,40 +133,6 @@ void SetSpeed(int8_t Speed)
 
 		TimHandle_Motor.Instance->CCR1=(50-Speed)*DUTY_1percent;
 		TimHandle_Motor.Instance->CCR2=(50+Speed)*DUTY_1percent;
-		/*
-			  // Set the pulse value for channel 1
-			  sPWMConfig.Pulse = (50-Speed)*DUTY_1percent;
-			  if(HAL_TIM_PWM_ConfigChannel(&TimHandle_Motor, &sPWMConfig, TIM_CHANNEL_1) != HAL_OK)
-			  {
-				// Configuration Error
-				Error_Handler();
-			  }
-
-			  // Set the pulse value for channel 2
-			  sPWMConfig.Pulse = (50+Speed)*DUTY_1percent; //
-			  if(HAL_TIM_PWM_ConfigChannel(&TimHandle_Motor, &sPWMConfig, TIM_CHANNEL_2) != HAL_OK)
-			  {
-				// Configuration Error
-				Error_Handler();
-			  }
-
-
-			  //##-3- Start PWM signals generation #######################################
-			  // Start channel 1
-			  if(HAL_TIM_PWM_Start(&TimHandle_Motor, TIM_CHANNEL_1) != HAL_OK)
-			  {
-				// Starting Error
-				Error_Handler();
-			  }
-
-			  // Start channel 2
-			  if(HAL_TIM_PWM_Start(&TimHandle_Motor, TIM_CHANNEL_2) != HAL_OK)
-			  {
-				// Starting Error
-				Error_Handler();
-			  }
-		*/
-
 	}
 }
 

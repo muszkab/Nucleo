@@ -43,13 +43,13 @@ int main(void)
 	if(CAN_ReceiveIT() != HAL_OK)
 		Error_Handler();
 
-
 	/*UART */
 	UART_RecvStringNonBlocking(&UartHandle_Cable);
 
+
 	//teszt: IMU
 	static uint8_t who=3;
-	static SensorAxes_t SensorAxes;
+	//static SensorAxes_t SensorAxes;
 
 	GYRO_Driver->Get_WhoAmI(&GYRO_SensorHandle, &who);
 
@@ -78,24 +78,12 @@ int main(void)
 		//Sebesség: távirányító
 		//SetSpeed_RemoteControl();
 
-		//teszt: UART és RobotDiagnostic
-	/*	static int temp=0;
-		UART_SendNumberBlocking(temp++, &UartHandle_Bluetooth);
-	*/
-
 		//teszt: IMU
 	/*	GYRO_Driver->Get_Axes(&GYRO_SensorHandle, &SensorAxes);
 		//LSM6DS3_G_Drv.Get_Axes_Status
 		UART_SendNumberBlocking(SensorAxes.AXIS_X, &UartHandle_Cable);
 		UART_SendStringBlocking("\n\r", &UartHandle_Cable);
 		HAL_Delay(100);
-	*/
-
-	/*	//teszt: új szervo kipróbálásra
-		SetServoPWMPulse(100);
-		HAL_Delay(500);
-		SetServoPWMPulse(-100);
-		HAL_Delay(500);
 	*/
 	}//for
 }//main

@@ -78,17 +78,6 @@ void UART_Cable_Init()
 	    /* Initialization Error */
 	    Error_Handler();
 	  }
-
-	  //TODO ?
-	  /*
-	   *  UartHandle.pRxBuffPtr = ( uint8_t * )UART_RxBuffer;
-  	  	  UartHandle.RxXferSize = UART_BufferSize;
-  	  	  UartHandle.ErrorCode  = HAL_UART_ERROR_NONE;
-	   */
-
-
-	  /* Output a message on Hyperterminal using printf function */
-	  //printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
 }
 
 void UART_Bluetooth_Init()
@@ -146,9 +135,6 @@ void UART_Bluetooth_Init()
 	    /* Initialization Error */
 	    Error_Handler();
 	  }
-
-	  /* Output a message on Hyperterminal using printf function */
-	  //printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){

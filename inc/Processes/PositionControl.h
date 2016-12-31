@@ -24,7 +24,7 @@ extern uint16_t TimePositionControl;
 extern speedState StateQ1;
 
 /* Függvények */
-void SetServoPWMPulse(const int8_t ServoPos);
+void SetServoPWMPulse(const int8_t ServoPos);	//Servo.c
 void Do_PositionControl();
 
 #endif /* POSITIONCONTROL_H_ */

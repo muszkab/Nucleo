@@ -7,17 +7,6 @@
 
 #include "Encoder.h"
 
-/* Definition for TIM_ENC clock resources */
-#define TIM_ENC                           TIM2
-#define TIM_ENC_CLK_ENABLE()              __HAL_RCC_TIM2_CLK_ENABLE()
-
-/* Definition for TIM_ENC Channel Pins */
-#define TIM_ENC_CHANNEL_GPIO_PORT()       __HAL_RCC_GPIOA_CLK_ENABLE()
-#define TIM_ENC_GPIO_PORT			       GPIOA
-#define TIM_ENC_GPIO_PIN_CHANNEL1         GPIO_PIN_0
-#define TIM_ENC_GPIO_PIN_CHANNEL2         GPIO_PIN_1
-#define TIM_ENC_GPIO_ALTERNATE_FUNCTION   GPIO_AF1_TIM2
-
 /* Ha a félperiódus hossza túl nagy, van egy felsõ limit. Ez a sebességérték érték, ha áll az autó */
 #define MAX_HALFPERIOD		(uint16_t)5000
 

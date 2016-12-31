@@ -7,26 +7,16 @@
 
 #include "Servo.h"
 
-/* Definition for TIMx clock resources */
-#define TIMx                           TIM10
-#define TIMx_CLK_ENABLE()              __HAL_RCC_TIM10_CLK_ENABLE()
-
-/* Definition for TIMx Channel Pins */
-#define TIMx_CHANNEL_GPIO_PORT()       __HAL_RCC_GPIOB_CLK_ENABLE()
-#define TIMx_GPIO_PORT_CHANNEL1        GPIOB
-#define TIMx_GPIO_PIN_CHANNEL1         GPIO_PIN_8
-#define TIMx_GPIO_AF_CHANNEL1          GPIO_AF3_TIM10
-
-/* TIM10 channel1 - PC8 - PWM */
-#define MAX_CLOCK		180				/* TIM10 max clock: 180MHz */
-#define PRESCALER		(MAX_CLOCK-1)	/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM10_freq=180MHZ/180 =1MHz
-#define PERIOD			(20000-1)		/* PWM_frequency=TIM_freq/(Period+1)=1MHZ/20000=10^6HZ/20000 =50HZ */
-
 //100% - 20ms (f=50Hz, T=20ms)
 #define	PULSE_UNIT		(PERIOD+1)/200		//0.1ms
 #define PULSE_MIN		1250//1260				//1.24ms left
 #define PULSE_MAX		1690//1680				//1.68ms right
 #define PULSE_CENTER	1460				//1.46ms
+
+/* TIM10 channel1 - PC8 - PWM */
+#define MAX_CLOCK		180				/* TIM10 max clock: 180MHz */
+#define PRESCALER		(MAX_CLOCK-1)	/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM10_freq=180MHZ/180 =1MHz
+#define PERIOD			(20000-1)		/* PWM_frequency=TIM_freq/(Period+1)=1MHZ/20000=10^6HZ/20000 =50HZ */
 
 /* Private variables ---------------------------------------------------------*/
 /* Timer handler declaration */

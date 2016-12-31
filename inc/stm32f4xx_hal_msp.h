@@ -10,7 +10,6 @@
 
 #include "stm32f4xx.h"
 #include "stm32f4xx_nucleo.h"
-#include "ADC.h"
 #include "UART.h"
 #include "CAN.h"
 #include "Servo.h"

@@ -17,7 +17,6 @@
 #include "stm32f4xx_it.h"
 #include "stm32f4xx_hal_msp.h"
 
-#include "Encoder.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -51,7 +50,7 @@ void SysTick_Handler(void)
   */
 void ADC_IRQHandler(void)
 {
-  HAL_ADC_IRQHandler(&AdcHandle);
+  //HAL_ADC_IRQHandler(&AdcHandle);
 }
 
 void EXTI15_10_IRQHandler(void)

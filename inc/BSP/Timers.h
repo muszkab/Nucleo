@@ -10,7 +10,12 @@
 
 #include "Nucleo.h"
 
-#define TIM_SZABALYZO_IRQHandler		TIM6_DAC_IRQHandler
+/* Definition for TIMx clock resources */
+#define TIM_SZABALYZO                           TIM6
+#define TIM_SZABALYZO_CLK_ENABLE()              __HAL_RCC_TIM6_CLK_ENABLE()
+#define TIM_SZABALYZO_IRQn						TIM6_DAC_IRQn
+
+#define TIM_SZABALYZO_IRQHandler				TIM6_DAC_IRQHandler
 
 /* Változók */
 extern uint16_t TimePositionControl;		//vonalszabályozás segédszámláló
@@ -22,6 +27,7 @@ extern uint16_t TimeBrake;					//lassításhoz segédszámláló
 
 extern uint32_t Szabcount;			//szabályzó segédszámláló
 extern uint16_t countHalfPeriod;	//félperiódus idõ mérés az enkódernél
+
 extern TIM_HandleTypeDef TimHandle_Szabalyzo;
 
 /* Függvények */
