@@ -9,6 +9,7 @@
 #define LINETYPE_H_
 
 #include "Nucleo.h"
+#include "Processes.h"
 
 /* Változók */
 //elsõ byte a vonalpozíció (int8_t), a második a vonalak darabszáma(0,1,2,3)

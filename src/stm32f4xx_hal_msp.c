@@ -24,7 +24,7 @@ void Periph_Init(){
 	//Buttons_Init(BUTTON_MODE_EXTI); TODO forrasztás után mehet az init
 	UART_Cable_Init();
 	UART_Bluetooth_Init();
-	UART_Radio_Init();
+	//UART_Radio_Init();	//rádiós modul 1.83V feszültséget ad az 5V-os körre, ha az 5V nincs is bekapcsolva, csak a Nucleo
 	CAN_Init();
 	Servo_TIM10_PWM_Init();
 	Servo_Sharp_TIM4_PWM_Init();

@@ -10,21 +10,6 @@
 #define PRESCALER	(180-1)
 #define PERIOD		0xFFFF
 
-/* Definition for TIMx clock resources */
-#define TIM_REMOTE                           TIM1
-#define TIM_REMOTE_CLK_ENABLE()              __HAL_RCC_TIM1_CLK_ENABLE()
-
-/* Definition for TIMx Pins */
-#define TIM_REMOTE_CHANNEL_GPIO_PORT()      __HAL_RCC_GPIOA_CLK_ENABLE()
-#define TIM_REMOTE_GPIO_PORT                GPIOA
-#define TIM_REMOTE_GPIO_PIN              	GPIO_PIN_9
-#define TIM_REMOTE_GPIO_AF                 	GPIO_AF1_TIM1
-
-/* Definition for TIMx's NVIC */
-#define TIM_REMOTE_CC_IRQn                   TIM1_CC_IRQn
-
-#define TIM_REMOTE_IRQHandler                TIM1_CC_IRQHandler
-
 /* Timer handler declaration */
 TIM_HandleTypeDef    TimHandle_Remote;
 
@@ -190,16 +175,14 @@ void SetSpeed_RemoteControl()
 	}
 }
 
-/**
-  * @brief  Input Capture callback in non blocking mode
-  * @param  htim : TIM IC handle
-  * @retval None
-  */
-//TODO:timers.c-be átrakni!
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+void Is_StopCommand()
 {
-  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2 && htim->Instance == TIM_REMOTE)
-  {
+	if(uwDutyCycle<70)
+		StateQ1 = Stop;
+}
+
+void RemoteController_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
     /* Get the Input Capture value */
     uwIC2Value = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
 
@@ -217,5 +200,18 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
       uwDutyCycle = 0;
       uwFrequency = 0;
     }
+}
+
+/**
+  * @brief  Input Capture callback in non blocking mode
+  * @param  htim : TIM IC handle
+  * @retval None
+  */
+//TODO:timers.c-be átrakni! vagy talán jó itt?
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2 && htim->Instance == TIM_REMOTE)
+  {
+	  RemoteController_TIM_IC_CaptureCallback(htim);
   }
 }

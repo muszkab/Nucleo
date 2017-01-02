@@ -10,9 +10,7 @@
 #define UART_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal_msp.h"
 #include "Nucleo.h"
-#include "stdio.h"
 
 /**********************************************/
 /*************** CABLE - USART2 ***************/
@@ -111,5 +109,14 @@ HAL_StatusTypeDef UART_NewLine();
 void UART_SendString(const char* string);
 void UART_SendInt(const int number);
 */
+
+/* Private function prototypes -----------------------------------------------*/
+#ifdef __GNUC__
+  /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
+     set to 'Yes') calls __io_putchar() */
+  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#else
+  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
 
 #endif /* UART_H_ */

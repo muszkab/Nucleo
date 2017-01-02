@@ -9,6 +9,7 @@
 #define SPEEDCONTROL_H_
 
 #include "Nucleo.h"
+#include "Processes.h"
 #include "Timers.h"
 
 /* Változók */

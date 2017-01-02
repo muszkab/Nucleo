@@ -114,9 +114,10 @@ void Motor_PWM_Init()
 	  }
 }
 
-/* -40 és 40 közötti értéket vár */
+/* -45 és 45 közötti értéket vár */
 void SetSpeed(int8_t Speed)
-{   //TODO zavaró lehet 2 limit a sebességnek, elég lenne csak egy
+{
+	//hibás bemeneti paraméter ellen, hibás mûködés esetén a motor megáll
 	if(Speed<-45 || Speed>45)
 	{
 		MotorStop();
@@ -136,8 +137,7 @@ void SetSpeed(int8_t Speed)
 	}
 }
 
-//TODO alsó fetek vezetnek ilyenkor
-/* Motor szabadon fut, minden FET zárva */
+/* Motor megáll, felsõ FETek nem vezetnek, alsó FETek vezetnek */
 void MotorStop()
 {
 	HAL_TIM_PWM_Stop(&TimHandle_Motor, TIM_CHANNEL_1);

@@ -9,6 +9,7 @@
 #define POSITIONCONTROL_H_
 
 #include "Nucleo.h"
+#include "Processes.h"
 #include "SpeedControl.h"
 
 /* Változók */

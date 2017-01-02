@@ -31,7 +31,7 @@ int main(void)
 	HAL_Init();
 
 	/* Set NVIC Group Priority to 3 */
-	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_3);
+	//HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_3);
 
 	/* Configure the system clock to 180 MHz */
 	SystemClock_Config();
@@ -87,6 +87,7 @@ int main(void)
 		Do_SpeedControl_FixSpeed();
 
 		//vészleállítás távirányítóval
+		Is_StopCommand();
 		if(uwDutyCycle<70)
 			StateQ1 = Stop;
 

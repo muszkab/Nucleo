@@ -52,10 +52,10 @@ void Buttons_Init(ButtonMode_TypeDef ButtonMode){
 		HAL_GPIO_Init(USER_BUTTON1_GPIO_PORT, &GPIO_InitStruct);
 
 		/* Enable and set Button EXTI Interrupt to the lowest priority */
-		HAL_NVIC_SetPriority(USER_BUTTON0_EXTI_IRQn, 15, 0);
+		HAL_NVIC_SetPriority(USER_BUTTON0_EXTI_IRQn, 1, 0);
 		HAL_NVIC_EnableIRQ(USER_BUTTON0_EXTI_IRQn);
 
-		HAL_NVIC_SetPriority(USER_BUTTON1_EXTI_IRQn, 15, 0);
+		HAL_NVIC_SetPriority(USER_BUTTON1_EXTI_IRQn, 1, 0);
 		HAL_NVIC_EnableIRQ(USER_BUTTON1_EXTI_IRQn);
 	}
 }

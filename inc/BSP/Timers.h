@@ -25,9 +25,6 @@ extern uint16_t TimeSpeedState;				//sebesség állapot(StateQ1) ne változzon x má
 extern uint16_t TimeAccelerate;				//gyorsításhoz segédszámláló
 extern uint16_t TimeBrake;					//lassításhoz segédszámláló
 
-extern uint32_t Szabcount;			//szabályzó segédszámláló
-extern uint16_t countHalfPeriod;	//félperiódus idõ mérés az enkódernél
-
 extern TIM_HandleTypeDef TimHandle_Szabalyzo;
 
 /* Függvények */
