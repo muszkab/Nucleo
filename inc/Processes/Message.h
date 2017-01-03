@@ -45,6 +45,7 @@ void Do_Send_ValueMessageArray();
 void SetValue_AtMessageArray(VariableName varname, const float data);
 void Message_Init();
 void SendDebugMessage_Raw(const char* string, const float data);
+void SendDebugMessage_Text(const char* string);
 void SendDebugMessage_Each(Messagetype* message);
 void SendDebugMessage_Array(Messagetype* message, uint8_t arraysize);
 

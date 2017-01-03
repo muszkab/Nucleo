@@ -82,6 +82,11 @@ void SendDebugMessage_Raw(const char* string, const float data)
 	printf("#%s:%3.3f;\n\r", string, data);
 }
 
+void SendDebugMessage_Text(const char* string)
+{
+	printf("#Text:%s;\n\r", string);
+}
+
 void SendDebugMessage_Each(Messagetype* message)
 {
 	SendDebugMessage_Raw(message->Name, message->Data);

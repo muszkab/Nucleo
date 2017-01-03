@@ -73,6 +73,9 @@ int main(void)
 	messageGraph[0].Name="Graph:Linepos";
 	messageGraph[0].Data=1;
 
+	SendDebugMessage_Raw("Text:Orsi",0);
+	SendDebugMessage_Text("Itt lehet szoveget kuldeni.");
+
 	for(;;)
 	{
 		//HAL_Delay(10);
@@ -115,6 +118,8 @@ int main(void)
 		SendDebugMessage_Array(messageGraph, 1);
 		if(messageGraph[0].Data>-50)
 			messageGraph[0].Data--;
+
+		//SendDebugMessage_Raw("Text:Kiraly",0);
 
 		HAL_Delay(200);
 
