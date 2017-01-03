@@ -52,5 +52,9 @@ void Do_PositionControl()
 
 		//szervo állítása
 		SetServoPWMPulse((int8_t)ServoPosition);
+
+		//változó érték beállítás az üzenettömbben(Debugszoftver)
+		//TODO: máshol kéne meghívni?
+		SetValue_AtMessageArray(var_LinePos, (float)LinePosition[0]);
 	}
 }

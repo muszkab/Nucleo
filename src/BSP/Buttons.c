@@ -11,6 +11,15 @@
 		– SB16 and SB50 (MCO) OFF
 		– R35 and R37 removed*/
 
+/*User Button*/
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == USER_BUTTON_PIN)
+	{
+		StateQ1 = CornerOut;
+	}
+}
+
 GPIO_TypeDef* BUTTONs_PORT[2] = {USER_BUTTON0_GPIO_PORT, USER_BUTTON1_GPIO_PORT};
 const uint16_t BUTTONs_PIN[2] = {USER_BUTTON0_PIN, USER_BUTTON1_PIN};
 

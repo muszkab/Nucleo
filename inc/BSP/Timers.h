@@ -24,6 +24,7 @@ extern uint16_t TimeLineType;				//vonaltípus meghatározás segédszámláló
 extern uint16_t TimeSpeedState;				//sebesség állapot(StateQ1) ne változzon x másodpercig segédszámláló
 extern uint16_t TimeAccelerate;				//gyorsításhoz segédszámláló
 extern uint16_t TimeBrake;					//lassításhoz segédszámláló
+extern uint16_t TimeSendMessage;			//üzenetküldéshez(bluetooth) segédszámláló
 
 extern TIM_HandleTypeDef TimHandle_Szabalyzo;
 

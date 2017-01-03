@@ -78,21 +78,26 @@ int main(void)
 		//HAL_Delay(10);
 
 		//Vonalkövetés: PD szabályzó
-		//Do_PositionControl();
+		Do_PositionControl();
 
-		//teszt: vonaltípus
-		GetLineType();
+		//Vonaltípus meghatározás
+		Do_GetLineType();
 
-		//teszt: sebesség állítás vonaltípus alapján
+		//Sebesség: fix érték vonaltípus alapján, Q1
 		Do_SpeedControl_FixSpeed();
-
-		//vészleállítás távirányítóval
-		Is_StopCommand();
-		if(uwDutyCycle<70)
-			StateQ1 = Stop;
 
 		//Sebesség: távirányító
 		//SetSpeed_RemoteControl();
+
+		//Üzenetküldés Bluetooth-on
+		Do_Send_ValueMessageArray();
+
+		//vészleállítás távirányítóval
+		Is_StopCommand();
+
+		if(uwDutyCycle<70)
+			StateQ1 = Stop;
+
 
 		//teszt: IMU
 	/*	GYRO_Driver->Get_Axes(&GYRO_SensorHandle, &SensorAxes);
@@ -112,6 +117,7 @@ int main(void)
 			messageGraph[0].Data--;
 
 		HAL_Delay(200);
+
 
 	}//for
 }//main

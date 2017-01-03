@@ -26,7 +26,7 @@ extern lineType LineNumber;
 extern speedState StateQ1;
 
 /* Függvények */
-void GetLineType();
+void Do_GetLineType();
 void SetSpeedState();
 uint8_t IsElementsEqual(lineType* Array);
 

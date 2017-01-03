@@ -16,6 +16,7 @@
 #define ContinousMinTime_folyt	6/T_GETLINE	//ContinousMinTime*1ms
 #define ContinousMinTime_szagg	10/T_GETLINE
 #define CornerSpeedHigh_Time	1000/T_GETLINE	//1 másodperc
+
 //vonaldarabszám szûréshez használt tömb mérete
 #define ARRAYSIZE	3
 //vonaldarabszám szûrésnél, mennyi érték lehet különbözõ a tömbben, amikor még egyértelmûnek mondjuk a tömböt
@@ -36,9 +37,9 @@ uint32_t ThreeLineTime = 0;
  * számolja az idõt, amíg folyamatosan egy vagy három vonal van: OneLineTime, ThreeLineTime
  * állítja a State változót: SetSpeedState();
  */
-void GetLineType()
+void Do_GetLineType()
 {
-	//T_GETLINE ciklusidõ (T_GETLINE*0.1ms) biztosítása. Szabcount: 0.1ms periódus
+	//T_GETLINE ciklusidõ (T_GETLINE*0.1ms) biztosítása.
 	if(TimeLineType > T_GETLINE)
 	{
 		//számláló nullázás a ciklus újrakezdéséhez
@@ -74,6 +75,10 @@ void GetLineType()
 			Led_On(Blue);
 		else
 			Led_Off(Blue);
+
+		//változó érték beállítás az üzenettömbben(Debugszoftver)
+		//TODO: máshol kéne meghívni?
+		SetValue_AtMessageArray(var_LineNumber, (float)LineNumber);
 	}
 }
 

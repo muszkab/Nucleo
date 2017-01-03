@@ -8,6 +8,8 @@
 #ifndef PROCESSES_PROCESSES_H_
 #define PROCESSES_PROCESSES_H_
 
+#include "Message.h"
+
 /*Global types*/
 typedef enum{
 	NoLine = 0,

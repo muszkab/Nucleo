@@ -7,15 +7,6 @@
 
 #include "stm32f4xx_hal_msp.h"
 
-/*User Button*/
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	if(GPIO_Pin == USER_BUTTON_PIN)
-	{
-		StateQ1 = CornerOut;
-	}
-}
-
 /*Perifériák inicializálása */
 void Periph_Init(){
 	Leds_Init();
@@ -33,6 +24,7 @@ void Periph_Init(){
 	RemoteController_Timer_Init();
 	Szabalyzo_TIM_Init();
 	IMU_Init();
+	Message_Init();
 }
 
 void HAL_MspInit()

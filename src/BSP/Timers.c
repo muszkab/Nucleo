@@ -19,6 +19,7 @@ uint16_t TimeLineType=0;
 uint16_t TimeSpeedState=0;
 uint16_t TimeAccelerate=0;
 uint16_t TimeBrake=0;
+uint16_t TimeSendMessage=0;
 
 /* Timer handler declaration */
 TIM_HandleTypeDef    TimHandle_Szabalyzo;
@@ -76,5 +77,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		TimeSpeedState++;
 		TimeAccelerate++;
 		TimeBrake++;
+		TimeSendMessage++;
 	}
 }
