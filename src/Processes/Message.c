@@ -24,6 +24,16 @@ void Do_Send_ValueMessageArray()
 	if(TimeSendMessage > T_SENDMESSAGE)
 	{
 		TimeSendMessage = 0;
+
+		//amelyik változó gyakran változik(pl. LinePos), azt itt állítjuk, amelyik ritkán, azt helyben, hogyha változott
+		SetValue_AtMessageArray(var_LineNumber, (float)LineNumber);
+		SetValue_AtMessageArray(var_LinePos, (float)LinePosition[0]);
+		//SetValue_AtMessageArray(var_State, (float) StateQ1);
+		//SetValue_AtMessageArray(var_Speed_Corner, (float) StateQ1);
+		//SetValue_AtMessageArray(var_Speed_Straight, (float) StateQ1);
+		//SetValue_AtMessageArray(var_P_Corner, (float) StateQ1);
+		//SetValue_AtMessageArray(var_P_Straight, (float) StateQ1);
+
 		for(int i=0;i<MESSAGEARRAY_SIZE;i++)
 		{
 			if(Value_MessageArray[i].Status == NewValue)

@@ -8,7 +8,8 @@
 #ifndef PROCESSES_PROCESSES_H_
 #define PROCESSES_PROCESSES_H_
 
-#include "Message.h"
+#include "Nucleo.h"
+//#include "Message.h"
 
 /*Global types*/
 typedef enum{
@@ -28,5 +29,9 @@ typedef enum{
 /*Global variables*/
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;
+//adott pillanatban hány darab vonalat állítunk
+extern lineType LineNumber;
+//vonalpozíció hibajel, mostani[0] és elõzõ[1] érték
+extern int8_t LinePosition[];
 
 #endif /* PROCESSES_PROCESSES_H_ */

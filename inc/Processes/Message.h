@@ -8,7 +8,8 @@
 #ifndef MESSAGE_H_
 #define MESSAGE_H_
 
-#include "UART.h"
+#include "Processes.h"
+//#include "UART.h"
 
 //jelzi, hogy válozott-e a változó értéke a programban az elõzõ kiküldése óta
 typedef enum{

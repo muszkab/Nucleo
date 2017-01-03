@@ -132,6 +132,7 @@ void UART_Bluetooth_Init(){
 /**
   * @brief UART Radio UART5 Initialization
   */
+//TODO: 1.8V a szabadon hagyott 5V-os tápon. Ok? Ha nincs UART_Radio_Init(), nincs ez a jelenség
 void UART_Radio_Init(){
 	GPIO_InitTypeDef  GPIO_InitStruct;
 

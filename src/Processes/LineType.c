@@ -78,7 +78,7 @@ void Do_GetLineType()
 
 		//változó érték beállítás az üzenettömbben(Debugszoftver)
 		//TODO: máshol kéne meghívni?
-		SetValue_AtMessageArray(var_LineNumber, (float)LineNumber);
+		//SetValue_AtMessageArray(var_LineNumber, (float)LineNumber);
 	}
 }
 

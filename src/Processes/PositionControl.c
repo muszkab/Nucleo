@@ -55,6 +55,6 @@ void Do_PositionControl()
 
 		//változó érték beállítás az üzenettömbben(Debugszoftver)
 		//TODO: máshol kéne meghívni?
-		SetValue_AtMessageArray(var_LinePos, (float)LinePosition[0]);
+		//SetValue_AtMessageArray(var_LinePos, (float)LinePosition[0]);
 	}
 }
