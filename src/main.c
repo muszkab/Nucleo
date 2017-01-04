@@ -73,7 +73,8 @@ int main(void)
 	messageGraph[0].Name="Graph:Linepos";
 	messageGraph[0].Data=1;
 
-	SendDebugMessage_Raw("Text:Orsi",0);
+	//elsõ üzenet nem látszódik a \r miatt, ezért van egy üres üzenet legelõször
+	SendDebugMessage_Raw("A",0);
 	SendDebugMessage_Text("Itt lehet szoveget kuldeni.");
 
 	for(;;)
@@ -119,10 +120,10 @@ int main(void)
 		if(messageGraph[0].Data>-50)
 			messageGraph[0].Data--;
 
-		//SendDebugMessage_Raw("Text:Kiraly",0);
-
 		HAL_Delay(200);
 
-
+		//teszt: gombok
+		if(Button_GetState(USER_BUTTON0_PIN) == 0)
+			BSP_LED_Toggle(LED2);
 	}//for
 }//main

@@ -12,7 +12,7 @@ void Periph_Init(){
 	Leds_Init();
 	Encoder_Init();
 	//ADC1_Init(); TODO startot el kell dönteni milyen legyen. timer trigger?
-	//Buttons_Init(BUTTON_MODE_EXTI); TODO forrasztás után mehet az init
+	Buttons_Init(BUTTON_MODE_EXTI);
 	UART_Cable_Init();
 	UART_Bluetooth_Init();
 	//UART_Radio_Init();	//rádiós modul 1.83V feszültséget ad az 5V-os körre, ha az 5V nincs is bekapcsolva, csak a Nucleo

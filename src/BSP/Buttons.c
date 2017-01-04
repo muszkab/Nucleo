@@ -16,7 +16,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if(GPIO_Pin == USER_BUTTON_PIN)
 	{
-		StateQ1 = CornerOut;
+		BSP_LED_Toggle(LED2);
+	}
+	if(GPIO_Pin == USER_BUTTON0_PIN)
+	{
+		BSP_LED_Toggle(LED2);
+	}
+
+	if(GPIO_Pin == USER_BUTTON1_PIN)
+	{
+		BSP_LED_Toggle(LED2);
 	}
 }
 
