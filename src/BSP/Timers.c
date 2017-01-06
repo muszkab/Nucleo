@@ -20,6 +20,7 @@ uint16_t TimeSpeedState=0;
 uint16_t TimeAccelerate=0;
 uint16_t TimeBrake=0;
 uint16_t TimeSendMessage=0;
+uint16_t TimeMotorControl=0;
 
 /* Timer handler declaration */
 TIM_HandleTypeDef    TimHandle_Szabalyzo;
@@ -78,5 +79,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		TimeAccelerate++;
 		TimeBrake++;
 		TimeSendMessage++;
+		TimeMotorControl++;
+	}
+	else if(htim->Instance == ENC_CALLBACK_TIM){
+		Encoder_Callback_Timer();
 	}
 }

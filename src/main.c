@@ -15,6 +15,9 @@
 
 //távirányító tüskéinek szûrése
 int16_t temp = 0;
+float distance;
+float v;
+int32_t CNT;
 
 int main(void)
 {
@@ -78,16 +81,24 @@ int main(void)
 
 	for(;;)
 	{
+		if(Button_GetState(BUTTON_USER_0) == 0)
+			LED_Toggle(Green);
+		if(Button_GetState(BUTTON_USER_1) == 0)
+			LED_Toggle(Red);
+		//SetSpeed(10);
+		distance = Encoder_GetDistance();
+		v = Encoder_GetVelocity();
+		CNT = ENC_TIM->CNT;
 		//HAL_Delay(10);
-
+		//MotorControl(3);
 		//Vonalkövetés: PD szabályzó
-		Do_PositionControl();
+		//Do_PositionControl();
 
 		//Vonaltípus meghatározás
-		Do_GetLineType();
+		//Do_GetLineType();
 
 		//Sebesség: fix érték vonaltípus alapján, Q1
-		Do_SpeedControl_FixSpeed();
+		//Do_SpeedControl_FixSpeed();
 
 		//Sebesség: távirányító
 		//SetSpeed_RemoteControl();
@@ -96,10 +107,10 @@ int main(void)
 		Do_Send_ValueMessageArray();
 
 		//vészleállítás távirányítóval
-		Is_StopCommand();
+		//Is_StopCommand();
 
-		if(uwDutyCycle<70)
-			StateQ1 = Stop;
+		//if(uwDutyCycle<70)
+			//StateQ1 = Stop;
 
 
 		//teszt: IMU

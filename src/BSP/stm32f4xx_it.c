@@ -114,6 +114,13 @@ void CAN1_RX0_IRQHandler(void){
 	HAL_CAN_IRQHandler(&CanHandle);
 }
 
+/**
+* @brief This function handles Encoder Callback Timer interrupt request
+*/
+void TIM1_BRK_TIM9_IRQHandler(void){
+	HAL_TIM_IRQHandler(&Encoder_Callback_Handle);
+}
+
 void TIM_REMOTE_IRQHandler(void){
 	HAL_TIM_IRQHandler(&TimHandle_Remote);
 }
@@ -122,6 +129,3 @@ void TIM_SZABALYZO_IRQHandler(void){
 	HAL_TIM_IRQHandler(&TimHandle_Szabalyzo);
 }
 
-void SPI_IMU_IRQHandler(void){
-	HAL_SPI_IRQHandler(&SpiHandle_IMU);
-}
