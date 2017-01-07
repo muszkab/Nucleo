@@ -17,18 +17,44 @@
 #define ContinousMinTime_szagg	10/T_LINETYPE
 #define CornerSpeedHigh_Time	1000/T_LINETYPE	//1 másodperc
 
+//vonalhossz értékek
+#define THREELINEDISTANCE_FOLYT_LIMIT 	10	//?
+#define ONELINEDISTANCE_FOLYT_LIMIT 	10	//?
+#define DISTANCEDIFFERENCE_MAX			10	//?
+
 //vonaldarabszám szûréshez használt tömb mérete
 #define ARRAYSIZE	3
 //vonaldarabszám szûrésnél, mennyi érték lehet különbözõ a tömbben, amikor még egyértelmûnek mondjuk a tömböt
 #define TOLERANCE 	2	//nem használjuk jelenleg
 
+typedef enum{
+	Egyvonal_folyt = 0,
+	Egyvonal_szagg,
+	Ketvonal_folyt,
+	Ketvonal_szagg,
+	Haromvonal_x,
+	Haromvonal_folyt,
+	Haromvonal_szagg
+}State_LineType;
+
 /* Változók */
+//tárolja milyen állapotban vagyunk a vonal alapján(darabszám; folyt-szagg)
+State_LineType StateLineType = Egyvonal_folyt;
 /* Vonalak darabszáma a CAN üzenet alapján, idõben ARRAYSIZE darab egymást követõt tárolunk el */
-lineType LineNumberArray[ARRAYSIZE];
+static lineType LineNumberArray[ARRAYSIZE];
 //adott pillanatban hány darab vonalat állítunk
-lineType LineNumber = NoLine;
+lineType LineNumber = NoLine; //TODO lehetne static?
 //elõzõ pillanatban hány darab vonalat állítottunk
-lineType LineNumberPrev = NoLine;
+static lineType LineNumberPrev = NoLine;
+
+//milyen hosszan tart egy vonaltípus
+static float OneLineDistance=0;
+static float TwoLineDistance=0;
+static float ThreeLineDistance=0;
+//vonaltípusok kezdõpontja az abszolút távolságban
+static float OneLineStartPos=0;
+static float ThreeLineStartPos=0;
+
 
 //TODO: törlés!
 //számolja mennyi ideig van egy darab vonal
@@ -61,17 +87,14 @@ void Do_GetLineType()
 		if(IsElementsEqual(LineNumberArray))
 			LineNumber = LineNumberArray[0];
 
-		//egy vonalból három vonal lett
-		if(LineNumber==ThreeLine && LineNumberPrev==OneLine)
-		{
+		//változó érték beállítás az üzenettömbben(Debugszoftver)
+		//TODO: máshol kéne meghívni?
+		//SetValue_AtMessageArray(var_LineNumber, (float)LineNumber);
 
-		}
 
-		//három vonalból egy vonal lett
-		if(LineNumber==OneLine && LineNumberPrev==ThreeLine)
-		{
 
-		}
+
+
 
 		//törlés
 		if(LineNumber == OneLine)
@@ -95,10 +118,90 @@ void Do_GetLineType()
 			Led_On(Blue);
 		else
 			Led_Off(Blue);
+	}
+}
 
-		//változó érték beállítás az üzenettömbben(Debugszoftver)
-		//TODO: máshol kéne meghívni?
-		//SetValue_AtMessageArray(var_LineNumber, (float)LineNumber);
+//figyeli, hogy régóta egyvonal van-e, és ha igen, Egyvonal_folyt-ba állítja az állapotot
+void Is_EgyVonal()
+{
+	//ha most kezdõdött az egyvonalhossz, ezelõtt más volt, a kezdeti érték
+	if(LineNumberPrev != OneLine && LineNumber == OneLine)
+	{
+		OneLineStartPos = Encoder_GetDistance();
+	}
+	//egyvonal hossza jelenleg
+	if(LineNumber == OneLine)
+	{
+		OneLineDistance = Encoder_GetDistance() - OneLineStartPos;
+	}
+	//hossz ellenõrzés, ha elég nagy, berakjuk egyvonal folytonosba
+	if(OneLineDistance > ONELINEDISTANCE_FOLYT_LIMIT)
+	{
+		StateLineType = Egyvonal_folyt;
+	}
+}
+//figyeli hogy háromvonal van-e, és ha igen, szaggatott vagy folytonos, és beállítja a StateLineType változót ennek megfelelõen
+void Is_HaromVonal()
+{
+	//egy vonalból három vonal lett
+	if(LineNumber==ThreeLine && LineNumberPrev==OneLine)
+	{
+		//ha normal egyvonal állapotban  voltunk
+		if(StateLineType == Egyvonal_folyt)
+		{
+			//abszolút távolság kezdõpontja
+			ThreeLineStartPos = Encoder_GetDistance();
+			//állapotot háromvonalba állítjuk, nem tudjuk folytonos vagy szaggatott
+			StateLineType = Haromvonal_x;
+		}
+		//ha Háromvonal_x állapotban vagyunk, lehet h szaggatott lesz
+		else if(StateLineType == Haromvonal_x)
+		{
+			//egyvonal hosszáért másik fgv felelõs: Is_EgyVonal()
+			//három vonal hossza és egy vonal hossza összehasonlítás, ha közel egyenlõek, szaggatott vonal van
+			float One_Three_DistanceDifference = OneLineDistance - ThreeLineDistance;
+			//ha a különbség a megadott határon belül van, szaggatott vonal van
+			if(One_Three_DistanceDifference < DISTANCEDIFFERENCE_MAX && One_Three_DistanceDifference > -DISTANCEDIFFERENCE_MAX)
+			{
+				StateLineType = Haromvonal_szagg;
+			}
+			//ha nincs határon belül, legyen megint normal állapot
+			else
+			{
+				StateLineType = Egyvonal_folyt;
+			}
+		}
+	}
+
+	//figyeljük milyen hosszan tart a három vonal hossza
+	if(LineNumber == ThreeLine && StateLineType == Haromvonal_x)
+	{
+		ThreeLineDistance = Encoder_GetDistance() - ThreeLineStartPos;
+		//ha elérte a háromvonal a megfelelõ hosszt, folytonosnak mondjuk
+		if(ThreeLineDistance > THREELINEDISTANCE_FOLYT_LIMIT)
+		{
+			//folytonos háromvonal van
+			StateLineType = Haromvonal_folyt;
+		}
+	}
+
+	//három vonalból egy vonal lett
+	if(LineNumber==OneLine && LineNumberPrev==ThreeLine)
+	{
+		//ha folytonos három vonalnak lett vége
+		if(StateLineType == Haromvonal_folyt)
+		{
+			//normál egyvonal állapot
+			StateLineType = Egyvonal_folyt;
+		}
+
+		//ha vélhetõen szaggatott vonal van
+		else if(StateLineType == Haromvonal_x)
+		{
+			//abszolút távolság végpontja - kezdõpontja = relatív távolság
+			ThreeLineDistance = Encoder_GetDistance() - ThreeLineStartPos;
+			//az egyvonal távolságát az Is_EgyVonal() számolja folyamatosan
+		}
 	}
 }
 
