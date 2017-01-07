@@ -117,14 +117,13 @@ HAL_StatusTypeDef CAN_TransmitIT(uint8_t *data, uint8_t length)
 }
 
 /* Üzenetkérés a vonalszenzoroktól */
-HAL_StatusTypeDef CAN_ReceiveIT()
+void CAN_ReceiveIT()
 {
-	  if(HAL_CAN_Receive_IT(&CanHandle, CAN_FIFO0) != HAL_OK)
-	  {
-	    /* Reception Error */
+	if(HAL_CAN_Receive_IT(&CanHandle, CAN_FIFO0) != HAL_OK)
+	{
+		/* Reception Error */
 	    Error_SendUart("CAN illeszto nem jo!");
-	  }
-	  return HAL_OK;
+	}
 }
 
 /* HAL_CAN_Receive_IT hívja meg, ha kész a CAN üzenet fogadás */

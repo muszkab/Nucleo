@@ -40,8 +40,7 @@ int main(void)
 	Periph_Init();
 
 	/* CAN */
-	if(CAN_ReceiveIT() != HAL_OK)
-		Error_Handler();
+	CAN_ReceiveIT();
 
 	/*UART */
 	UART_RecvStringNonBlocking(&UartHandle_Cable);
@@ -99,9 +98,6 @@ int main(void)
 		//vészleállítás távirányítóval
 		Is_StopCommand();
 
-		if(uwDutyCycle<70)
-			StateQ1 = Stop;
-
 
 		//teszt: IMU
 	/*	GYRO_Driver->Get_Axes(&GYRO_SensorHandle, &SensorAxes);
@@ -121,9 +117,5 @@ int main(void)
 			messageGraph[0].Data--;
 
 		HAL_Delay(200);
-
-		//teszt: gombok
-		if(Button_GetState(USER_BUTTON0_PIN) == 0)
-			BSP_LED_Toggle(LED2);
 	}//for
 }//main

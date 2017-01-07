@@ -10,7 +10,14 @@
 
 #include "Nucleo.h"
 
-#define ALL_LED_GPIO_CLK_ENABLE()	__HAL_RCC_GPIOC_CLK_ENABLE()
+/*
+ * Blue		- háromvonal LineType.c
+ * Red		-
+ * Yellow	-
+ * Green	-
+ */
+
+#define ALL_LED_GPIO_CLK_ENABLE()		__HAL_RCC_GPIOC_CLK_ENABLE()
 
 #define RED_LED_PIN						GPIO_PIN_10
 #define RED_LED_PORT					GPIOC

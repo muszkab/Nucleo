@@ -33,6 +33,6 @@ extern uint8_t RearSensor_Data[8];
 /*Functions*/
 void CAN_Init();
 HAL_StatusTypeDef CAN_TransmitIT(uint8_t *data, uint8_t length);
-HAL_StatusTypeDef CAN_ReceiveIT();
+void CAN_ReceiveIT();
 
 #endif /* CAN_H_ */

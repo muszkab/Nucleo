@@ -8,7 +8,6 @@
 #ifndef LINETYPE_H_
 #define LINETYPE_H_
 
-#include "Nucleo.h"
 #include "Processes.h"
 
 /* Változók */
@@ -22,6 +21,8 @@ extern uint16_t TimeLineType;
 extern uint16_t TimeSpeedState;
 //adott pillanatban hány darab vonalat állítunk
 extern lineType LineNumber;
+
+//TODO: törlés!
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;
 

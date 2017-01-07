@@ -8,25 +8,29 @@
 #include "LineType.h"
 
 //vonaltípus meghatározás ciklusideje
-#define T_GETLINE	2		//T*1ms
+#define T_LINETYPE	2		//T*1ms
 
 //hány másodpercig tartson egy állapotot biztosan
 #define SECONDLIMIT	2
 //kanyart jelzõ három folytonos vonal érzékelési ideje
-#define ContinousMinTime_folyt	6/T_GETLINE	//ContinousMinTime*1ms
-#define ContinousMinTime_szagg	10/T_GETLINE
-#define CornerSpeedHigh_Time	1000/T_GETLINE	//1 másodperc
+#define ContinousMinTime_folyt	6/T_LINETYPE	//ContinousMinTime*1ms
+#define ContinousMinTime_szagg	10/T_LINETYPE
+#define CornerSpeedHigh_Time	1000/T_LINETYPE	//1 másodperc
 
 //vonaldarabszám szûréshez használt tömb mérete
 #define ARRAYSIZE	3
 //vonaldarabszám szûrésnél, mennyi érték lehet különbözõ a tömbben, amikor még egyértelmûnek mondjuk a tömböt
-#define TOLERANCE 	2
+#define TOLERANCE 	2	//nem használjuk jelenleg
 
 /* Változók */
 /* Vonalak darabszáma a CAN üzenet alapján, idõben ARRAYSIZE darab egymást követõt tárolunk el */
 lineType LineNumberArray[ARRAYSIZE];
 //adott pillanatban hány darab vonalat állítunk
 lineType LineNumber = NoLine;
+//elõzõ pillanatban hány darab vonalat állítottunk
+lineType LineNumberPrev = NoLine;
+
+//TODO: törlés!
 //számolja mennyi ideig van egy darab vonal
 uint32_t OneLineTime = 0;
 //számolja mennyi ideig van három darab vonal
@@ -34,13 +38,14 @@ uint32_t ThreeLineTime = 0;
 
 /* új érték (FrontSensor_Data[1]) elmentése a tömbbe (LineNumberArray[])
  * idõbeli szûrés a vonaltípusra: IsElementsEqual(LineNumberArray)
+ *
  * számolja az idõt, amíg folyamatosan egy vagy három vonal van: OneLineTime, ThreeLineTime
  * állítja a State változót: SetSpeedState();
  */
 void Do_GetLineType()
 {
 	//T_GETLINE ciklusidõ (T_GETLINE*0.1ms) biztosítása.
-	if(TimeLineType > T_GETLINE)
+	if(TimeLineType > T_LINETYPE)
 	{
 		//számláló nullázás a ciklus újrakezdéséhez
 		TimeLineType=0;
@@ -50,10 +55,25 @@ void Do_GetLineType()
 			LineNumberArray[i+1] = LineNumberArray[i];
 		//új érték
 		LineNumberArray[0] = FrontSensor_Data[1];
+		//elmentjük az elõzõ állapot vonaldarabszámát
+		LineNumberPrev = LineNumber;
 		//ha minden elem egyenlõ a tömbben, ez az érték lesz a vonaldarabszám. Ha nem igaz, marad az elõzõ vonaltípus.
 		if(IsElementsEqual(LineNumberArray))
 			LineNumber = LineNumberArray[0];
 
+		//egy vonalból három vonal lett
+		if(LineNumber==ThreeLine && LineNumberPrev==OneLine)
+		{
+
+		}
+
+		//három vonalból egy vonal lett
+		if(LineNumber==OneLine && LineNumberPrev==ThreeLine)
+		{
+
+		}
+
+		//törlés
 		if(LineNumber == OneLine)
 		{
 			//T_GETLINE*1ms egységekben
@@ -160,7 +180,7 @@ uint8_t IsElementsEqual(lineType* Array)
 		if(Array[i] == Array[i+1])
 			cnt++;
 	}
-	//ha (majdnem?) minden érték egyezett, visszatér igazzal
+	//ha minden érték egyezett, visszatér igazzal
 	if(cnt == (ARRAYSIZE-1))
 		return 1;
 	else
