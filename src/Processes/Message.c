@@ -68,7 +68,6 @@ void Message_Init()
 	Value_MessageArray[var_LinePos].Name		= "Value:LinePos";
 	Value_MessageArray[var_Speed_Corner].Name	= "Value:Speed_Corner";
 	Value_MessageArray[var_Speed_Straight].Name	= "Value:Speed_Straight";
-
 	//status és adat nullázása
 	for(int i =0;i<MESSAGEARRAY_SIZE;i++)
 	{

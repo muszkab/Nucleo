@@ -10,7 +10,6 @@
 /*Perifériák inicializálása */
 void Periph_Init(){
 	Leds_Init();
-	Encoder_Init();
 	//ADC1_Init(); TODO startot el kell dönteni milyen legyen. timer trigger?
 	Buttons_Init(BUTTON_MODE_EXTI);
 	UART_Cable_Init();

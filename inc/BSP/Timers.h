@@ -9,6 +9,7 @@
 #define TIMERS_H_
 
 #include "Nucleo.h"
+#include "Encoder.h"
 
 /* Definition for TIMx clock resources */
 #define TIM_SZABALYZO                           TIM6
@@ -25,7 +26,7 @@ extern uint16_t TimeSpeedState;				//sebesség állapot(StateQ1) ne változzon x má
 extern uint16_t TimeAccelerate;				//gyorsításhoz segédszámláló
 extern uint16_t TimeBrake;					//lassításhoz segédszámláló
 extern uint16_t TimeSendMessage;			//üzenetküldéshez(bluetooth) segédszámláló
-
+extern uint16_t TimeMotorControl;			//Motor speed control
 extern TIM_HandleTypeDef TimHandle_Szabalyzo;
 
 /* Függvények */

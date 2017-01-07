@@ -7,25 +7,19 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "Buttons.h"
-/*TODO  – SB54 and SB55 ON
-		– SB16 and SB50 (MCO) OFF
-		– R35 and R37 removed*/
 
 /*User Button*/
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	if(GPIO_Pin == USER_BUTTON_PIN)
+	/*if(GPIO_Pin == USER_BUTTON_PIN)
 	{
-		BSP_LED_Toggle(LED2);
+		StateQ1 = CornerOut;
+	}*/
+	if(GPIO_Pin == USER_BUTTON0_PIN){
+		LED_Toggle(Yellow);
 	}
-	if(GPIO_Pin == USER_BUTTON0_PIN)
-	{
-		BSP_LED_Toggle(LED2);
-	}
-
-	if(GPIO_Pin == USER_BUTTON1_PIN)
-	{
-		BSP_LED_Toggle(LED2);
+	if(GPIO_Pin == USER_BUTTON1_PIN){
+		LED_Toggle(Blue);
 	}
 }
 
@@ -62,18 +56,19 @@ void Buttons_Init(ButtonMode_TypeDef ButtonMode){
 	if(ButtonMode == BUTTON_MODE_EXTI){
 		/* Configure Buttons pin as input with External interrupt */
 		GPIO_InitStruct.Pin = USER_BUTTON0_PIN;
-		GPIO_InitStruct.Pull = GPIO_PULLUP; //PULLUP kell a 2 gombnak
 		GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+		GPIO_InitStruct.Pull = GPIO_PULLUP; //PULLUP kell a 2 gombnak
+		GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 		HAL_GPIO_Init(USER_BUTTON0_GPIO_PORT, &GPIO_InitStruct);
 
 		GPIO_InitStruct.Pin = USER_BUTTON1_PIN;
 		HAL_GPIO_Init(USER_BUTTON1_GPIO_PORT, &GPIO_InitStruct);
 
 		/* Enable and set Button EXTI Interrupt to the lowest priority */
-		HAL_NVIC_SetPriority(USER_BUTTON0_EXTI_IRQn, 1, 0);
+		HAL_NVIC_SetPriority(USER_BUTTON0_EXTI_IRQn, 3, 0);
 		HAL_NVIC_EnableIRQ(USER_BUTTON0_EXTI_IRQn);
 
-		HAL_NVIC_SetPriority(USER_BUTTON1_EXTI_IRQn, 1, 0);
+		HAL_NVIC_SetPriority(USER_BUTTON1_EXTI_IRQn, 3, 0);
 		HAL_NVIC_EnableIRQ(USER_BUTTON1_EXTI_IRQn);
 	}
 }
