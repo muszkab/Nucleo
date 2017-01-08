@@ -16,7 +16,6 @@
 uint16_t TimePositionControl=0;
 uint16_t TimeSpeedControl=0;
 uint16_t TimeLineType=0;
-uint16_t TimeSpeedState=0;
 uint16_t TimeAccelerate=0;
 uint16_t TimeBrake=0;
 uint16_t TimeSendMessage=0;
@@ -72,10 +71,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	/* TIM6: szabályzó timer, f=1kHZ */
 	if(htim->Instance==TIM_SZABALYZO)
 	{
+		//TODO: tömb
 		TimePositionControl++;
 		TimeSpeedControl++;
 		TimeLineType++;
-		TimeSpeedState++;
 		TimeAccelerate++;
 		TimeBrake++;
 		TimeSendMessage++;

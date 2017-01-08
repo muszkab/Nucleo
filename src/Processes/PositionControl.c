@@ -13,17 +13,24 @@
 #define D			20.0f
 #define T			10		//T*1ms
 
+/* static változók */
+//beavatkozó jel
+static float ServoPosition=0;
+//P értéke attól függõen milyen állapotban vagyunk: kanyarban magassabb, egyenesben kisebb P
+static float P = P_CORNER;
+//hibajel, mostani[0] és elõzõ[1] érték
+static int8_t LinePosition[2];
+
 void Do_PositionControl()
 {
-	if((TimePositionControl > T) && FrontSensor_Data[1]!=0)
+	//ciklusidõ ellenõrzés és ha nincs vonal, nincs szabályzás, tartsa az elõzõ kormányszöget
+	if((TimePositionControl > T) && (Get_LineNumber() != NoLine))
 	{
 		//számláló nullázás a ciklus újrakezdéséhez
 		TimePositionControl=0;
 
-		//P értéke attól függõen milyen állapotban vagyunk: kanyarban magassabb, egyenesben kisebb P
-		static float P = P_CORNER;
 		//ha kanyarsebességet elérte és már csak egy vonal van, legyen nagyobb P
-		if(SpeedNow <= CornerSpeed && LineNumber!=ThreeLine)
+		if((SpeedNow <= CornerSpeed) && (Get_LineNumber() != ThreeLine))
 		{
 			P=P_CORNER;
 			Led_On(Red);
@@ -38,8 +45,6 @@ void Do_PositionControl()
 		//-128..127
 		LinePosition[1]=LinePosition[0]; 				//elõzõ hibajel
 		LinePosition[0]=(int8_t)FrontSensor_Data[0];	//jelenlegi hibajel
-		//beavatkozó jel
-		static float ServoPosition=0;
 
 		//PD szabályzó
 		ServoPosition = -P*LinePosition[0] - D*(LinePosition[0]-LinePosition[1]);
@@ -57,4 +62,11 @@ void Do_PositionControl()
 		//TODO: máshol kéne meghívni?
 		//SetValue_AtMessageArray(var_LinePos, (float)LinePosition[0]);
 	}
+}
+
+/* Get függvények */
+/* ServoPosition: -128..127 */
+int8_t Get_ServoPosition()
+{
+	return (int8_t)ServoPosition;
 }

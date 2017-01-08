@@ -9,7 +9,6 @@
 #define PROCESSES_PROCESSES_H_
 
 #include "Nucleo.h"
-//#include "Message.h"
 
 /*Global types*/
 typedef enum{
@@ -26,12 +25,26 @@ typedef enum{
 	Straight
 }speedState;
 
-/*Global variables*/
+typedef enum{
+	Egyvonal_folyt = 0,
+	Egyvonal_szagg,
+	Ketvonal_x,
+	Ketvonal_folyt,
+	Ketvonal_szagg,
+	Haromvonal_x,
+	Haromvonal_folyt,
+	Haromvonal_szagg
+}State_LineType;
+
+/*Get függvények*/
+/* LineType.h */
+extern lineType Get_LineNumber();
+extern State_LineType Get_StateLineType();
+/* PositionControl.h */
+extern int8_t Get_ServoPosition();
+
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;
-//adott pillanatban hány darab vonalat állítunk
-extern lineType LineNumber;
-//vonalpozíció hibajel, mostani[0] és elõzõ[1] érték
-extern int8_t LinePosition[];
+
 
 #endif /* PROCESSES_PROCESSES_H_ */

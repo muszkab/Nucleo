@@ -84,7 +84,7 @@ int main(void)
 		Do_PositionControl();
 
 		//Vonaltípus meghatározás
-		Do_GetLineType();
+		Do_LineType();
 
 		//Sebesség: fix érték vonaltípus alapján, Q1
 		Do_SpeedControl_FixSpeed();

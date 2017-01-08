@@ -8,24 +8,23 @@
 #ifndef POSITIONCONTROL_H_
 #define POSITIONCONTROL_H_
 
-#include "Nucleo.h"
 #include "Processes.h"
 #include "SpeedControl.h"
 
-/* Változók */
+/* Külsõ változók */
 //elsõ byte a vonalpozíció (int8_t), a második a vonalak darabszáma(0,1,2,3)
-extern uint8_t FrontSensor_Data[8];
-//késõbb
-extern uint8_t RearSensor_Data[8];
-//hibajel, mostani[0] és elõzõ[1] érték
-int8_t LinePosition[2];
+extern uint8_t FrontSensor_Data[8];		//CAN.c
+//állapotvisszacsatolásos szabályzáshoz
+extern uint8_t RearSensor_Data[8];		//CAN.c
 //vonalszabályozás segédszámláló
-extern uint16_t TimePositionControl;
-//állapotváltozó: kanyar vagy egyenes van épp
-extern speedState StateQ1;
+extern uint16_t TimePositionControl;	//Timers.c
 
-/* Függvények */
+/* Külsõ függvények */
 void SetServoPWMPulse(const int8_t ServoPos);	//Servo.c
+
+/* Publikus saját függvények */
 void Do_PositionControl();
+int8_t Get_ServoPosition();
+
 
 #endif /* POSITIONCONTROL_H_ */

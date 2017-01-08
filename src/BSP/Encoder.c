@@ -157,11 +157,19 @@ void Encoder_Timer_Init(){
 }
 
 /**
- * Get the distance
+ * Get the distance in m
  * @return distance
  */
 float Encoder_GetDistance(){
 	return Distance;
+}
+
+/**
+ * Get the distance in cm
+ * @return distance
+ */
+float Encoder_GetDistance_cm(){
+	return 100*Distance;
 }
 
 /**

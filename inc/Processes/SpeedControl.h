@@ -13,8 +13,6 @@
 #include "Timers.h"
 
 /* Változók */
-//adott pillanatban hány darab vonalat állítunk
-extern lineType LineNumber;
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;
 //adott pillanatban a sebesség

@@ -65,7 +65,7 @@ void Do_SpeedControl_FixSpeed()
 
 			case(Straight):
 					//ha nincs vonal álljon meg, és Stop állapot, hogy csak gombnyomásra induljon
-					if(LineNumber == NoLine)
+					if(Get_LineNumber() == NoLine)
 					{
 						StateQ1 = Stop;
 					}

@@ -54,6 +54,7 @@ void Encoder_Timer_Init();
 void Encoder_Callback_Timer();
 
 float Encoder_GetDistance();     // m
+float Encoder_GetDistance_cm();	 //cm
 float Encoder_GetVelocity(void); // m/s
 void Encoder_Reset();
 

@@ -22,11 +22,11 @@
 extern uint16_t TimePositionControl;		//vonalszabályozás segédszámláló
 extern uint16_t TimeSpeedControl;			//sebességszabályozás segédszámláló
 extern uint16_t TimeLineType;				//vonaltípus meghatározás segédszámláló
-extern uint16_t TimeSpeedState;				//sebesség állapot(StateQ1) ne változzon x másodpercig segédszámláló
 extern uint16_t TimeAccelerate;				//gyorsításhoz segédszámláló
 extern uint16_t TimeBrake;					//lassításhoz segédszámláló
 extern uint16_t TimeSendMessage;			//üzenetküldéshez(bluetooth) segédszámláló
 extern uint16_t TimeMotorControl;			//Motor speed control
+
 extern TIM_HandleTypeDef TimHandle_Szabalyzo;
 
 /* Függvények */

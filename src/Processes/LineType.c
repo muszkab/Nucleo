@@ -18,57 +18,52 @@
 #define CornerSpeedHigh_Time	1000/T_LINETYPE	//1 másodperc
 
 //vonalhossz értékek
-#define THREELINEDISTANCE_FOLYT_LIMIT 	10	//?
-#define ONELINEDISTANCE_FOLYT_LIMIT 	10	//?
-#define DISTANCEDIFFERENCE_MAX			10	//?
+#define THREELINEDISTANCE_FOLYT_LIMIT 	10	//cm	(szaggatott max 8)
+#define ONELINEDISTANCE_FOLYT_LIMIT 	18	//cm	(kétvonal szaggatottnál 16cm az egyvonal szaggatás)
+#define DISTANCEDIFFERENCE_MAX			1	//cm	szaggatott háromvonalnál, az egy- és háromvonal szaggatás megengedett eltérése. Névleges méret: 8cm
+#define NOLINEDISTANCE_SZAGG_LIMIT		7	//cm	névleges hossz: 8cm
+#define TWOLINEDISTANCE_SZAGG_LIMIT_TWOLINE	7//cm	névleges hossz: 8cm
+#define TWOLINEDISTANCE_SZAGG_LIMIT_ONELINE	15//cm	névleges hossz: 16cm
 
 //vonaldarabszám szûréshez használt tömb mérete
 #define ARRAYSIZE	3
 //vonaldarabszám szûrésnél, mennyi érték lehet különbözõ a tömbben, amikor még egyértelmûnek mondjuk a tömböt
-#define TOLERANCE 	2	//nem használjuk jelenleg
-
-typedef enum{
-	Egyvonal_folyt = 0,
-	Egyvonal_szagg,
-	Ketvonal_folyt,
-	Ketvonal_szagg,
-	Haromvonal_x,
-	Haromvonal_folyt,
-	Haromvonal_szagg
-}State_LineType;
+//#define TOLERANCE 	2	//nem használjuk jelenleg
 
 /* Változók */
 //tárolja milyen állapotban vagyunk a vonal alapján(darabszám; folyt-szagg)
-State_LineType StateLineType = Egyvonal_folyt;
+static State_LineType StateLineType = Egyvonal_folyt;
 /* Vonalak darabszáma a CAN üzenet alapján, idõben ARRAYSIZE darab egymást követõt tárolunk el */
 static lineType LineNumberArray[ARRAYSIZE];
 //adott pillanatban hány darab vonalat állítunk
-lineType LineNumber = NoLine; //TODO lehetne static?
+static lineType LineNumber = NoLine;
 //elõzõ pillanatban hány darab vonalat állítottunk
 static lineType LineNumberPrev = NoLine;
 
 //milyen hosszan tart egy vonaltípus
+static float NoLineDistance=0;
 static float OneLineDistance=0;
 static float TwoLineDistance=0;
 static float ThreeLineDistance=0;
 //vonaltípusok kezdõpontja az abszolút távolságban
+static float NoLineStartPos=0;
 static float OneLineStartPos=0;
+static float TwoLineStartPos=0;
 static float ThreeLineStartPos=0;
 
+/* Static Függvények */
+static void NewSensorData();
+static void Is_EgyVonal();
+static void Is_KetVonal();
+static void Is_HaromVonal();
+static uint8_t IsElementsEqual(lineType* Array);
 
-//TODO: törlés!
-//számolja mennyi ideig van egy darab vonal
-uint32_t OneLineTime = 0;
-//számolja mennyi ideig van három darab vonal
-uint32_t ThreeLineTime = 0;
 
-/* új érték (FrontSensor_Data[1]) elmentése a tömbbe (LineNumberArray[])
- * idõbeli szûrés a vonaltípusra: IsElementsEqual(LineNumberArray)
- *
- * számolja az idõt, amíg folyamatosan egy vagy három vonal van: OneLineTime, ThreeLineTime
- * állítja a State változót: SetSpeedState();
+/* NewSensorData(): új érték (FrontSensor_Data[1]) elmentése a tömbbe (LineNumberArray[])
+ * LineNumber: vonaldarabszám meghatározás szûréssel: IsElementsEqual(LineNumberArray[])
+ * StateLineType: állapotváltozó beállítása: Is_EgyVonal(); Is_KetVonal(); Is_HaromVonal();
  */
-void Do_GetLineType()
+void Do_LineType()
 {
 	//T_GETLINE ciklusidõ (T_GETLINE*0.1ms) biztosítása.
 	if(TimeLineType > T_LINETYPE)
@@ -76,42 +71,17 @@ void Do_GetLineType()
 		//számláló nullázás a ciklus újrakezdéséhez
 		TimeLineType=0;
 
-		//minden érték eggyel hátrébb csúsztatása
-		for(int i=0;i<ARRAYSIZE-1;i++)
-			LineNumberArray[i+1] = LineNumberArray[i];
-		//új érték
-		LineNumberArray[0] = FrontSensor_Data[1];
-		//elmentjük az elõzõ állapot vonaldarabszámát
-		LineNumberPrev = LineNumber;
-		//ha minden elem egyenlõ a tömbben, ez az érték lesz a vonaldarabszám. Ha nem igaz, marad az elõzõ vonaltípus.
-		if(IsElementsEqual(LineNumberArray))
-			LineNumber = LineNumberArray[0];
+		//új szenzoradat feldolgozása
+		NewSensorData();
+
+		//vonaltípus állapotváltozó(StateLineType) meghatározás: darabszám és folytonos/szaggatott
+		Is_EgyVonal();
+		Is_KetVonal();
+		Is_HaromVonal();
 
 		//változó érték beállítás az üzenettömbben(Debugszoftver)
-		//TODO: máshol kéne meghívni?
+		//TODO: hol legyen meghívva? itt vagy message.c-ben?
 		//SetValue_AtMessageArray(var_LineNumber, (float)LineNumber);
-
-
-
-
-
-
-		//törlés
-		if(LineNumber == OneLine)
-		{
-			//T_GETLINE*1ms egységekben
-			OneLineTime++;
-			ThreeLineTime=0;
-		}
-		if(LineNumber == ThreeLine)
-		{
-			//T_GETLINE*1ms egységekben
-			ThreeLineTime++;
-			//OneLineTime=0;
-		}
-
-		//sebességállapot állítás
-		SetSpeedState();
 
 		//teszt
 		if(LineNumber == ThreeLine)
@@ -121,36 +91,101 @@ void Do_GetLineType()
 	}
 }
 
-//figyeli, hogy régóta egyvonal van-e, és ha igen, Egyvonal_folyt-ba állítja az állapotot
-void Is_EgyVonal()
+/* vonalszenzortól fogadott új adat(FrontSensor_Data[1]=vonaldarabszám) feldolgozása
+ * idõbeli szûrés a vonaltípusra: IsElementsEqual(LineNumberArray)
+ */
+static void NewSensorData()
 {
-	//ha most kezdõdött az egyvonalhossz, ezelõtt más volt, a kezdeti érték
+	//minden érték eggyel hátrébb csúsztatása
+	for(int i=0;i<ARRAYSIZE-1;i++)
+		LineNumberArray[i+1] = LineNumberArray[i];
+	//új érték
+	LineNumberArray[0] = FrontSensor_Data[1];
+	//elmentjük az elõzõ állapot vonaldarabszámát
+	LineNumberPrev = LineNumber;
+	//ha minden elem egyenlõ a tömbben, ez az érték lesz a vonaldarabszám. Ha nem igaz, marad az elõzõ vonaltípus.
+	if(IsElementsEqual(LineNumberArray))
+		LineNumber = LineNumberArray[0];
+}
+
+/* Figyeli, hogy régóta egyvonal van-e, és ha igen, Egyvonal_folyt-ba állítja az állapotot
+ * Figyeli, hogy szaggatott egyvonal van-e.
+ */
+static void Is_EgyVonal()
+{
+	//ha most kezdõdött az egyvonalhossz, ezelõtt más volt, a kezdeti érték lekérése
 	if(LineNumberPrev != OneLine && LineNumber == OneLine)
 	{
-		OneLineStartPos = Encoder_GetDistance();
+		OneLineStartPos = Encoder_GetDistance_cm();
 	}
 	//egyvonal hossza jelenleg
 	if(LineNumber == OneLine)
 	{
-		OneLineDistance = Encoder_GetDistance() - OneLineStartPos;
+		OneLineDistance = Encoder_GetDistance_cm() - OneLineStartPos;
 	}
 	//hossz ellenõrzés, ha elég nagy, berakjuk egyvonal folytonosba
 	if(OneLineDistance > ONELINEDISTANCE_FOLYT_LIMIT)
 	{
 		StateLineType = Egyvonal_folyt;
 	}
+
+	//ha eltûnt az egyvonal és a kormányszög 0 körül van, feltehetõleg egyvonal szaggatott lesz
+	if(LineNumber == NoLine && (Get_ServoPosition() <20) &&  (Get_ServoPosition() >-20) && LineNumberPrev == OneLine)
+	{
+		NoLineStartPos = Encoder_GetDistance_cm();
+	}
+	//ha ezelõtt nulla vonal volt, és egy vonal van most, és kicsi a kormányszög
+	if(LineNumberPrev == NoLine && (Get_ServoPosition() <20) &&  (Get_ServoPosition() >-20) && LineNumber == OneLine)
+	{
+		NoLineDistance = Encoder_GetDistance_cm() - NoLineStartPos;
+		//ha egy adott hossznál nagyobb a szaggatás, egyvonal szaggatott lesz az állapotváltozó
+		if(NoLineDistance > NOLINEDISTANCE_SZAGG_LIMIT)
+			StateLineType = Egyvonal_szagg;
+	}
 }
+
+//figyeli hogy két vonal van-e, és szaggatott
+static void Is_KetVonal()
+{
+	//ha egy vonalból két vonal lett
+	if(LineNumber == TwoLine && LineNumberPrev == OneLine)
+	{
+		//kezdõpont
+		TwoLineStartPos = Encoder_GetDistance_cm();
+		//elsõ darab két vonal
+		if(StateLineType == Egyvonal_folyt)
+		{
+			//állapot kétvonal, de bizonytalan hogy milyen
+			StateLineType = Ketvonal_x;
+		}
+		//már kétvonal_x állapotban vagyunk, nem az elsõ kétvonal
+		else if(StateLineType == Ketvonal_x)
+		{
+			//egyvonal hossz és kétvonal hossz ellenõrzés, hogy szaggatott állapot-e
+			if(OneLineDistance > TWOLINEDISTANCE_SZAGG_LIMIT_ONELINE && TwoLineDistance > TWOLINEDISTANCE_SZAGG_LIMIT_TWOLINE)
+			{
+				StateLineType = Ketvonal_szagg;
+			}
+		}
+	}
+	//ha két vonalból egy vonal lett
+	if(LineNumberPrev == TwoLine && LineNumber == OneLine)
+	{
+		TwoLineDistance = Encoder_GetDistance_cm() - TwoLineStartPos;
+	}
+}
+
 //figyeli hogy háromvonal van-e, és ha igen, szaggatott vagy folytonos, és beállítja a StateLineType változót ennek megfelelõen
-void Is_HaromVonal()
+static void Is_HaromVonal()
 {
 	//egy vonalból három vonal lett
 	if(LineNumber==ThreeLine && LineNumberPrev==OneLine)
 	{
+		//abszolút távolság kezdõpontja
+		ThreeLineStartPos = Encoder_GetDistance_cm();
 		//ha normal egyvonal állapotban  voltunk
 		if(StateLineType == Egyvonal_folyt)
 		{
-			//abszolút távolság kezdõpontja
-			ThreeLineStartPos = Encoder_GetDistance();
 			//állapotot háromvonalba állítjuk, nem tudjuk folytonos vagy szaggatott
 			StateLineType = Haromvonal_x;
 		}
@@ -176,7 +211,7 @@ void Is_HaromVonal()
 	//figyeljük milyen hosszan tart a három vonal hossza
 	if(LineNumber == ThreeLine && StateLineType == Haromvonal_x)
 	{
-		ThreeLineDistance = Encoder_GetDistance() - ThreeLineStartPos;
+		ThreeLineDistance = Encoder_GetDistance_cm() - ThreeLineStartPos;
 		//ha elérte a háromvonal a megfelelõ hosszt, folytonosnak mondjuk
 		if(ThreeLineDistance > THREELINEDISTANCE_FOLYT_LIMIT)
 		{
@@ -199,81 +234,17 @@ void Is_HaromVonal()
 		else if(StateLineType == Haromvonal_x)
 		{
 			//abszolút távolság végpontja - kezdõpontja = relatív távolság
-			ThreeLineDistance = Encoder_GetDistance() - ThreeLineStartPos;
+			ThreeLineDistance = Encoder_GetDistance_cm() - ThreeLineStartPos;
 			//az egyvonal távolságát az Is_EgyVonal() számolja folyamatosan
 		}
 	}
-}
-
-/* Beállítja a sebesség állapotot az elõzõ állapot, és a vonaltípus alapján: egyenes vagy kanyar */
-void SetSpeedState()
-{
-	//másodperces számláló
-	static uint8_t second=0;
-	//TimeSpeedState:1ms, second:1000*1ms=1s
-	if(TimeSpeedState > 1000)
-	{
-		TimeSpeedState=0;
-		second++;
-	}
-
-	/* Ha eltelt SECONDLIMIT másodperc az elõzõ állopváltás óta,
-	 * és egy adott ideje(ContinousMinTime) három darab vonal van,
-	 * csak akkor válthat újból állapotot.
-	 */
-	if((second>SECONDLIMIT) )
-	{
-		/* egyenesbõl váltson kanyarra */
-		if(StateQ1==Straight && (ThreeLineTime > ContinousMinTime_folyt))
-		{
-			StateQ1 = CornerIn;
-			second=0;
-
-			OneLineTime=0;
-			ThreeLineTime=0;
-			//teszt
-			//Led_On(Red);
-		}
-		else
-		{
-			/* kanyarból váltson egyenesbe */
-			if((StateQ1==CornerOut || StateQ1==CornerIn) && (ThreeLineTime > ContinousMinTime_szagg))
-			{
-				StateQ1 = Straight;
-				second=0;
-				//állapotváltásnál nullázzuk a vonalidõket
-				OneLineTime=0;
-				ThreeLineTime=0;
-
-				//teszt
-				//Led_Off(Red);
-			}
-		}
-	}
-
-	//kanyarbejáratból váltson kijáratba
-	if(StateQ1==CornerIn && (OneLineTime > CornerSpeedHigh_Time))
-	{
-		StateQ1=CornerOut;
-		//second=0;
-
-		OneLineTime=0;
-		ThreeLineTime=0;
-	}
-
-	//teszt
-/*	if(second>SECONDLIMIT)
-		Led_On(Red);
-	else
-		Led_Off(Red);
-*/
 }
 
 /* Idõbeli szûrés a vonaltípusra, akkor állítjuk biztosra hogy hány darab vonal van,
  * ha több egymás utáni érték is egyezik.
  * lineType típusú tömböt megvizsgálja, egyenlõ-e minden elem,
  * ha igen, 1-gyel tér vissza, ha hamis, nullával*/
-uint8_t IsElementsEqual(lineType* Array)
+static uint8_t IsElementsEqual(lineType* Array)
 {
 	//számolja hány darab elem értéke egyezik meg, ha az összes egyezik ( cnt == (ARRASIZE-1) ), egyértelmû a vonaltípus
 	uint8_t cnt=0;
@@ -288,4 +259,15 @@ uint8_t IsElementsEqual(lineType* Array)
 		return 1;
 	else
 		return 0;
+}
+
+/* Get függvények */
+lineType Get_LineNumber()
+{
+	return LineNumber;
+}
+
+State_LineType Get_StateLineType()
+{
+	return StateLineType;
 }

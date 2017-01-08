@@ -10,30 +10,21 @@
 
 #include "Processes.h"
 
-/* Változók */
+/* Külsõ változók */
 //elsõ byte a vonalpozíció (int8_t), a második a vonalak darabszáma(0,1,2,3)
-extern uint8_t FrontSensor_Data[8];
-//késõbb
-extern uint8_t RearSensor_Data[8];
+extern uint8_t FrontSensor_Data[8];	//CAN.c
+//állapotvisszacsatolásos szabályzáshoz
+extern uint8_t RearSensor_Data[8];	//CAN.c
 //vonaltípus meghatározás segédszámláló
-extern uint16_t TimeLineType;
-//sebesség állapot(StateQ1) ne változzon x másodpercig segédszámláló
-extern uint16_t TimeSpeedState;
-//adott pillanatban hány darab vonalat állítunk
-//extern lineType LineNumber;
+extern uint16_t TimeLineType;		//Timers.c
 
-//TODO: törlés!
-//állapotváltozó: kanyar vagy egyenes van épp
-extern speedState StateQ1;
-
-/* Függvények */
-void Do_GetLineType();
-void Is_EgyVonal();
-void Is_HaromVonal();
-void SetSpeedState();
-uint8_t IsElementsEqual(lineType* Array);
 /* Külsõ függvények */
-float Encoder_GetDistance();     // m ; Encoder.c
-void SetState();
+float Encoder_GetDistance_cm();    // cm ; Encoder.c
+
+/* Publikus saját függvények */
+void Do_LineType();
+lineType Get_LineNumber();
+State_LineType Get_StateLineType();
+
 
 #endif /* LINETYPE_H_ */
