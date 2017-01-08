@@ -10,13 +10,6 @@
 //vonaltípus meghatározás ciklusideje
 #define T_LINETYPE	2		//T*1ms
 
-//hány másodpercig tartson egy állapotot biztosan
-#define SECONDLIMIT	2
-//kanyart jelzõ három folytonos vonal érzékelési ideje
-#define ContinousMinTime_folyt	6/T_LINETYPE	//ContinousMinTime*1ms
-#define ContinousMinTime_szagg	10/T_LINETYPE
-#define CornerSpeedHigh_Time	1000/T_LINETYPE	//1 másodperc
-
 //vonalhossz értékek
 #define THREELINEDISTANCE_FOLYT_LIMIT 	10	//cm	(szaggatott max 8)
 #define ONELINEDISTANCE_FOLYT_LIMIT 	18	//cm	(kétvonal szaggatottnál 16cm az egyvonal szaggatás)
@@ -78,10 +71,6 @@ void Do_LineType()
 		Is_EgyVonal();
 		Is_KetVonal();
 		Is_HaromVonal();
-
-		//változó érték beállítás az üzenettömbben(Debugszoftver)
-		//TODO: hol legyen meghívva? itt vagy message.c-ben?
-		//SetValue_AtMessageArray(var_LineNumber, (float)LineNumber);
 
 		//teszt
 		if(LineNumber == ThreeLine)

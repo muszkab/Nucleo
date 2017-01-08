@@ -17,7 +17,11 @@
 //beavatkozó jel
 static float ServoPosition=0;
 //P értéke attól függõen milyen állapotban vagyunk: kanyarban magassabb, egyenesben kisebb P
-static float P = P_CORNER;
+static float P			= P_CORNER;
+static float P_Corner	= P_CORNER;
+static float P_Straight	= P_STRAIGHT;
+//D tag, jelenleg ugyanaz az érték mindenhol
+static float D_All		= D;
 //hibajel, mostani[0] és elõzõ[1] érték
 static int8_t LinePosition[2];
 
@@ -32,12 +36,12 @@ void Do_PositionControl()
 		//ha kanyarsebességet elérte és már csak egy vonal van, legyen nagyobb P
 		if((SpeedNow <= CornerSpeed) && (Get_LineNumber() != ThreeLine))
 		{
-			P=P_CORNER;
+			P=P_Corner;
 			Led_On(Red);
 		}
 		else
 		{
-			P=P_STRAIGHT;
+			P=P_Straight;
 			Led_Off(Red);
 		}
 
@@ -47,7 +51,7 @@ void Do_PositionControl()
 		LinePosition[0]=(int8_t)FrontSensor_Data[0];	//jelenlegi hibajel
 
 		//PD szabályzó
-		ServoPosition = -P*LinePosition[0] - D*(LinePosition[0]-LinePosition[1]);
+		ServoPosition = -P*LinePosition[0] - D_All*(LinePosition[0]-LinePosition[1]);
 
 		//telítõdés
 		if(ServoPosition>127)
@@ -57,10 +61,6 @@ void Do_PositionControl()
 
 		//szervo állítása
 		SetServoPWMPulse((int8_t)ServoPosition);
-
-		//változó érték beállítás az üzenettömbben(Debugszoftver)
-		//TODO: máshol kéne meghívni?
-		//SetValue_AtMessageArray(var_LinePos, (float)LinePosition[0]);
 	}
 }
 
@@ -69,4 +69,28 @@ void Do_PositionControl()
 int8_t Get_ServoPosition()
 {
 	return (int8_t)ServoPosition;
+}
+
+/* LinePosition:-128..127 */
+int8_t Get_LinePosition()
+{
+	return LinePosition[0];
+}
+
+/*  */
+float Get_P_Corner()
+{
+	return P_Corner;
+}
+
+/*  */
+float Get_P_Straight()
+{
+	return P_Straight;
+}
+
+/*  */
+float Get_D()
+{
+	return D_All;
 }

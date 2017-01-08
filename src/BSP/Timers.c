@@ -71,7 +71,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	/* TIM6: szabályzó timer, f=1kHZ */
 	if(htim->Instance==TIM_SZABALYZO)
 	{
-		//TODO: tömb
 		TimePositionControl++;
 		TimeSpeedControl++;
 		TimeLineType++;

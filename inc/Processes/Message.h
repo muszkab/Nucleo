@@ -9,9 +9,8 @@
 #define MESSAGE_H_
 
 #include "Processes.h"
-//#include "UART.h"
 
-//jelzi, hogy válozott-e a változó értéke a programban az elõzõ kiküldése óta
+//jelzi, hogy változott-e a változó értéke a programban az elõzõ kiküldése óta
 typedef enum{
 	OldValue = 0,
 	NewValue

@@ -25,14 +25,15 @@ void Do_Send_ValueMessageArray()
 	{
 		TimeSendMessage = 0;
 
-		//amelyik változó gyakran változik(pl. LinePos), azt itt állítjuk, amelyik ritkán, azt helyben, hogyha változott
-		//SetValue_AtMessageArray(var_LineNumber, (float)LineNumber);
-		//SetValue_AtMessageArray(var_LinePos, (float)LinePosition[0]);
+		//amelyik változó gyakran változik(pl. LinePosition), azt itt állítjuk, amelyik ritkán, azt helyben, hogyha változott
+		SetValue_AtMessageArray(var_LineNumber,	(float) Get_LineNumber());
+		SetValue_AtMessageArray(var_LinePos,	(float) Get_LinePosition());
+		SetValue_AtMessageArray(var_P_Corner,	(float) Get_P_Corner());
+		SetValue_AtMessageArray(var_P_Straight,	(float) Get_P_Straight());
+		SetValue_AtMessageArray(var_D,			(float) Get_D());
 		//SetValue_AtMessageArray(var_State, (float) StateQ1);
 		//SetValue_AtMessageArray(var_Speed_Corner, (float) StateQ1);
 		//SetValue_AtMessageArray(var_Speed_Straight, (float) StateQ1);
-		//SetValue_AtMessageArray(var_P_Corner, (float) StateQ1);
-		//SetValue_AtMessageArray(var_P_Straight, (float) StateQ1);
 
 		for(int i=0;i<MESSAGEARRAY_SIZE;i++)
 		{
@@ -42,17 +43,6 @@ void Do_Send_ValueMessageArray()
 				SendDebugMessage_Each(Value_MessageArray+i);
 			}
 		}
-	}
-}
-
-//változóérték beállítás a tömbben, abban a fájlban kell hívni, ahol az eredeti változó van. Csak akkor fut le, ha új az érték.
-void SetValue_AtMessageArray(VariableName varname, const float data)
-{
-	//megváltozott a figyelt változó értéke
-	if(data != Value_MessageArray[varname].Data)
-	{
-		Value_MessageArray[varname].Data = data;
-		Value_MessageArray[varname].Status = NewValue;
 	}
 }
 
@@ -73,6 +63,17 @@ void Message_Init()
 	{
 		Value_MessageArray[i].Data = 0;
 		Value_MessageArray[i].Status = OldValue;
+	}
+}
+
+//változóérték beállítás a tömbben, abban a fájlban kell hívni, ahol az eredeti változó van. Csak akkor fut le, ha új az érték.
+void SetValue_AtMessageArray(VariableName varname, const float data)
+{
+	//megváltozott a figyelt változó értéke
+	if(data != Value_MessageArray[varname].Data)
+	{
+		Value_MessageArray[varname].Data = data;
+		Value_MessageArray[varname].Status = NewValue;
 	}
 }
 

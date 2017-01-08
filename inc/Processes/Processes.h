@@ -42,6 +42,10 @@ extern lineType Get_LineNumber();
 extern State_LineType Get_StateLineType();
 /* PositionControl.h */
 extern int8_t Get_ServoPosition();
+extern int8_t Get_LinePosition();
+extern float Get_P_Corner();
+extern float Get_P_Straight();
+extern float Get_D();
 
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;

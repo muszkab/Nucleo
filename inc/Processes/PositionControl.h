@@ -16,7 +16,7 @@
 extern uint8_t FrontSensor_Data[8];		//CAN.c
 //állapotvisszacsatolásos szabályzáshoz
 extern uint8_t RearSensor_Data[8];		//CAN.c
-//vonalszabályozás segédszámláló
+//vonalszabályozás segédszámláló a ciklusidõhöz
 extern uint16_t TimePositionControl;	//Timers.c
 
 /* Külsõ függvények */
@@ -25,6 +25,10 @@ void SetServoPWMPulse(const int8_t ServoPos);	//Servo.c
 /* Publikus saját függvények */
 void Do_PositionControl();
 int8_t Get_ServoPosition();
+int8_t Get_LinePosition();
+float Get_P_Corner();
+float Get_P_Straight();
+float Get_D();
 
 
 #endif /* POSITIONCONTROL_H_ */

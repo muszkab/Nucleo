@@ -8,11 +8,20 @@
 #ifndef SPEEDCONTROL_H_
 #define SPEEDCONTROL_H_
 
-#include "Nucleo.h"
 #include "Processes.h"
-#include "Timers.h"
 
-/* Változók */
+/* Külsõ változók */
+//sebességszabályozás segédszámláló a ciklusidõhöz
+extern uint16_t TimeSpeedControl;
+//gyorsításhoz segédszámláló
+extern uint16_t TimeAccelerate;
+//lassításhoz segédszámláló
+extern uint16_t TimeBrake;
+
+/* Külsõ függvények */
+void SetSpeed(int8_t Speed);	//Motor.c
+
+/* Saját változók */
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;
 //adott pillanatban a sebesség
@@ -22,12 +31,13 @@ extern uint8_t StraigthSpeed;
 //kanyarban a sebesség
 extern uint8_t CornerSpeed;
 
-/* Függvények */
-/* Sebesség beállítása fix értékre, a pályaelemek alapján: kanyar vagy egyenes */
+
+/* Publikus saját függvények */
+/* Q1 csak: Sebesség beállítása fix értékre, a pályaelemek alapján: kanyar vagy egyenes */
 void Do_SpeedControl_FixSpeed();
+//legyen static!
 void Accelerate(uint8_t MaxSpeed);
 void Brake(uint8_t MinSpeed);
-void SetSpeed(int8_t Speed);	//Motor.c
 
 
 #endif /* SPEEDCONTROL_H_ */

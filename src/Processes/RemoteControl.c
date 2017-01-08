@@ -207,7 +207,7 @@ void RemoteController_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
   * @param  htim : TIM IC handle
   * @retval None
   */
-//TODO:timers.c-be átrakni! vagy talán jó itt?
+//timers.c-be átrakni ha más timer is kerül bele!
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2 && htim->Instance == TIM_REMOTE)
