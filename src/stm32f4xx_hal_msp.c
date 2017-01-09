@@ -18,8 +18,8 @@ void Periph_Init(){
 	CAN_Init();
 	Servo_TIM10_PWM_Init();
 	Servo_Sharp_TIM4_PWM_Init();
-	//Encoder_Init();
-	Motor_PWM_Init();
+	Encoder_Init();
+	Motor_Init();
 	RemoteController_Timer_Init();
 	Szabalyzo_TIM_Init();
 	IMU_Init();

@@ -15,18 +15,18 @@
 
 #define LOOKUP_MAX	10   //Identifikációs mérések száma
 //Inverz karakterisztika y tengelye
-static const float LookUpU[LOOKUP_MAX] = {
+/* static const float LookUpU[LOOKUP_MAX] = {
 		0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
 //Inverz karakterisztika x tengelye
 static const float LookUpY[LOOKUP_MAX] = {
-		0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
+		0,	0,	0,	0,	0,	0,	0,	0,	0,	0}; */
 static const float Offset = 5;
 static const float m      = 1;
 /* Szabályzó változók FOXBORO PI */
-float u1;
-float u2;
-float u;
-float Velocity;
+static float u1;
+static float u2;
+static float u;
+static float Velocity;
 
 void MotorControl(float VelocityRef){
 	if(TimeMotorControl > 100){
@@ -54,4 +54,32 @@ float LookUpTable(float u){
 		u *= -1;
 	}
 	return sign*(m*u+Offset);
+}
+
+/**
+  * @brief  Motor identifikáció
+  * A megadott tartományon a megadott idõközökkel gerjeszti a motort és elküldi
+  * bluetoothon a sebességértéket.
+  * Identifikálásnál csak ez a függvény fusson
+  */
+void MotorIdentification(){
+	uint16_t output = 0;
+	uint16_t time_run = 0;
+	uint16_t time_wait = 0;
+	float    velocity;
+	for(output = START_VALUE; output <= END_VALUE; output += STEP ){
+		SetSpeed(output);
+		for(time_run = 0; time_run < TIME_RUN; time_run+=TIME_STEP_RUN){
+			velocity = Encoder_GetVelocityRaw();
+			printf("%3.3f; %d\n\r", velocity, output);
+			HAL_Delay(TIME_STEP_RUN);
+		}
+		SetSpeed(0);
+		for(time_wait = 0; time_wait < TIME_WAIT; time_wait+=TIME_STEP_WAIT){
+			velocity = Encoder_GetVelocityRaw();
+			printf("%3.3f; 0\n\r", velocity);
+			HAL_Delay(TIME_STEP_WAIT);
+		}
+	}
+
 }

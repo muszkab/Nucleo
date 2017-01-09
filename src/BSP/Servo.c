@@ -69,45 +69,45 @@ void Servo_TIM10_PWM_Init()
 	GPIO_InitStruct.Pin = TIMx_GPIO_PIN_CHANNEL1;
 	HAL_GPIO_Init(TIMx_GPIO_PORT_CHANNEL1, &GPIO_InitStruct);
 
-	  /*##-1- Configure the TIM peripheral #######################################*/
-	  /* f=50Hz =180MHz/180/20000 */
-	  /* Initialize TIMx peripheral as follows:
-		   + Prescaler = 180 - 1
-		   + Period = 20000 - 1
-		   + ClockDivision = 1
-		   + Counter direction = Up
-	  */
-	  TimHandle_Servo.Instance = TIMx;
+	/*##-2- Configure the TIM peripheral #######################################*/
+	/* f=50Hz =180MHz/180/20000 */
+	/* Initialize TIMx peripheral as follows:
+	   + Prescaler = 180 - 1
+	   + Period = 20000 - 1
+	   + ClockDivision = 1
+	   + Counter direction = Up
+	*/
+	TimHandle_Servo.Instance = TIMx;
 
-	  TimHandle_Servo.Init.Prescaler         = PRESCALER;
-	  TimHandle_Servo.Init.Period            = PERIOD;
-	  TimHandle_Servo.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
-	  TimHandle_Servo.Init.CounterMode       = TIM_COUNTERMODE_UP;
-	  if (HAL_TIM_PWM_Init(&TimHandle_Servo) != HAL_OK)
-	  {
+	TimHandle_Servo.Init.Prescaler         = PRESCALER;
+	TimHandle_Servo.Init.Period            = PERIOD;
+	TimHandle_Servo.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+	TimHandle_Servo.Init.CounterMode       = TIM_COUNTERMODE_UP;
+	if (HAL_TIM_PWM_Init(&TimHandle_Servo) != HAL_OK)
+	{
 		/* Initialization Error */
 		Error_Handler();
-	  }
+	}
 
-	  /*##-2- Configure the PWM channels #########################################*/
-	  /* Common configuration for all channels */
-	  sConfig_Servo.OCMode       = TIM_OCMODE_PWM1;
-	  sConfig_Servo.OCPolarity   = TIM_OCPOLARITY_HIGH;
-	  sConfig_Servo.OCFastMode   = TIM_OCFAST_DISABLE;
-	  sConfig_Servo.Pulse		 = PULSE_CENTER;
-	  if (HAL_TIM_PWM_ConfigChannel(&TimHandle_Servo, &sConfig_Servo, TIM_CHANNEL_1) != HAL_OK)
-	  {
+	/*##-3- Configure the PWM channels #########################################*/
+	/* Common configuration for all channels */
+	sConfig_Servo.OCMode       = TIM_OCMODE_PWM1;
+	sConfig_Servo.OCPolarity   = TIM_OCPOLARITY_HIGH;
+	sConfig_Servo.OCFastMode   = TIM_OCFAST_DISABLE;
+	sConfig_Servo.Pulse		 = PULSE_CENTER;
+	if (HAL_TIM_PWM_ConfigChannel(&TimHandle_Servo, &sConfig_Servo, TIM_CHANNEL_1) != HAL_OK)
+	{
 		/* Configuration Error */
 		Error_Handler();
-	  }
+	}
 
-	  /*##-3- Start PWM signals generation #######################################*/
-	  /* Start channel 1 */
-	  if (HAL_TIM_PWM_Start(&TimHandle_Servo, TIM_CHANNEL_1) != HAL_OK)
-	  {
+	/*##-4- Start PWM signals generation #######################################*/
+	/* Start channel 1 */
+	if (HAL_TIM_PWM_Start(&TimHandle_Servo, TIM_CHANNEL_1) != HAL_OK)
+	{
 		/* PWM Generation Error */
 		Error_Handler();
-	  }
+	}
 }
 
 /*
@@ -130,8 +130,8 @@ void Servo_Sharp_TIM4_PWM_Init(){
 	GPIO_InitStruct.Pin = TIM_SERVO_SHARP_GPIO_PIN_CHANNEL2;
 	HAL_GPIO_Init(TIM_SERVO_SHARP_GPIO_PORT_CHANNEL2, &GPIO_InitStruct);
 
-	/*##-1- Configure the TIM peripheral #######################################*/
-	/* f=50Hz =180MHz/180/20000 */
+	/*##-2- Configure the TIM peripheral #######################################*/
+	/* f=50Hz =90MHz/90/20000 */
 	/* Initialize TIM4 peripheral as follows:
 	   + Prescaler = 180 - 1
 	   + Period = 20000 - 1
@@ -148,7 +148,7 @@ void Servo_Sharp_TIM4_PWM_Init(){
 		Error_Handler();
 	}
 
-	/*##-2- Configure the PWM channels #########################################*/
+	/*##-3- Configure the PWM channels #########################################*/
 	/* Common configuration for all channels */
 	sConfig_Servo.OCMode       = TIM_OCMODE_PWM1;
 	sConfig_Servo.OCPolarity   = TIM_OCPOLARITY_HIGH;
@@ -159,7 +159,7 @@ void Servo_Sharp_TIM4_PWM_Init(){
 		Error_Handler();
 	}
 
-	/*##-3- Start PWM signals generation #######################################*/
+	/*##-4- Start PWM signals generation #######################################*/
 	/* Start channel 1 */
 	if (HAL_TIM_PWM_Start(&TimHandle_Servo_Sharp, TIM_CHANNEL_2) != HAL_OK){
 		/* PWM Generation Error */

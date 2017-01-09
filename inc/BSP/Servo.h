@@ -12,6 +12,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "Nucleo.h"
 
+/**********************************************/
+/*********** Servo - Steering Wheel ***********/
+/**********************************************/
 /* Definition for TIMx clock resources */
 #define TIMx                           TIM10
 #define TIMx_CLK_ENABLE()              __HAL_RCC_TIM10_CLK_ENABLE()

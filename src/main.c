@@ -58,45 +58,45 @@ int main(void)
 		//Error_SendUart("GYRO Enable error!");
 
 	//teszt változók
-	Messagetype message[2];
-	message[0].Name="Value:P_Corner";
-	message[0].Data=3.456;
+	//Messagetype message[2];
+	//message[0].Name="Value:P_Corner";
+	//message[0].Data=3.456;
 
-	message[1].Name="Value:P_Straight";
-	message[1].Data=150;
+	//message[1].Name="Value:P_Straight";
+	//message[1].Data=150;
 
-	message[2].Name="Value:Time";
-	message[2].Data=0;
+	//message[2].Name="Value:Time";
+	//message[2].Data=0;
 
-	Messagetype messageGraph[1];
-	messageGraph[0].Name="Graph:Linepos";
-	messageGraph[0].Data=1;
+	//Messagetype messageGraph[1];
+	//messageGraph[0].Name="Graph:Linepos";
+	//messageGraph[0].Data=1;
 
 	//elsõ üzenet nem látszódik a \r miatt, ezért van egy üres üzenet legelõször
-	SendDebugMessage_Raw("A",0);
-	SendDebugMessage_Text("Itt lehet szoveget kuldeni.");
+	//SendDebugMessage_Raw("A",0);
+	//SendDebugMessage_Text("Itt lehet szoveget kuldeni.");
 
 	for(;;)
 	{
 		//HAL_Delay(10);
 
 		//Vonalkövetés: PD szabályzó
-		Do_PositionControl();
+		//Do_PositionControl();
 
 		//Vonaltípus meghatározás
-		Do_LineType();
+		//Do_LineType();
 
 		//Sebesség: fix érték vonaltípus alapján, Q1
-		Do_SpeedControl_FixSpeed();
+		//Do_SpeedControl_FixSpeed();
 
 		//Sebesség: távirányító
 		//SetSpeed_RemoteControl();
 
 		//Üzenetküldés Bluetooth-on
-		Do_Send_ValueMessageArray();
+		//Do_Send_ValueMessageArray();
 
 		//vészleállítás távirányítóval
-		Is_StopCommand();
+		//Is_StopCommand();
 
 
 		//teszt: IMU
@@ -108,14 +108,14 @@ int main(void)
 	*/
 
 		//teszt: Debugszoftver
-		SendDebugMessage_Array(message, 3);
-		message[2].Data++;
-		message[1].Data--;
+		//SendDebugMessage_Array(message, 3);
+		//message[2].Data++;
+		//message[1].Data--;
 
-		SendDebugMessage_Array(messageGraph, 1);
-		if(messageGraph[0].Data>-50)
-			messageGraph[0].Data--;
+		//SendDebugMessage_Array(messageGraph, 1);
+		//if(messageGraph[0].Data>-50)
+			//messageGraph[0].Data--;
 
-		HAL_Delay(200);
+		//HAL_Delay(200);
 	}//for
 }//main
