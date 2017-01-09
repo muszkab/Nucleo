@@ -11,7 +11,7 @@
 #define T_SENDMESSAGE	100	//T*1ms
 
 //üzenettömb mérete, ennyi változót figyelünk, enum darabszámától függ a tömb mérete
-#define  MESSAGEARRAY_SIZE	(VariableName_LastElement - 1)
+#define  MESSAGEARRAY_SIZE	VariableName_LastElement
 
 //pillanatnyi érték felületre("#Value") kiküldött változók üzenettömbje
 Messagetype Value_MessageArray[MESSAGEARRAY_SIZE];
@@ -79,12 +79,14 @@ void SetValue_AtMessageArray(VariableName varname, const float data)
 
 void SendDebugMessage_Raw(const char* string, const float data)
 {
-	printf("#%s:%3.3f;\n\r", string, data);
+	printf("#%s:%3.3f;\n", string, data);
+	printf("\r");
 }
 
 void SendDebugMessage_Text(const char* string)
 {
-	printf("#Text:%s;\n\r", string);
+	printf("#Text:%s;\n", string);
+	printf("\r");
 }
 
 void SendDebugMessage_Each(Messagetype* message)
