@@ -140,34 +140,34 @@ void RemoteController_Timer_Init()
 	  }
 }
 
-/* Sebességjel a távirányító alapján */
+/* Sebessï¿½gjel a tï¿½virï¿½nyï¿½tï¿½ alapjï¿½n */
 void SetSpeed_RemoteControl()
 {
-	//sebességjel
+	//sebessï¿½gjel
 	static int8_t value=0;
-	//zajszûréshez idõmérés
+	//zajszï¿½rï¿½shez idï¿½mï¿½rï¿½s
 	static uint8_t temp=0;
 
-	//uwDutyCycle: 57..140 között.
-	//value: -20..21(21.5) között
-	if(uwDutyCycle < 150 && uwDutyCycle > 50)	//kitöltési tényezõ érték vizsgálat, tartományon belül legyen
-		value = (uwDutyCycle-97)>>1;			//sebességjel konverzó a kitöltési tényezõbõl: 57..140 -> -20..21.5
+	//uwDutyCycle: 57..140 kï¿½zï¿½tt.
+	//value: -20..21(21.5) kï¿½zï¿½tt
+	if(uwDutyCycle < 150 && uwDutyCycle > 50)	//kitï¿½ltï¿½si tï¿½nyezï¿½ ï¿½rtï¿½k vizsgï¿½lat, tartomï¿½nyon belï¿½l legyen
+		value = (uwDutyCycle-97)>>1;			//sebessï¿½gjel konverzï¿½ a kitï¿½ltï¿½si tï¿½nyezï¿½bï¿½l: 57..140 -> -20..21.5
 	else
 		value = 0;
-	if(value<4 && value>-4)	//holtjáték a távirányótónak
+	if(value<4 && value>-4)	//holtjï¿½tï¿½k a tï¿½virï¿½nyï¿½tï¿½nak
 		value=0;
 
-	//távirányító zaj szûrés
-	if(value==0)	//ha nulla a sebesség, elölrõl kezdjük az idõmérést
+	//tï¿½virï¿½nyï¿½tï¿½ zaj szï¿½rï¿½s
+	if(value==0)	//ha nulla a sebessï¿½g, elï¿½lrï¿½l kezdjï¿½k az idï¿½mï¿½rï¿½st
 		temp=0;
 	else
 		temp++;
-	//nem kell neki nagyon sokaig számolni, túlcsordulás ellen is
+	//nem kell neki nagyon sokaig szï¿½molni, tï¿½lcsordulï¿½s ellen is
 	if(temp>20)
 		temp=20;
 
-	//csak akkor küldjön sebességjelet, ha egy ideje(temp értéke) már veszi a jelet a távirányítótól,
-	//de a nulla értéket mindig küldeni kell neki, hogy ne az elõzõ érték ragadjon be, mivel value==0 esetén temp is nulla
+	//csak akkor kï¿½ldjï¿½n sebessï¿½gjelet, ha egy ideje(temp ï¿½rtï¿½ke) mï¿½r veszi a jelet a tï¿½virï¿½nyï¿½tï¿½tï¿½l,
+	//de a nulla ï¿½rtï¿½ket mindig kï¿½ldeni kell neki, hogy ne az elï¿½zï¿½ ï¿½rtï¿½k ragadjon be, mivel value==0 esetï¿½n temp is nulla
 	if(temp>5 || value==0)
 	{
 		SetSpeed(2*value);
@@ -178,7 +178,9 @@ void SetSpeed_RemoteControl()
 void Is_StopCommand()
 {
 	if(uwDutyCycle<70)
+	{
 		StateQ1 = Stop;
+	}
 }
 
 void RemoteController_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
@@ -207,7 +209,7 @@ void RemoteController_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
   * @param  htim : TIM IC handle
   * @retval None
   */
-//timers.c-be átrakni ha más timer is kerül bele!
+//timers.c-be ï¿½trakni ha mï¿½s timer is kerï¿½l bele!
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2 && htim->Instance == TIM_REMOTE)
