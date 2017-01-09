@@ -10,7 +10,9 @@
 
 /* ADC handler declaration */
 ADC_HandleTypeDef    Adc1Handle;
-uint16_t uhADC1ConvertedValues[4];
+
+#define BufferSize 1000
+uint16_t uhADC1ConvertedValues[BufferSize];
 
 /**
   * @brief ADC MSP Initialization

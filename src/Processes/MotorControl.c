@@ -8,9 +8,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "MotorControl.h"
 
-#define MAX_OUTPUT	100.0f //Az inverz függvényben a maximális megengedhetõ kimenet FOXBORO-hoz
-#define Zd			0.98f
-#define Kc			3.0f
+#define MAX_OUTPUT	80.0f //Az inverz függvényben a maximális megengedhetõ kimenet FOXBORO-hoz
+#define Zd			0.9f
+#define Kc			8.78f
 
 
 #define LOOKUP_MAX	10   //Identifikációs mérések száma
@@ -20,7 +20,7 @@
 //Inverz karakterisztika x tengelye
 static const float LookUpY[LOOKUP_MAX] = {
 		0,	0,	0,	0,	0,	0,	0,	0,	0,	0}; */
-static const float Offset = 5;
+static const float Offset = 16;
 static const float m      = 1;
 /* Szabályzó változók FOXBORO PI */
 static float u1;
@@ -28,15 +28,18 @@ static float u2;
 static float u;
 static float Velocity;
 
+/* Identifikációhoz */
+uint8_t IdentificationEnable = 1;
+
 void MotorControl(float VelocityRef){
-	if(TimeMotorControl > 100){
+	if(TimeMotorControl > 20){
 		TimeMotorControl = 0;
 		/* Algoritmus */
 		u2 = Zd * u2 + (1- Zd)*u;
 		Velocity = Encoder_GetVelocity();
 		u1 = Kc * (VelocityRef - Velocity);
 		u = MotorControlSaturate(u1+u2);
-		SetSpeed((int8_t)LookUpTable(u));
+		SetSpeedFactory((int8_t)LookUpTable(u));
 	}
 }
 
@@ -68,6 +71,7 @@ void MotorIdentification(){
 	uint16_t time_wait = 0;
 	float    velocity;
 	for(output = START_VALUE; output <= END_VALUE; output += STEP ){
+		while(IdentificationEnable){}
 		SetSpeed(output);
 		for(time_run = 0; time_run < TIME_RUN; time_run+=TIME_STEP_RUN){
 			velocity = Encoder_GetVelocityRaw();
@@ -80,6 +84,7 @@ void MotorIdentification(){
 			printf("%3.3f; 0\n\r", velocity);
 			HAL_Delay(TIME_STEP_WAIT);
 		}
+		IdentificationEnable = 1;
 	}
 
 }

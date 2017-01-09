@@ -15,7 +15,6 @@
 
 //távirányító tüskéinek szûrése
 int16_t temp = 0;
-
 int main(void)
 {
 	/* STM32F4xx HAL library initialization:
@@ -75,11 +74,9 @@ int main(void)
 	//elsõ üzenet nem látszódik a \r miatt, ezért van egy üres üzenet legelõször
 	//SendDebugMessage_Raw("A",0);
 	//SendDebugMessage_Text("Itt lehet szoveget kuldeni.");
-
+	//MotorIdentification();
 	for(;;)
 	{
-		//HAL_Delay(10);
-
 		//Vonalkövetés: PD szabályzó
 		//Do_PositionControl();
 
