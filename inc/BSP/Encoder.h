@@ -53,9 +53,10 @@ void Encoder_Callback_Timer_Init();
 void Encoder_Timer_Init();
 void Encoder_Callback_Timer();
 
-float Encoder_GetDistance();     // m
-float Encoder_GetDistance_cm();	 //cm
-float Encoder_GetVelocity(void); // m/s
+float Encoder_GetDistance();     	// m
+float Encoder_GetDistance_cm();	 	// cm
+float Encoder_GetVelocity(void); 	// m/s
+float Encoder_GetVelocityRaw(void);	// inkrement/s
 void Encoder_Reset();
 
 #endif /* BSP_ENCODER_H_ */

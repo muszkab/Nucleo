@@ -27,6 +27,7 @@
 #include "IMU.h"
 #include "LSM6DS3_ACC_GYRO_driver_HL.h"
 #include "Message.h"
+#include "MotorControl.h"
 
 void Periph_Init();
 void HAL_MspInit();

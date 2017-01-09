@@ -11,16 +11,17 @@
 /*User Button*/
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	/*if(GPIO_Pin == USER_BUTTON_PIN)
+	if(GPIO_Pin == USER_BUTTON_PIN)
 	{
-		StateQ1 = CornerOut;
-	}*/
-	if(GPIO_Pin == USER_BUTTON0_PIN){
-		LED_Toggle(Yellow);
+		MotorIdentification();
+		//StateQ1 = CornerOut;
 	}
-	if(GPIO_Pin == USER_BUTTON1_PIN){
-		LED_Toggle(Blue);
-	}
+	//if(GPIO_Pin == USER_BUTTON0_PIN){
+	//	LED_Toggle(Yellow);
+	//}
+	//if(GPIO_Pin == USER_BUTTON1_PIN){
+	//	LED_Toggle(Blue);
+	//}
 }
 
 GPIO_TypeDef* BUTTONs_PORT[2] = {USER_BUTTON0_GPIO_PORT, USER_BUTTON1_GPIO_PORT};

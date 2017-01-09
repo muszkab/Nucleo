@@ -8,13 +8,15 @@
 /* Includes ------------------------------------------------------------------*/
 #include "Encoder.h"
 
-
+/* Enkóder paraméterek
+ * Az idõparamétereknek és a Callback Timernek ÖSSZHANGBAN kell lennie */
 #define METER_PER_INCR 					1.3459e-4f    /* m/inkrement */
-#define ENC_TIME_STEP 					0.05f
-#define ENC_FREQ						50
+#define ENC_TIME_STEP 					0.01f		  /* mérési idõköz */
+#define ENC_FREQ						100			  /* mérési frekvencia */
 
+/* Callback Timer megszakítás beállítása a kívánt frekvenciára */
 #define Encoder_Callback_Timer_Freq  	40000
-#define Encoder_Callback_Timer_Period 	2000
+#define Encoder_Callback_Timer_Period 	400
 
 /* Encoder Timer handler declaration */
 TIM_HandleTypeDef    	Encoder_Handle;
@@ -79,7 +81,7 @@ void Encoder_Callback_Timer_Init(){
 	   + Counter direction = Up
 	*/
 
-	/* Compute the prescaler value to have TIMx counter clock equal to 10000 Hz */
+	/* Compute the prescaler value to have TIMx counter clock equal to 100 Hz */
 	uwPrescalerValue = (uint32_t)((SystemCoreClock) / Encoder_Callback_Timer_Freq) - 1;
 
 	Encoder_Callback_Handle.Instance 			   = ENC_CALLBACK_TIM;
@@ -157,7 +159,7 @@ void Encoder_Timer_Init(){
 }
 
 /**
- * Get the distance in m
+ * Get the distance in [m]
  * @return distance
  */
 float Encoder_GetDistance(){
@@ -165,7 +167,7 @@ float Encoder_GetDistance(){
 }
 
 /**
- * Get the distance in cm
+ * Get the distance in [cm]
  * @return distance
  */
 float Encoder_GetDistance_cm(){
@@ -173,10 +175,18 @@ float Encoder_GetDistance_cm(){
 }
 
 /**
- * Get the velocity
+ * Get the velocity in [m/s]
  * @return velocity
  */
 float Encoder_GetVelocity(void){
+	return METER_PER_INCR * Velocity;
+}
+
+/**
+ * Get the velocity in raw dimension [inkrement/s]
+ * @return velocity
+ */
+float Encoder_GetVelocityRaw(void){
 	return Velocity;
 }
 
@@ -192,11 +202,11 @@ void Encoder_Reset(){
 }
 
 /**
- * Callback function for periodical check, and measure velocity in every 50 ms
+ * Callback function for periodical check, and measure velocity in every 10 ms
  */
 void Encoder_Callback_Timer(){
 	PrevCnt = CurrCnt;
 	CurrCnt = ENC_TIM->CNT;
 	Distance = METER_PER_INCR*CurrCnt;
-	Velocity = (METER_PER_INCR*(CurrCnt - PrevCnt)) * ENC_FREQ;
+	Velocity = (CurrCnt - PrevCnt) * ENC_FREQ;
 }
