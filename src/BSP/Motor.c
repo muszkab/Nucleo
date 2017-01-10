@@ -11,16 +11,16 @@
 /*****************************************************/
 /**************** SAJÁT MOTORVEZÉRLÕ *****************/
 /*****************************************************/
-#define MAX_SPEED		35	//maximum: 45
-#define START_DUTYCCLE1 50
-#define START_DUTYCCLE2 50
+#define MAX_SPEED		350	//maximum: 450
+#define START_DUTYCCLE1 500
+#define START_DUTYCCLE2 500
 
 /* TIM3 - PWM */
 #define MAX_CLOCK		90				/* TIM3 max clock: 90MHz */
-#define PRESCALER		(4-1)			/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM3_freq=90MHZ/4 =22.5MHz
-#define PERIOD			(500-1)			/* PWM_frequency=TIM_freq/(Period+1)=22.5MHZ/500/2=22.5kHZ
-										 * 500/2: center aligned pwm miatt máshogy van a PERIOD érték*/
-#define DUTY_1percent	(PERIOD+1)/100	/* 1%-os kitöltési tényezõ */
+#define PRESCALER		(2-1)			/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM3_freq=90MHZ/2 =45MHz
+#define PERIOD			(1000-1)			/* PWM_frequency=TIM_freq/(Period+1)=45MHZ/1000/2=22.5kHZ
+										 * 1000/2: center aligned pwm miatt máshogy van a PERIOD érték*/
+#define DUTY_01percent	(PERIOD+1)/1000	/* 0.1%-os kitöltési tényezõ */
 
 /* Private variables ---------------------------------------------------------*/
 /* Timer handler declaration */
@@ -105,7 +105,7 @@ void Motor_PWM_Init()
 	sPWMConfig.OCFastMode   = TIM_OCFAST_DISABLE;
 
 	/* Set the pulse value for channel 1 */
-	sPWMConfig.Pulse = START_DUTYCCLE1*DUTY_1percent; //
+	sPWMConfig.Pulse = START_DUTYCCLE1*DUTY_01percent; //
 	if(HAL_TIM_PWM_ConfigChannel(&TimHandle_Motor, &sPWMConfig, TIM_CHANNEL_1) != HAL_OK)
 	{
 		/* Configuration Error */
@@ -113,7 +113,7 @@ void Motor_PWM_Init()
 	}
 
 	/* Set the pulse value for channel 2 */
-	sPWMConfig.Pulse = START_DUTYCCLE2*DUTY_1percent; //
+	sPWMConfig.Pulse = START_DUTYCCLE2*DUTY_01percent; //
 	if(HAL_TIM_PWM_ConfigChannel(&TimHandle_Motor, &sPWMConfig, TIM_CHANNEL_2) != HAL_OK)
 	{
 		/* Configuration Error */
@@ -192,11 +192,11 @@ void Motor_PWM_Init_Factory()
 	}
 }
 
-/* -45 és 45 közötti értéket vár */
-void SetSpeed(int8_t Speed)
+/* -450 és 450 közötti értéket vár */
+void SetSpeed(int16_t Speed)
 {
 	//hibás bemeneti paraméter ellen, hibás mûködés esetén a motor megáll
-	if(Speed<-45 || Speed>45)
+	if(Speed<-450 || Speed>450)
 	{
 		MotorStop();
 		Error_SendUart("Tartomanyon kivuli sebesseg ertek! \n\r");
@@ -210,8 +210,8 @@ void SetSpeed(int8_t Speed)
 		if(Speed>MAX_SPEED)
 			Speed = MAX_SPEED;
 
-		TimHandle_Motor.Instance->CCR1=(50-Speed)*DUTY_1percent;
-		TimHandle_Motor.Instance->CCR2=(50+Speed)*DUTY_1percent;
+		TimHandle_Motor.Instance->CCR1=(500-Speed)*DUTY_01percent;
+		TimHandle_Motor.Instance->CCR2=(500+Speed)*DUTY_01percent;
 	}
 }
 

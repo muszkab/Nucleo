@@ -23,15 +23,22 @@ void Error_SendUart(char* string)
 	UART_SendStringBlocking(string, &UartHandle_Cable);
 }
 
+int8_t ServoPos=0;
 void ProcessMessage(char* message)
 {
 	switch(*message)
 	{
+	case 'a':
+		ServoPos += 10;
+		break;
+	case 'q':
+		ServoPos -= 10;
+		break;
 	case '+':
-		//ServoPos += 10;
+		ServoPos += 1;
 		break;
 	case '-':
-		//ServoPos -= 10;
+		ServoPos -= 1;
 		break;
 	default:
 		break;

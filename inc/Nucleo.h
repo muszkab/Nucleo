@@ -17,4 +17,7 @@ void Error_Handler(void);
 void Error_SendUart(char* string);
 void ProcessMessage(char* message);
 
+/* Teszt változók */
+extern int8_t ServoPos;
+
 #endif /* NUCLEO_H_ */

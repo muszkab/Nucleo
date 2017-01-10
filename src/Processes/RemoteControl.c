@@ -170,7 +170,7 @@ void SetSpeed_RemoteControl()
 	//de a nulla �rt�ket mindig k�ldeni kell neki, hogy ne az el�z� �rt�k ragadjon be, mivel value==0 eset�n temp is nulla
 	if(temp>5 || value==0)
 	{
-		SetSpeed(2*value);
+		SetSpeed(2*value*10);
 		temp=0;
 	}
 }
