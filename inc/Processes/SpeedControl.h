@@ -19,7 +19,7 @@ extern uint16_t TimeAccelerate;
 extern uint16_t TimeBrake;
 
 /* Külsõ függvények */
-void SetSpeed(int8_t Speed);	//Motor.c
+void SetSpeed(int16_t Speed);	//Motor.c
 
 /* Saját változók */
 //állapotváltozó: kanyar vagy egyenes van épp

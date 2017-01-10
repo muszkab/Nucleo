@@ -15,9 +15,9 @@
 /* Itt beállítható, hogy melyik motorvezérlõt használjuk */
 #define HBRIDGE_HOMEMADE
 #ifdef HBRIDGE_HOMEMADE
-	#define Motor_Init() 	Motor_PWM_Init_Factory()
+	#define Motor_Init() 	Motor_PWM_Init()
 #else
-	#define Motor_Init()	Motor_PWM_Init()
+	#define Motor_Init()	Motor_PWM_Init_Factory()
 #endif /* HBRIDGE_HOMEMADE */
 
 /*****************************************************/
@@ -56,7 +56,7 @@
 /*Functions*/
 void Motor_PWM_Init();
 void Motor_PWM_Init_Factory();
-void SetSpeed(int8_t Speed);
+void SetSpeed(int16_t Speed);
 void SetSpeedFactory(int8_t Speed);
 void MotorStop();
 
