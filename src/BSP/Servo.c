@@ -13,16 +13,31 @@
 /*********** Servo - Steering Wheel ***********/
 /**********************************************/
 //TODO új szervónak új paraméterek
-//100% - 20ms (f=50Hz, T=20ms)
-#define	PULSE_UNIT		(PERIOD+1)/200		//0.1ms, jelenleg nem használjuk
-#define PULSE_MIN		1250//1260			//1.24ms left
-#define PULSE_MAX		1690//1680			//1.68ms right
-#define PULSE_CENTER	1460				//1.46ms
+#define PRO_SERVO
 
-/* TIM10 channel1 - PC8 - PWM */
-#define MAX_CLOCK		180				/* TIM10 max clock: 180MHz */
-#define PRESCALER		(MAX_CLOCK-1)	/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM10_freq=180MHZ/180 =1MHz
-#define PERIOD			(20000-1)		/* PWM_frequency=TIM_freq/(Period+1)=1MHZ/20000=10^6HZ/20000 =50HZ */
+#ifdef	PRO_SERVO
+	//100% - 10ms (f=100Hz, T=10ms)
+	#define	PULSE_UNIT		(PERIOD+1)/100		//0.1ms, jelenleg nem használjuk
+	#define PULSE_MIN		1370				//1.370ms left
+	#define PULSE_MAX		1680				//1.680ms right
+	#define PULSE_CENTER	1525				//1.525ms
+
+	/* TIM10 channel1 - PC8 - PWM */
+	#define MAX_CLOCK		180				/* TIM10 max clock: 180MHz */
+	#define PRESCALER		(MAX_CLOCK-1)	/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM10_freq=180MHZ/180 =1MHz
+	#define PERIOD			(10000-1)		/* PWM_frequency=TIM_freq/(Period+1)=1MHZ/10000=10^6HZ/10000 =100HZ */
+#else
+	//100% - 20ms (f=50Hz, T=20ms)
+	#define	PULSE_UNIT		(PERIOD+1)/200		//0.1ms, jelenleg nem használjuk
+	#define PULSE_MIN		1250//1260			//1.24ms left
+	#define PULSE_MAX		1690//1680			//1.68ms right
+	#define PULSE_CENTER	1460				//1.46ms
+
+	/* TIM10 channel1 - PC8 - PWM */
+	#define MAX_CLOCK		180				/* TIM10 max clock: 180MHz */
+	#define PRESCALER		(MAX_CLOCK-1)	/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM10_freq=180MHZ/180 =1MHz
+	#define PERIOD			(20000-1)		/* PWM_frequency=TIM_freq/(Period+1)=1MHZ/20000=10^6HZ/20000 =50HZ */
+#endif /* PRO_SERVO */
 
 /**********************************************/
 /*************** Servo - Sharp ****************/
