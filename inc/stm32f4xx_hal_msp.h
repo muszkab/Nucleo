@@ -13,6 +13,7 @@
 #include "stm32f4xx_nucleo.h" //TODO Ebben mi van, mi lesz? Neve alapján nem lehet behatárolni
 #include "Encoder.h"
 #include "ADC.h"
+#include "Sharp.h"
 #include "UART.h"
 #include "Buttons.h"
 #include "CAN.h"

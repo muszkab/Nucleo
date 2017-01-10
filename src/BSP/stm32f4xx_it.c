@@ -128,4 +128,6 @@ void TIM_REMOTE_IRQHandler(void){
 void TIM_SZABALYZO_IRQHandler(void){
 	HAL_TIM_IRQHandler(&TimHandle_Szabalyzo);
 }
-
+void TIM8_UP_TIM13_IRQHandler(){
+	HAL_TIM_IRQHandler(&Adc1_Tim_Handle);
+}

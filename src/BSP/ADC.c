@@ -10,19 +10,22 @@
 
 /* ADC handler declaration */
 ADC_HandleTypeDef    Adc1Handle;
+/* Timer handler declaration */
+TIM_HandleTypeDef    Adc1_Tim_Handle;
 
-#define BufferSize 1000
-uint16_t uhADC1ConvertedValues[BufferSize];
+/**********************************************/
+/***************** TIMER - ADC ****************/
+/**********************************************/
+#define ADC_TIM_FREQ			10000
+#define ADC_TIM_PERIOD			500
+#define ADC_TIM_MAX_CLOCK		180				/* TIM8 max clock: 180MHz */
+#define ADC_TIM_PRESCALER		((ADC_TIM_MAX_CLOCK*1e6) / ADC_TIM_FREQ) - 1
 
 /**
-  * @brief ADC MSP Initialization
-  *        This function configures the hardware resources used in this example:
-  *           - Peripheral's clock enable
-  *           - Peripheral's GPIO Configuration
-  * @param hadc: ADC handle pointer
-  * @retval None
+  * @brief ADC Initialization
   */
-void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc){
+void ADC1_Init(){
+	ADC_ChannelConfTypeDef 	  sConfig;
 	GPIO_InitTypeDef          GPIO_InitStruct;
 	static DMA_HandleTypeDef  Dma2Handle;
 
@@ -76,26 +79,19 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc){
 
 	/*##-4- Configure the NVIC for DMA #########################################*/
 	/* NVIC configuration for DMA transfer complete interrupt */
-	HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0); //TODO prioritás
+	HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 7, 0);
 	HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
-}
 
-/**
-  * @brief ADC Initialization
-  */
-void ADC1_Init(){
-	ADC_ChannelConfTypeDef sConfig;
-
-	/*##-1- Configure the ADC peripheral #######################################*/
+	/*##-2- Configure the ADC peripheral #######################################*/
 	Adc1Handle.Instance                   = ADC1;
 	Adc1Handle.Init.ClockPrescaler        = ADC_CLOCKPRESCALER_PCLK_DIV4;
 	Adc1Handle.Init.Resolution            = ADC_RESOLUTION;
 	Adc1Handle.Init.ScanConvMode          = ENABLE;                         /* Sequencer enabled (ADC conversion on multiple channels) */
-	Adc1Handle.Init.ContinuousConvMode    = DISABLE;                        /* Continuous mode disabled to have only 1 conversion at each conversion trig TODO engedélyezni lehetne*/
+	Adc1Handle.Init.ContinuousConvMode    = DISABLE;                        /* Continuous mode disabled to have only 1 conversion at each conversion trig */
 	Adc1Handle.Init.DiscontinuousConvMode = DISABLE;                        /* Parameter discarded because sequencer is disabled */
 	Adc1Handle.Init.NbrOfDiscConversion   = 0;
-	Adc1Handle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE;  /* Conversion start trigged at each external event */
-	Adc1Handle.Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T1_CC1;	/*TODO hardveres triggerrel meg lehetne oldani? */
+	Adc1Handle.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_RISING;  /* Conversion start trigged at each external event */
+	Adc1Handle.Init.ExternalTrigConv      = ADC_EXTERNALTRIGCONV_T8_TRGO;
 	Adc1Handle.Init.DataAlign             = ADC_DATAALIGN_RIGHT;
 	Adc1Handle.Init.NbrOfConversion       = 4;
 	Adc1Handle.Init.DMAContinuousRequests = ENABLE;
@@ -106,9 +102,9 @@ void ADC1_Init(){
 		Error_Handler();
 	}
 
-	//TODO sorrendet majd le kell ellenõrizni
-	/*##-2- Configure ADC regular channels ######################################*/
-	sConfig.Channel      = ADC1_CHANNEL4;
+	/*##-3- Configure ADC regular channels ######################################*/
+	/***************** Battery Feedback ******************/
+	sConfig.Channel      = ADC1_CHANNEL10;
 	sConfig.Rank         = 1;
 	sConfig.SamplingTime = ADC_SAMPLETIME;
 	sConfig.Offset       = 0;
@@ -118,9 +114,8 @@ void ADC1_Init(){
 		Error_Handler();
 	}
 
-
-	/***************** Battery Feedback ******************/
-	sConfig.Channel      = ADC1_CHANNEL10;
+	/* Front Sharp */
+	sConfig.Channel      = ADC1_CHANNEL4;
 	sConfig.Rank         = 2;
 	sConfig.SamplingTime = ADC_SAMPLETIME;
 	sConfig.Offset       = 0;
@@ -130,6 +125,7 @@ void ADC1_Init(){
 		Error_Handler();
 	}
 
+	/* Left Sharp */
 	sConfig.Channel      = ADC1_CHANNEL13;
 	sConfig.Rank         = 3;
 	sConfig.SamplingTime = ADC_SAMPLETIME;
@@ -140,6 +136,7 @@ void ADC1_Init(){
 		Error_Handler();
 	}
 
+	/* Right Sharp */
 	sConfig.Channel      = ADC1_CHANNEL14;
 	sConfig.Rank         = 4;
 	sConfig.SamplingTime = ADC_SAMPLETIME;
@@ -149,27 +146,44 @@ void ADC1_Init(){
 		/* Channel Configuration Error */
 		Error_Handler();
 	}
-
-	//TODO startolni nem biztos, h itt kell
-	/*##-3- Start the conversion process #######################################*/
-	/* Note: Considering IT occurring after each number of ADC conversions      */
-	/*       (IT by DMA end of transfer), select sampling time and ADC clock    */
-	/*       with sufficient duration to not create an overhead situation in    */
-	/*        IRQHandler. */
-	if(HAL_ADC_Start_DMA(&Adc1Handle, (uint32_t*)&uhADC1ConvertedValues, 4) != HAL_OK){
-		/* Start Conversation Error */
-		Error_Handler();
-	}
 }
 
 /**
-  * @brief  Conversion complete callback in non blocking mode
-  * @param  AdcHandle : AdcHandle handle
-  * @note   This example shows a simple way to report end of conversion, and
-  *         you can add your own implementation.
-  * @retval None
+  * @brief ADC Initialization
   */
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle){
+void ADC1_TIM_Init(){
+	TIM_MasterConfigTypeDef sMasterConfig;
 
+	/*##-1- Enable peripheral clock #################################*/
+	/* TIM8 Peripheral clock enable */
+	ADC_TIM_CLK_ENABLE();
+
+	//TODO debug miatt az IT-ben LED villogtatással ellenõrizhetõ a frekvencia
+	/*##-2- Configure the NVIC for TIM3 ########################################*/
+	/* Set the TIM3 priority */
+	HAL_NVIC_SetPriority(TIM8_UP_TIM13_IRQn, 7, 0);
+	/* Enable the TIM3 global Interrupt */
+	HAL_NVIC_EnableIRQ(TIM8_UP_TIM13_IRQn);
+
+	/* Time Base configuration */
+	Adc1_Tim_Handle.Instance 			   = TIM8;
+	Adc1_Tim_Handle.Init.Period            = ADC_TIM_PERIOD;
+	Adc1_Tim_Handle.Init.Prescaler         = ADC_TIM_PRESCALER;
+	Adc1_Tim_Handle.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
+	Adc1_Tim_Handle.Init.CounterMode       = TIM_COUNTERMODE_UP;
+	Adc1_Tim_Handle.Init.RepetitionCounter = 0;
+
+	if (HAL_TIM_Base_Init(&Adc1_Tim_Handle) != HAL_OK){
+		/* Timer initialization Error */
+		Error_Handler();
+	}
+
+	/* Timer TRGO selection */
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+
+	if (HAL_TIMEx_MasterConfigSynchronization(&Adc1_Tim_Handle, &sMasterConfig) != HAL_OK){
+		/* Timer TRGO selection Error */
+		Error_Handler();
+	}
 }
-

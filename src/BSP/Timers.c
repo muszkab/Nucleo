@@ -82,4 +82,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	else if(htim->Instance == ENC_CALLBACK_TIM){
 		Encoder_Callback_Timer();
 	}
+	else if(htim->Instance==TIM8){
+
+	}
 }

@@ -42,7 +42,6 @@
 /**********************************************/
 /*************** Servo - Sharp ****************/
 /**********************************************/
-//TODO frekvenciát le kell ellenõrizni
 /* TIM4 channel2 - PB7 - PWM */
 #define SERVO_SHARP_MAX_CLOCK	90						  /* TIM4 max clock: 90MHz */
 #define SERVO_SHARP_PRESCALER	(SERVO_SHARP_MAX_CLOCK-1) /* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM10_freq=180MHZ/180 =1MHz

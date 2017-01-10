@@ -13,7 +13,7 @@
 #include "Nucleo.h"
 
 /* Itt beállítható, hogy melyik motorvezérlõt használjuk */
-#define HBRIDGE_HOMEMADE
+//#define HBRIDGE_HOMEMADE
 #ifdef HBRIDGE_HOMEMADE
 	#define Motor_Init() 	Motor_PWM_Init()
 #else
@@ -42,16 +42,16 @@
 /**************** GYÁRI MOTORVEZÉRLÕ *****************/
 /*****************************************************/
 /* Definition for TIMx clock resources */
-#define TIM_MOTOR_FACTORY                  		TIM8
-#define TIM_MOTOR_FACTORY_CLK_ENABLE()    		__HAL_RCC_TIM8_CLK_ENABLE()
+#define TIM_MOTOR_FACTORY                  		TIM13
+#define TIM_MOTOR_FACTORY_CLK_ENABLE()    		__HAL_RCC_TIM13_CLK_ENABLE()
 
 /* Definition for TIMx Channel Pins  */
-/* TIM8_CH4:	PC9 */
-#define TIM_MOTOR_FACTORY_CHANNEL_GPIO_PORT()  __HAL_RCC_GPIOC_CLK_ENABLE()
-#define TIM_MOTOR_FACTORY_GPIO_PORT_CHANNEL     GPIOC
-#define TIM_MOTOR_FACTORY_GPIO_PIN_CHANNEL      GPIO_PIN_9
-#define TIM_MOTOR_FACTORY_GPIO_AF				GPIO_AF3_TIM8
-#define TIM_MOTOR_FACTORY_CHANNEL				TIM_CHANNEL_4
+/* TIM13_CH1:	PA6 */
+#define TIM_MOTOR_FACTORY_CHANNEL_GPIO_PORT()  __HAL_RCC_GPIOA_CLK_ENABLE()
+#define TIM_MOTOR_FACTORY_GPIO_PORT     		GPIOA
+#define TIM_MOTOR_FACTORY_GPIO_PIN      		GPIO_PIN_6
+#define TIM_MOTOR_FACTORY_GPIO_AF				GPIO_AF9_TIM13
+#define TIM_MOTOR_FACTORY_CHANNEL				TIM_CHANNEL_1
 
 /*Functions*/
 void Motor_PWM_Init();

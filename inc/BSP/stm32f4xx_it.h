@@ -74,7 +74,7 @@ void CAN1_RX0_IRQHandler(void);			// CAN1 RX0 interrupt request
 void TIM1_BRK_TIM9_IRQHandler(void);	// Encoder Callback Timer interrupt request
 void TIM_REMOTE_IRQHandler(void);
 void TIM_SZABALYZO_IRQHandler(void);
-
+void TIM8_UP_TIM13_IRQHandler();
 
 #ifdef __cplusplus
 }

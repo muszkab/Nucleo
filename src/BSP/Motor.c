@@ -39,9 +39,9 @@ TIM_OC_InitTypeDef              sPWMConfig;
 #define FACTORY_PULSE_MAX		2000//1680			//2 ms
 #define FACTORY_PULSE_CENTER	1500				//1.5 ms
 
-/* TIM8 channel4 - PC9 - PWM */
-#define FACTORY_MAX_CLOCK		180				/* TIM5 max clock: 180MHz */
-#define FACTORY_PRESCALER		(MAX_CLOCK-1)	/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM10_freq=180MHZ/180 =1MHz
+/* TIM13 channel1 - PA6 - PWM */
+#define FACTORY_MAX_CLOCK		90				/* TIM5 max clock: 180MHz */
+#define FACTORY_PRESCALER		(FACTORY_MAX_CLOCK-1)	/* TIM_freq=MAX_CLOCK*10^6/(Prescaler+1) */ //TIM10_freq=180MHZ/180 =1MHz
 #define FACTORY_PERIOD			(20000-1)		/* PWM_frequency=TIM_freq/(Period+1)=1MHZ/20000=10^6HZ/20000 =50HZ */
 
 /* Private variables ---------------------------------------------------------*/
@@ -152,8 +152,8 @@ void Motor_PWM_Init_Factory()
 	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 
 	GPIO_InitStruct.Alternate = TIM_MOTOR_FACTORY_GPIO_AF;
-	GPIO_InitStruct.Pin = TIM_MOTOR_FACTORY_GPIO_PIN_CHANNEL;
-	HAL_GPIO_Init(TIM_MOTOR_FACTORY_GPIO_PORT_CHANNEL, &GPIO_InitStruct);
+	GPIO_InitStruct.Pin = TIM_MOTOR_FACTORY_GPIO_PIN;
+	HAL_GPIO_Init(TIM_MOTOR_FACTORY_GPIO_PORT, &GPIO_InitStruct);
 
 	/*##-2- Configure the TIM peripheral #######################################*/
 	/* f=50Hz =180MHz/180/20000 */

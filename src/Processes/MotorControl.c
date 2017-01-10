@@ -27,11 +27,11 @@ static float u1;
 static float u2;
 static float u;
 static float Velocity;
-
+static float VelocityRef;
 /* Identifikációhoz */
 uint8_t IdentificationEnable = 1;
 
-void MotorControl(float VelocityRef){
+void MotorControl(){
 	if(TimeMotorControl > 20){
 		TimeMotorControl = 0;
 		/* Algoritmus */
@@ -43,6 +43,9 @@ void MotorControl(float VelocityRef){
 	}
 }
 
+void MotorControlSetVelocityRef(float Vref){
+	VelocityRef = Vref;
+}
 float MotorControlSaturate(float u){
 	if(u > MAX_OUTPUT)
 		return MAX_OUTPUT;
@@ -66,7 +69,7 @@ float LookUpTable(float u){
   * Identifikálásnál csak ez a függvény fusson
   */
 void MotorIdentification(){
-	uint16_t output = 0;
+	int16_t output = 0;
 	uint16_t time_run = 0;
 	uint16_t time_wait = 0;
 	float    velocity;
@@ -74,15 +77,15 @@ void MotorIdentification(){
 		while(IdentificationEnable){}
 		SetSpeed(output);
 		for(time_run = 0; time_run < TIME_RUN; time_run+=TIME_STEP_RUN){
+			HAL_Delay(TIME_STEP_RUN);
 			velocity = Encoder_GetVelocityRaw();
 			printf("%3.3f; %d\n\r", velocity, output);
-			HAL_Delay(TIME_STEP_RUN);
 		}
 		SetSpeed(0);
 		for(time_wait = 0; time_wait < TIME_WAIT; time_wait+=TIME_STEP_WAIT){
+			HAL_Delay(TIME_STEP_WAIT);
 			velocity = Encoder_GetVelocityRaw();
 			printf("%3.3f; 0\n\r", velocity);
-			HAL_Delay(TIME_STEP_WAIT);
 		}
 		IdentificationEnable = 1;
 	}
