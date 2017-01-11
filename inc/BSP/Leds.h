@@ -11,8 +11,8 @@
 #include "Nucleo.h"
 
 /*
- * Blue		- háromvonal		LineType.c
- * Red		- P corner/straight	PositionControl.c
+ * Blue		- háromvonal	LineType.c
+ * Red		- kétvonal		LineType.c
  * Yellow	-
  * Green	-
  */

@@ -33,6 +33,7 @@ typedef enum{
 	var_LineNumber,
 	var_Speed_Corner,
 	var_Speed_Straight,
+	var_BatteryVoltage,
 	VariableName_LastElement
 }VariableName;
 

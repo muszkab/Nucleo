@@ -77,6 +77,11 @@ void Do_LineType()
 			Led_On(Blue);
 		else
 			Led_Off(Blue);
+
+		if(LineNumber == TwoLine)
+			Led_On(Red);
+		else
+			Led_Off(Red);
 	}
 }
 
@@ -116,6 +121,7 @@ static void Is_EgyVonal()
 	if(OneLineDistance > ONELINEDISTANCE_FOLYT_LIMIT)
 	{
 		StateLineType = Egyvonal_folyt;
+		SendDebugMessage_Text("Egyvonal folytonos");
 	}
 
 	//ha eltûnt az egyvonal és a kormányszög 0 körül van, feltehetõleg egyvonal szaggatott lesz
@@ -129,7 +135,11 @@ static void Is_EgyVonal()
 		NoLineDistance = Encoder_GetDistance_cm() - NoLineStartPos;
 		//ha egy adott hossznál nagyobb a szaggatás, egyvonal szaggatott lesz az állapotváltozó
 		if(NoLineDistance > NOLINEDISTANCE_SZAGG_LIMIT)
+		{
 			StateLineType = Egyvonal_szagg;
+			SendDebugMessage_Text("Egyvonal szaggatott");
+
+		}
 	}
 }
 
@@ -154,6 +164,7 @@ static void Is_KetVonal()
 			if(OneLineDistance > TWOLINEDISTANCE_SZAGG_LIMIT_ONELINE && TwoLineDistance > TWOLINEDISTANCE_SZAGG_LIMIT_TWOLINE)
 			{
 				StateLineType = Ketvonal_szagg;
+				SendDebugMessage_Text("Ketvonal szaggatott");
 			}
 		}
 	}
@@ -188,11 +199,13 @@ static void Is_HaromVonal()
 			if(One_Three_DistanceDifference < DISTANCEDIFFERENCE_MAX && One_Three_DistanceDifference > -DISTANCEDIFFERENCE_MAX)
 			{
 				StateLineType = Haromvonal_szagg;
+				SendDebugMessage_Text("Haromvonal szaggatott");
 			}
 			//ha nincs határon belül, legyen megint normal állapot
 			else
 			{
 				StateLineType = Egyvonal_folyt;
+				SendDebugMessage_Text("Egyvonal folytonos");
 			}
 		}
 	}
@@ -206,6 +219,7 @@ static void Is_HaromVonal()
 		{
 			//folytonos háromvonal van
 			StateLineType = Haromvonal_folyt;
+			SendDebugMessage_Text("Haromvonal folytonos");
 		}
 	}
 
@@ -217,6 +231,7 @@ static void Is_HaromVonal()
 		{
 			//normál egyvonal állapot
 			StateLineType = Egyvonal_folyt;
+			SendDebugMessage_Text("Egyvonal folytonos");
 		}
 
 		//ha vélhetõen szaggatott vonal van

@@ -36,6 +36,8 @@ typedef enum{
 	Haromvonal_szagg
 }State_LineType;
 
+/* Message függvények */
+extern void SendDebugMessage_Text(const char* string);
 /*Get függvények*/
 /* LineType.h */
 extern lineType Get_LineNumber();
@@ -46,6 +48,11 @@ extern int8_t Get_LinePosition();
 extern float Get_P_Corner();
 extern float Get_P_Straight();
 extern float Get_D();
+/* Sharp.h */
+extern float GetBatteryVoltage();
+extern float GetFrontSharpDistance();
+extern float GetRightSharpDistance();
+extern float GetLeftSharpDistance();
 
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;

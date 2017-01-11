@@ -31,6 +31,7 @@ void Do_Send_ValueMessageArray()
 		SetValue_AtMessageArray(var_P_Corner,	(float) Get_P_Corner());
 		SetValue_AtMessageArray(var_P_Straight,	(float) Get_P_Straight());
 		SetValue_AtMessageArray(var_D,			(float) Get_D());
+		SetValue_AtMessageArray(var_BatteryVoltage, (float) GetBatteryVoltage());
 		//SetValue_AtMessageArray(var_State, (float) StateQ1);
 		//SetValue_AtMessageArray(var_Speed_Corner, (float) StateQ1);
 		//SetValue_AtMessageArray(var_Speed_Straight, (float) StateQ1);
@@ -58,11 +59,13 @@ void Message_Init()
 	Value_MessageArray[var_LinePos].Name		= "Value:LinePos";
 	Value_MessageArray[var_Speed_Corner].Name	= "Value:Speed_Corner";
 	Value_MessageArray[var_Speed_Straight].Name	= "Value:Speed_Straight";
+	Value_MessageArray[var_BatteryVoltage].Name	= "Value:BatteryVoltage";
+
 	//status és adat nullázása
 	for(int i =0;i<MESSAGEARRAY_SIZE;i++)
 	{
 		Value_MessageArray[i].Data = 0;
-		Value_MessageArray[i].Status = OldValue;
+		Value_MessageArray[i].Status = NewValue;
 	}
 }
 

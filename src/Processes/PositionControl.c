@@ -37,12 +37,10 @@ void Do_PositionControl()
 		if((SpeedNow <= CornerSpeed) && (Get_LineNumber() != ThreeLine))
 		{
 			P=P_Corner;
-			Led_On(Red);
 		}
 		else
 		{
 			P=P_Straight;
-			Led_Off(Red);
 		}
 
 		//hibajel
