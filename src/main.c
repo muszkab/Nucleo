@@ -66,23 +66,23 @@ int main(void)
 	{
 		//HAL_Delay(1000);
 
-		//Vonalkövetés: PD szabályzó
-		//Do_PositionControl();
+		//Üzenetküldés Bluetooth-on
+		Do_Send_ValueMessageArray();
 
 		//Vonaltípus meghatározás
-		//Do_LineType();
+		Do_LineType();
+
+		//vészleállítás távirányítóval
+		Is_StopCommand();
+
+		//Vonalkövetés: PD szabályzó
+		//Do_PositionControl();
 
 		//Sebesség: fix érték vonaltípus alapján, Q1
 		//Do_SpeedControl_FixSpeed();
 
 		//Sebesség: távirányító
 		//SetSpeed_RemoteControl();
-
-		//Üzenetküldés Bluetooth-on
-		Do_Send_ValueMessageArray();
-
-		//vészleállítás távirányítóval
-		Is_StopCommand();
 
 		//SendDebugMessage_Array(messageGraph, 1);
 		//if(messageGraph[0].Data>-50)

@@ -14,7 +14,8 @@
 #define THREELINEDISTANCE_FOLYT_LIMIT 	10	//cm	(szaggatott max 8)
 #define ONELINEDISTANCE_FOLYT_LIMIT 	18	//cm	(kétvonal szaggatottnál 16cm az egyvonal szaggatás)
 #define DISTANCEDIFFERENCE_MAX			1	//cm	szaggatott háromvonalnál, az egy- és háromvonal szaggatás megengedett eltérése. Névleges méret: 8cm
-#define NOLINEDISTANCE_SZAGG_LIMIT		7	//cm	névleges hossz: 8cm
+#define NOLINEDISTANCE_SZAGG_MIN		7	//cm	névleges hossz: 8cm
+#define NOLINEDISTANCE_SZAGG_MAX		9	//cm	névleges hossz: 8cm
 #define TWOLINEDISTANCE_SZAGG_LIMIT_TWOLINE	7//cm	névleges hossz: 8cm
 #define TWOLINEDISTANCE_SZAGG_LIMIT_ONELINE	15//cm	névleges hossz: 16cm
 
@@ -117,11 +118,12 @@ static void Is_EgyVonal()
 	{
 		OneLineDistance = Encoder_GetDistance_cm() - OneLineStartPos;
 	}
-	//hossz ellenõrzés, ha elég nagy, berakjuk egyvonal folytonosba
-	if(OneLineDistance > ONELINEDISTANCE_FOLYT_LIMIT)
+	//hossz ellenõrzés, ha elég nagy, és elõtte más állapotban  volt, berakjuk egyvonal folytonosba
+	if(StateLineType != Egyvonal_folyt && OneLineDistance > ONELINEDISTANCE_FOLYT_LIMIT)
 	{
 		StateLineType = Egyvonal_folyt;
 		SendDebugMessage_Text("Egyvonal folytonos");
+
 	}
 
 	//ha eltûnt az egyvonal és a kormányszög 0 körül van, feltehetõleg egyvonal szaggatott lesz
@@ -133,8 +135,8 @@ static void Is_EgyVonal()
 	if(LineNumberPrev == NoLine && (Get_ServoPosition() <20) &&  (Get_ServoPosition() >-20) && LineNumber == OneLine)
 	{
 		NoLineDistance = Encoder_GetDistance_cm() - NoLineStartPos;
-		//ha egy adott hossznál nagyobb a szaggatás, egyvonal szaggatott lesz az állapotváltozó
-		if(NoLineDistance > NOLINEDISTANCE_SZAGG_LIMIT)
+		//ha egy adott hossznál nagyobb, és egy másiknál kisebb a szaggatás, egyvonal szaggatott lesz az állapotváltozó
+		if(NoLineDistance > NOLINEDISTANCE_SZAGG_MIN && NoLineDistance < NOLINEDISTANCE_SZAGG_MAX)
 		{
 			StateLineType = Egyvonal_szagg;
 			SendDebugMessage_Text("Egyvonal szaggatott");
@@ -178,13 +180,13 @@ static void Is_KetVonal()
 //figyeli hogy háromvonal van-e, és ha igen, szaggatott vagy folytonos, és beállítja a StateLineType változót ennek megfelelõen
 static void Is_HaromVonal()
 {
-	//egy vonalból három vonal lett
-	if(LineNumber==ThreeLine && LineNumberPrev==OneLine)
+	//nem három(egy vagy kettõ) vonalból három vonal lett
+	if(LineNumber == ThreeLine && LineNumberPrev != ThreeLine)
 	{
 		//abszolút távolság kezdõpontja
 		ThreeLineStartPos = Encoder_GetDistance_cm();
-		//ha normal egyvonal állapotban  voltunk
-		if(StateLineType == Egyvonal_folyt)
+		//ha normal egyvonal állapotban  voltunk vagy Ketvonal_x-ben, mert lehet hogy elsõzör csak két vonalat érzékel a háromból
+		if((StateLineType == Egyvonal_folyt) || (StateLineType == Ketvonal_x))
 		{
 			//állapotot háromvonalba állítjuk, nem tudjuk folytonos vagy szaggatott
 			StateLineType = Haromvonal_x;
@@ -200,12 +202,6 @@ static void Is_HaromVonal()
 			{
 				StateLineType = Haromvonal_szagg;
 				SendDebugMessage_Text("Haromvonal szaggatott");
-			}
-			//ha nincs határon belül, legyen megint normal állapot
-			else
-			{
-				StateLineType = Egyvonal_folyt;
-				SendDebugMessage_Text("Egyvonal folytonos");
 			}
 		}
 	}
@@ -223,24 +219,12 @@ static void Is_HaromVonal()
 		}
 	}
 
-	//három vonalból egy vonal lett
-	if(LineNumber==OneLine && LineNumberPrev==ThreeLine)
+	//ha vélhetõen szaggatott vonal van és három vonalból valami más vonal lett
+	if(StateLineType == Haromvonal_x && LineNumber != ThreeLine && LineNumberPrev == ThreeLine)
 	{
-		//ha folytonos három vonalnak lett vége
-		if(StateLineType == Haromvonal_folyt)
-		{
-			//normál egyvonal állapot
-			StateLineType = Egyvonal_folyt;
-			SendDebugMessage_Text("Egyvonal folytonos");
-		}
-
-		//ha vélhetõen szaggatott vonal van
-		else if(StateLineType == Haromvonal_x)
-		{
-			//abszolút távolság végpontja - kezdõpontja = relatív távolság
-			ThreeLineDistance = Encoder_GetDistance_cm() - ThreeLineStartPos;
-			//az egyvonal távolságát az Is_EgyVonal() számolja folyamatosan
-		}
+		//abszolút távolság végpontja - kezdõpontja = relatív távolság
+		ThreeLineDistance = Encoder_GetDistance_cm() - ThreeLineStartPos;
+		//az egyvonal távolságát az Is_EgyVonal() számolja folyamatosan
 	}
 }
 
@@ -274,4 +258,9 @@ lineType Get_LineNumber()
 State_LineType Get_StateLineType()
 {
 	return StateLineType;
+}
+
+float Get_ThreeLineDistance()
+{
+	return ThreeLineDistance;
 }

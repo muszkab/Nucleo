@@ -12,7 +12,6 @@
 /**********************************************/
 /*********** Servo - Steering Wheel ***********/
 /**********************************************/
-//TODO új szervónak új paraméterek
 #define PRO_SERVO
 
 #ifdef	PRO_SERVO

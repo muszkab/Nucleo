@@ -72,7 +72,7 @@ int8_t Get_ServoPosition()
 /* LinePosition:-128..127 */
 int8_t Get_LinePosition()
 {
-	return LinePosition[0];
+	return (int8_t)FrontSensor_Data[0];
 }
 
 /*  */

@@ -42,6 +42,7 @@ extern void SendDebugMessage_Text(const char* string);
 /* LineType.h */
 extern lineType Get_LineNumber();
 extern State_LineType Get_StateLineType();
+extern float Get_ThreeLineDistance();
 /* PositionControl.h */
 extern int8_t Get_ServoPosition();
 extern int8_t Get_LinePosition();
@@ -53,6 +54,9 @@ extern float GetBatteryVoltage();
 extern float GetFrontSharpDistance();
 extern float GetRightSharpDistance();
 extern float GetLeftSharpDistance();
+/* Encoder.h */
+extern float Encoder_GetDistance_cm();	 	// cm
+extern float Encoder_GetVelocity(void); 	// m/s
 
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;

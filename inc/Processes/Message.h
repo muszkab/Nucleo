@@ -31,9 +31,15 @@ typedef enum{
 	var_D,
 	var_LinePos,
 	var_LineNumber,
+	var_SpeedNow,
 	var_Speed_Corner,
 	var_Speed_Straight,
 	var_BatteryVoltage,
+	var_FrontSharp,
+	var_RightSharp,
+	var_LeftSharp,
+	var_Distance,
+	var_ThreeLineDistance,
 	VariableName_LastElement
 }VariableName;
 

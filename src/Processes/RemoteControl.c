@@ -179,7 +179,7 @@ void Is_StopCommand()
 {
 	if(uwDutyCycle<70)
 	{
-		StateQ1 = Stop;
+		SetSpeed(0);
 	}
 }
 
