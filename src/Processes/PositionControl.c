@@ -25,8 +25,35 @@ static float D_All		= D;
 //hibajel, mostani[0] és elõzõ[1] érték
 static int8_t LinePosition[2];
 
-void Do_PositionControl()
-{
+/*************************************************/
+/************ ÁLLAPOTTERES SZABÁLYZÓ**************/
+/*************************************************/
+// Csillapítási tényezõ, ajánlott értéke : 0,7 0,9
+#define T_AT 10 						// Ciklusidõ
+static float D5Percent;  				// Beállási úthossz					 [m]
+static float Speed;						// Sebesség							 [m/s]
+#define	L					0.385f		// Hátsó kerék - szenzorsor távolság [m]
+#define D_LINE_SENSORS 		16.4f		// Szenzorsorok távolsága 			 [cm]
+#define Width_LINE_SENSOR 	18.5f 		// -128 127-ig mehet a vonalpozíció  Szenzorsor hossza [cm]
+#define LINE_POS_OFFSET  	0.0f       	// 2. szenzorsor eltérése az elsõhöz képest
+
+/* Állapotteres szabályozó a vonalkövetésre */
+void Do_PositionControl_AT(){
+	//ciklusidõ ellenõrzés
+	if(TimePositionControl_AT > T_AT){
+		//számláló nullázás a ciklus újrakezdéséhez
+		TimePositionControl=0;
+	}
+}
+
+/* Vonal orientáció lekérdezése állapotteres szabályzóhoz*/
+float GetLineOrient(){
+	return atan ((FrontSensor_Data[0] - RearSensor_Data[0])/L);
+}
+
+
+/* PD szabályozó a vonalkövetésre */
+void Do_PositionControl(){
 	//ciklusidõ ellenõrzés és ha nincs vonal, nincs szabályzás, tartsa az elõzõ kormányszöget
 	if((TimePositionControl > T) && (Get_LineNumber() != NoLine))
 	{

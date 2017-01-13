@@ -13,7 +13,7 @@
 #include "Nucleo.h"
 
 /* Itt beállítható, hogy melyik motorvezérlõt használjuk */
-//#define HBRIDGE_HOMEMADE
+#define HBRIDGE_HOMEMADE
 #ifdef HBRIDGE_HOMEMADE
 	#define Motor_Init() 	Motor_PWM_Init()
 #else

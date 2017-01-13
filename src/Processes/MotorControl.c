@@ -8,9 +8,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "MotorControl.h"
 
-#define MAX_OUTPUT	80.0f //Az inverz függvényben a maximális megengedhetõ kimenet FOXBORO-hoz
-#define Zd			0.9f
-#define Kc			8.78f
+#define MAX_OUTPUT	61200.0f //Az inverz függvényben a maximális megengedhetõ kimenet FOXBORO-hoz
+#define Zd			0.96f
+#define Kc			4.0f
 
 
 #define LOOKUP_MAX	10   //Identifikációs mérések száma
@@ -20,8 +20,8 @@
 //Inverz karakterisztika x tengelye
 static const float LookUpY[LOOKUP_MAX] = {
 		0,	0,	0,	0,	0,	0,	0,	0,	0,	0}; */
-static const float Offset = 16;
-static const float m      = 1;
+static const float Offset = 40;
+static const float m      = 0.0067;
 /* Szabályzó változók FOXBORO PI */
 static float u1;
 static float u2;
@@ -31,20 +31,20 @@ static float VelocityRef;
 /* Identifikációhoz */
 uint8_t IdentificationEnable = 1;
 
-void MotorControl(){
+void Do_MotorControl(){
 	if(TimeMotorControl > 20){
 		TimeMotorControl = 0;
 		/* Algoritmus */
 		u2 = Zd * u2 + (1- Zd)*u;
-		Velocity = Encoder_GetVelocity();
+		Velocity = Encoder_GetVelocityRaw();
 		u1 = Kc * (VelocityRef - Velocity);
 		u = MotorControlSaturate(u1+u2);
-		SetSpeedFactory((int8_t)LookUpTable(u));
+		SetSpeed((int16_t)LookUpTable(u));
 	}
 }
 
 void MotorControlSetVelocityRef(float Vref){
-	VelocityRef = Vref;
+	VelocityRef = Vref/METER_PER_INCR;
 }
 float MotorControlSaturate(float u){
 	if(u > MAX_OUTPUT)
@@ -55,11 +55,15 @@ float MotorControlSaturate(float u){
 }
 float LookUpTable(float u){
 	int8_t sign = 1;
+	float y;
 	if(u < 0){
 		sign = -1;
 		u *= -1;
 	}
-	return sign*(m*u+Offset);
+	y = m*u+Offset;
+	if(y <= Offset)
+		y = 0;
+	return sign*y;
 }
 
 /**
@@ -80,6 +84,8 @@ void MotorIdentification(){
 			HAL_Delay(TIME_STEP_RUN);
 			velocity = Encoder_GetVelocityRaw();
 			printf("%3.3f; %d\n\r", velocity, output);
+			if(Is_StopCommand())
+				SetSpeed(0);
 		}
 		SetSpeed(0);
 		for(time_wait = 0; time_wait < TIME_WAIT; time_wait+=TIME_STEP_WAIT){
@@ -91,3 +97,4 @@ void MotorIdentification(){
 	}
 
 }
+

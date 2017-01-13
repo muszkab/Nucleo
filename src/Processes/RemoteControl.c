@@ -175,12 +175,16 @@ void SetSpeed_RemoteControl()
 	}
 }
 
-void Is_StopCommand()
+int8_t Is_StopCommand()
 {
 	if(uwDutyCycle<70)
 	{
 		StateQ1 = Stop;
+		SetSpeed(0);
+		return 1;
 	}
+	else
+		return 0;
 }
 
 void RemoteController_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)

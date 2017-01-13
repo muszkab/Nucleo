@@ -15,7 +15,7 @@
 
 //távirányító tüskéinek szûrése
 int16_t temp = 0;
-
+float VV;
 int main(void)
 {
 	/* STM32F4xx HAL library initialization:
@@ -78,9 +78,11 @@ int main(void)
 	//MotorIdentification();
 	for(;;)
 	{
+		//MotorControlSetVelocityRef(1);
+		//Do_MotorControl();
+		//VV = Encoder_GetVelocity();
 		//Vonalkövetés: PD szabályzó
 		//Do_PositionControl();
-
 		//Vonaltípus meghatározás
 		//Do_LineType();
 
@@ -114,6 +116,6 @@ int main(void)
 		//if(messageGraph[0].Data>-50)
 			//messageGraph[0].Data--;
 
-		HAL_Delay(200);
+		//HAL_Delay(200);
 	}//for
 }//main

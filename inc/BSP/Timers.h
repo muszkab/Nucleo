@@ -20,6 +20,7 @@
 
 /* Változók */
 extern uint16_t TimePositionControl;		//vonalszabályozás segédszámláló
+extern uint16_t TimePositionControl_AT;     //állapotteres vonalszabályozás segédszámláló
 extern uint16_t TimeSpeedControl;			//sebességszabályozás segédszámláló
 extern uint16_t TimeLineType;				//vonaltípus meghatározás segédszámláló
 extern uint16_t TimeAccelerate;				//gyorsításhoz segédszámláló

@@ -13,8 +13,19 @@
 #define BufferSize 4
 uint16_t uhADC1ConvertedValues[BufferSize];
 
+/* Exponential Moving Average */
+/*static const float Weight = 0.8;
+static float BatteryV_EMAvg;
+static float FrontSharp_EMAvg;
+static float RightSharp_EMAvg;
+static float LeftSharp_EMAvg; */
+
 /* Moving Average */
-static const float Weight = 0.8;
+#define MABuffLenght 2
+static float BatteryV_MAvgBuff[MABuffLenght];
+static float FrontSharp_MAvgBuff[MABuffLenght];
+static float RightSharp_MAvgBuff[MABuffLenght];
+static float LeftSharp_MAvgBuff[MABuffLenght];
 static float BatteryV_MAvg;
 static float FrontSharp_MAvg;
 static float RightSharp_MAvg;
@@ -48,15 +59,25 @@ void SharpInit(){
   * @retval None
   */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* AdcHandle){
-	LED_Toggle(Yellow);
-	BatteryV_MAvg = ExponentialMovingAverage(uhADC1ConvertedValues[0],
-			BatteryV_MAvg, Weight);
-	FrontSharp_MAvg = ExponentialMovingAverage(uhADC1ConvertedValues[1],
-			FrontSharp_MAvg, Weight);
-	RightSharp_MAvg = ExponentialMovingAverage(uhADC1ConvertedValues[3],
-			RightSharp_MAvg, Weight);
-	LeftSharp_MAvg = ExponentialMovingAverage(uhADC1ConvertedValues[2],
-			LeftSharp_MAvg, Weight);
+	/* Exponenciális átlagolás */
+	/* BatteryV_EMAvg = ExponentialMovingAverage(uhADC1ConvertedValues[0],
+			BatteryV_EMAvg, Weight);
+	FrontSharp_EMAvg = ExponentialMovingAverage(uhADC1ConvertedValues[1],
+			FrontSharp_EMAvg, Weight);
+	RightSharp_EMAvg = ExponentialMovingAverage(uhADC1ConvertedValues[3],
+			RightSharp_EMAvg, Weight);
+	LeftSharp_EMAvg = ExponentialMovingAverage(uhADC1ConvertedValues[2],
+			LeftSharp_EMAvg, Weight); */
+
+	/* Mozgó átlagolás */
+	BatteryV_MAvg = MovingAverage((float)uhADC1ConvertedValues[0],
+			BatteryV_MAvgBuff, MABuffLenght);
+	FrontSharp_MAvg = MovingAverage((float)uhADC1ConvertedValues[1],
+			FrontSharp_MAvgBuff, MABuffLenght);
+	RightSharp_MAvg = MovingAverage((float)uhADC1ConvertedValues[3],
+			RightSharp_MAvgBuff, MABuffLenght);
+	LeftSharp_MAvg = MovingAverage((float)uhADC1ConvertedValues[2],
+			LeftSharp_MAvgBuff, MABuffLenght);
 }
 
 /*
@@ -82,16 +103,18 @@ float MovingAverage(float NewData, float *MovAvBuff, uint8_t lenght){
 }
 
 float GetBatteryVoltage(){
-	return BatteryV_MAvg/BATT_CONST;
+	return (BatteryV_MAvg/BATT_CONST);
 }
 
 float GetFrontSharpDistance(){
 	return 7026*pow(FrontSharp_MAvg,-1.089);
 }
+
 float GetRightSharpDistance(){
-	return -9.174*log(0.003454*RightSharp_MAvg);
+	return 849.56*pow(RightSharp_MAvg,-1.001);
 }
+
 float GetLeftSharpDistance(){
-	return 10.3*log(275.08/LeftSharp_MAvg);
+	return 1069.01*pow(LeftSharp_MAvg,-1.045);
 }
 

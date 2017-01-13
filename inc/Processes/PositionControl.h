@@ -10,6 +10,7 @@
 
 #include "Processes.h"
 #include "SpeedControl.h"
+#include "math.h"
 
 /* Külsõ változók */
 //elsõ byte a vonalpozíció (int8_t), a második a vonalak darabszáma(0,1,2,3)
@@ -18,6 +19,8 @@ extern uint8_t FrontSensor_Data[8];		//CAN.c
 extern uint8_t RearSensor_Data[8];		//CAN.c
 //vonalszabályozás segédszámláló a ciklusidõhöz
 extern uint16_t TimePositionControl;	//Timers.c
+//állapotteres vonalszabályozás segédszámláló a ciklusidõhöz
+extern uint16_t TimePositionControl_AT;	//Timers.c
 
 /* Külsõ függvények */
 void SetServoPWMPulse(const int8_t ServoPos);	//Servo.c
