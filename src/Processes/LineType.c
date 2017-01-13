@@ -118,6 +118,12 @@ static void Is_EgyVonal()
 	{
 		OneLineDistance = Encoder_GetDistance_cm() - OneLineStartPos;
 	}
+	//TODO: kétvonal szaggatottnál így nem jó!
+	//ha nincs egyvonal, nullázzuk a hosszt
+	if(LineNumber != OneLine)
+	{
+		OneLineDistance = 0;
+	}
 	//hossz ellenõrzés, ha elég nagy, és elõtte más állapotban  volt, berakjuk egyvonal folytonosba
 	if(StateLineType != Egyvonal_folyt && OneLineDistance > ONELINEDISTANCE_FOLYT_LIMIT)
 	{
@@ -135,8 +141,8 @@ static void Is_EgyVonal()
 	if(LineNumberPrev == NoLine && (Get_ServoPosition() <20) &&  (Get_ServoPosition() >-20) && LineNumber == OneLine)
 	{
 		NoLineDistance = Encoder_GetDistance_cm() - NoLineStartPos;
-		//ha egy adott hossznál nagyobb, és egy másiknál kisebb a szaggatás, egyvonal szaggatott lesz az állapotváltozó
-		if(NoLineDistance > NOLINEDISTANCE_SZAGG_MIN && NoLineDistance < NOLINEDISTANCE_SZAGG_MAX)
+		//ha normál egyvonal folytonos állapotban volt és egy adott tartomyányon belül van a szaggatás, egyvonal szaggatott lesz az állapotváltozó
+		if(StateLineType == Egyvonal_folyt && NoLineDistance > NOLINEDISTANCE_SZAGG_MIN && NoLineDistance < NOLINEDISTANCE_SZAGG_MAX)
 		{
 			StateLineType = Egyvonal_szagg;
 			SendDebugMessage_Text("Egyvonal szaggatott");
@@ -148,8 +154,8 @@ static void Is_EgyVonal()
 //figyeli hogy két vonal van-e, és szaggatott
 static void Is_KetVonal()
 {
-	//ha egy vonalból két vonal lett
-	if(LineNumber == TwoLine && LineNumberPrev == OneLine)
+	//ha valamilyen vonalból két vonal lett
+	if(LineNumber == TwoLine && LineNumberPrev != TwoLine)
 	{
 		//kezdõpont
 		TwoLineStartPos = Encoder_GetDistance_cm();
@@ -158,6 +164,7 @@ static void Is_KetVonal()
 		{
 			//állapot kétvonal, de bizonytalan hogy milyen
 			StateLineType = Ketvonal_x;
+			SendDebugMessage_Text("Ketvonal x");
 		}
 		//már kétvonal_x állapotban vagyunk, nem az elsõ kétvonal
 		else if(StateLineType == Ketvonal_x)
@@ -170,8 +177,8 @@ static void Is_KetVonal()
 			}
 		}
 	}
-	//ha két vonalból egy vonal lett
-	if(LineNumberPrev == TwoLine && LineNumber == OneLine)
+	//ha két vonalból másmilyen vonal lett
+	if(LineNumberPrev == TwoLine && LineNumber != TwoLine)
 	{
 		TwoLineDistance = Encoder_GetDistance_cm() - TwoLineStartPos;
 	}
@@ -190,6 +197,7 @@ static void Is_HaromVonal()
 		{
 			//állapotot háromvonalba állítjuk, nem tudjuk folytonos vagy szaggatott
 			StateLineType = Haromvonal_x;
+			SendDebugMessage_Text("Haromvonal x");
 		}
 		//ha Háromvonal_x állapotban vagyunk, lehet h szaggatott lesz
 		else if(StateLineType == Haromvonal_x)
