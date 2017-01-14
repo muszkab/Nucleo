@@ -8,12 +8,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "MotorControl.h"
 
-#define MAX_OUTPUT	80.0f //Az inverz f¸ggvÈnyben a maxim·lis megengedhetı kimenet FOXBORO-hoz
+#define MAX_OUTPUT	80.0f //Az inverz f√ºggv√©nyben a maxim√°lis megengedhet≈ë kimenet FOXBORO-hoz
 #define Zd			0.9f
 #define Kc			8.78f
 
+#define VELOCITYFILTER_LIMIT	4000 //nemtom mekkora sz√°m kell
 
-#define LOOKUP_MAX	10   //Identifik·ciÛs mÈrÈsek sz·ma
+#define LOOKUP_MAX	10   //Identifik√°ci√≥s m√©r√©sek sz√°ma
 //Inverz karakterisztika y tengelye
 /* static const float LookUpU[LOOKUP_MAX] = {
 		0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
@@ -22,13 +23,13 @@ static const float LookUpY[LOOKUP_MAX] = {
 		0,	0,	0,	0,	0,	0,	0,	0,	0,	0}; */
 static const float Offset = 16;
 static const float m      = 1;
-/* Szab·lyzÛ v·ltozÛk FOXBORO PI */
+/* Szab√°lyz√≥ v√°ltoz√≥k FOXBORO PI */
 static float u1;
 static float u2;
 static float u;
 static float Velocity;
 static float VelocityRef;
-/* Identifik·ciÛhoz */
+/* Identifik√°ci√≥hoz */
 uint8_t IdentificationEnable = 1;
 
 void MotorControl(){
@@ -41,6 +42,13 @@ void MotorControl(){
 		u = MotorControlSaturate(u1+u2);
 		SetSpeedFactory((int8_t)LookUpTable(u));
 	}
+}
+
+//bele kell rakni a MotorControl()-ba
+void ZeroSpeedFilter(float* Velocity, const float* VelocityRef)
+{
+	if((*VelocityRef == 0) && (*Velocity < VELOCITYFILTER_LIMIT))
+		*Velocity = VELOCITYFILTER_LIMIT;
 }
 
 void MotorControlSetVelocityRef(float Vref){
@@ -63,10 +71,10 @@ float LookUpTable(float u){
 }
 
 /**
-  * @brief  Motor identifik·ciÛ
-  * A megadott tartom·nyon a megadott idıkˆzˆkkel gerjeszti a motort Ès elk¸ldi
-  * bluetoothon a sebessÈgÈrtÈket.
-  * Identifik·l·sn·l csak ez a f¸ggvÈny fusson
+  * @brief  Motor identifik√°ci√≥
+  * A megadott tartom√°nyon a megadott id≈ëk√∂z√∂kkel gerjeszti a motort √©s elk√ºldi
+  * bluetoothon a sebess√©g√©rt√©ket.
+  * Identifik√°l√°sn√°l csak ez a f√ºggv√©ny fusson
   */
 void MotorIdentification(){
 	int16_t output = 0;
