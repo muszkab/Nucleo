@@ -13,6 +13,7 @@
 #define Kc			8.78f
 
 #define VELOCITYFILTER_LIMIT	4000 //nemtom mekkora szám kell
+#define ACCELERATION_LIMIT		10
 
 #define LOOKUP_MAX	10   //Identifikációs mérések száma
 //Inverz karakterisztika y tengelye
@@ -45,10 +46,16 @@ void MotorControl(){
 }
 
 //bele kell rakni a MotorControl()-ba
-void ZeroSpeedFilter(float* Velocity, const float* VelocityRef)
+void ZeroSpeedFilter_Vel(float* EncoderVelocity, const float* VelocityRef)
 {
-	if((*VelocityRef == 0) && (*Velocity < VELOCITYFILTER_LIMIT))
-		*Velocity = VELOCITYFILTER_LIMIT;
+	if((*VelocityRef == 0) && (*EncoderVelocity > VELOCITYFILTER_LIMIT))
+		*EncoderVelocity = VELOCITYFILTER_LIMIT;
+}
+
+void ZeroSpeedFilter_Acc(float* EncoderVelocity, const float* VelocityRef, const float* EncoderAcceleration)
+{
+	if((*VelocityRef == 0) && (*EncoderVelocity > VELOCITYFILTER_LIMIT) && (*EncoderAcceleration > ACCELERATION_LIMIT))
+		*EncoderVelocity = VELOCITYFILTER_LIMIT;
 }
 
 void MotorControlSetVelocityRef(float Vref){
