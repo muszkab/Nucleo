@@ -113,19 +113,15 @@ static void Is_EgyVonal()
 	{
 		OneLineStartPos = Encoder_GetDistance_cm();
 	}
+
 	//egyvonal hossza jelenleg
 	if(LineNumber == OneLine)
 	{
 		OneLineDistance = Encoder_GetDistance_cm() - OneLineStartPos;
 	}
-	//TODO: kétvonal szaggatottnál így nem jó!
-	//ha nincs egyvonal, nullázzuk a hosszt
-	if(LineNumber != OneLine)
-	{
-		OneLineDistance = 0;
-	}
+
 	//hossz ellenõrzés, ha elég nagy, és elõtte más állapotban  volt, berakjuk egyvonal folytonosba
-	if(StateLineType != Egyvonal_folyt && OneLineDistance > ONELINEDISTANCE_FOLYT_LIMIT)
+	if(StateLineType != Egyvonal_folyt && LineNumber == OneLine && OneLineDistance > ONELINEDISTANCE_FOLYT_LIMIT)
 	{
 		StateLineType = Egyvonal_folyt;
 		SendDebugMessage_Text("Egyvonal folytonos");
