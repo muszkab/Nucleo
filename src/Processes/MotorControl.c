@@ -9,8 +9,8 @@
 #include "MotorControl.h"
 
 #define MAX_OUTPUT	61200.0f //Az inverz függvényben a maximális megengedhetõ kimenet FOXBORO-hoz
-#define Zd			0.96f
-#define Kc			4.0f
+static float Zd = 0.96f;
+static float Kc = 0.5f;
 
 
 #define LOOKUP_MAX	10   //Identifikációs mérések száma
@@ -20,7 +20,7 @@
 //Inverz karakterisztika x tengelye
 static const float LookUpY[LOOKUP_MAX] = {
 		0,	0,	0,	0,	0,	0,	0,	0,	0,	0}; */
-static const float Offset = 40;
+static const float Offset = 30;
 static const float m      = 0.0067;
 /* Szabályzó változók FOXBORO PI */
 static float u1;
@@ -34,9 +34,9 @@ uint8_t IdentificationEnable = 1;
 void Do_MotorControl(){
 	if(TimeMotorControl > 20){
 		TimeMotorControl = 0;
+
 		/* Algoritmus */
 		u2 = Zd * u2 + (1- Zd)*u;
-		Velocity = Encoder_GetVelocityRaw();
 		u1 = Kc * (VelocityRef - Velocity);
 		u = MotorControlSaturate(u1+u2);
 		SetSpeed((int16_t)LookUpTable(u));

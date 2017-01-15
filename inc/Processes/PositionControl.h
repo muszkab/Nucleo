@@ -10,6 +10,7 @@
 
 #include "Processes.h"
 #include "SpeedControl.h"
+#include "Encoder.h"
 #include "math.h"
 
 /* Külsõ változók */
@@ -27,11 +28,12 @@ void SetServoPWMPulse(const int8_t ServoPos);	//Servo.c
 
 /* Publikus saját függvények */
 void Do_PositionControl();
+void Do_PositionControl_AT();
 int8_t Get_ServoPosition();
 int8_t Get_LinePosition();
 float Get_P_Corner();
 float Get_P_Straight();
 float Get_D();
-
+float GetLineOrient();
 
 #endif /* POSITIONCONTROL_H_ */

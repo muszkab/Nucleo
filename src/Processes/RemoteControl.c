@@ -139,7 +139,7 @@ void RemoteController_Timer_Init()
 	    Error_Handler();
 	  }
 }
-
+/* TODO Mik ezek a kommentek? :D */
 /* Sebess�gjel a t�vir�ny�t� alapj�n */
 void SetSpeed_RemoteControl()
 {

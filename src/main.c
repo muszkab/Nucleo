@@ -15,7 +15,7 @@
 
 //távirányító tüskéinek szûrése
 int16_t temp = 0;
-float VV;
+float VVV;
 int main(void)
 {
 	/* STM32F4xx HAL library initialization:
@@ -27,8 +27,7 @@ int main(void)
 		 handled in milliseconds basis.
 	   - Set NVIC Group Priority to 4
 	   - Low Level Initialization
-	 */
-	HAL_Init();
+	 */	HAL_Init();
 
 	/* Set NVIC Group Priority to 3 */
 	//HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_3);
@@ -78,11 +77,14 @@ int main(void)
 	//MotorIdentification();
 	for(;;)
 	{
-		//MotorControlSetVelocityRef(1);
-		//Do_MotorControl();
-		//VV = Encoder_GetVelocity();
+		VVV = Encoder_GetVelocity();
+		MotorControlSetVelocityRef(0);
+		Do_MotorControl();
+		//Orient = GetLineOrient();
 		//Vonalkövetés: PD szabályzó
 		//Do_PositionControl();
+		//Vonalkövetés: Állapotteres szabályzó
+		Do_PositionControl_AT();
 		//Vonaltípus meghatározás
 		//Do_LineType();
 
@@ -96,7 +98,7 @@ int main(void)
 		//Do_Send_ValueMessageArray();
 
 		//vészleállítás távirányítóval
-		Is_StopCommand();
+		//Is_StopCommand();
 
 
 		//teszt: IMU
