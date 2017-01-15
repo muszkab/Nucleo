@@ -8,14 +8,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "MotorControl.h"
 
-#define MAX_OUTPUT	80.0f //Az inverz f√ºggv√©nyben a maxim√°lis megengedhet≈ë kimenet FOXBORO-hoz
+#define MAX_OUTPUT	80.0f //Az inverz f¸ggvÈnyben a maxim·lis megengedhetı kimenet FOXBORO-hoz
 #define Zd			0.9f
 #define Kc			8.78f
 
-#define VELOCITYFILTER_LIMIT	4000 //nemtom mekkora sz√°m kell
+#define VELOCITYFILTER_LIMIT	4000 //nemtom mekkora sz·m kell
 #define ACCELERATION_LIMIT		10
 
-#define LOOKUP_MAX	10   //Identifik√°ci√≥s m√©r√©sek sz√°ma
+#define LOOKUP_MAX	10   //Identifik·ciÛs mÈrÈsek sz·ma
 //Inverz karakterisztika y tengelye
 /* static const float LookUpU[LOOKUP_MAX] = {
 		0,	0,	0,	0,	0,	0,	0,	0,	0,	0};
@@ -24,13 +24,13 @@ static const float LookUpY[LOOKUP_MAX] = {
 		0,	0,	0,	0,	0,	0,	0,	0,	0,	0}; */
 static const float Offset = 16;
 static const float m      = 1;
-/* Szab√°lyz√≥ v√°ltoz√≥k FOXBORO PI */
+/* Szab·lyzÛ v·ltozÛk FOXBORO PI */
 static float u1;
 static float u2;
 static float u;
 static float Velocity;
 static float VelocityRef;
-/* Identifik√°ci√≥hoz */
+/* Identifik·ciÛhoz */
 uint8_t IdentificationEnable = 1;
 
 void MotorControl(){
@@ -78,10 +78,10 @@ float LookUpTable(float u){
 }
 
 /**
-  * @brief  Motor identifik√°ci√≥
-  * A megadott tartom√°nyon a megadott id≈ëk√∂z√∂kkel gerjeszti a motort √©s elk√ºldi
-  * bluetoothon a sebess√©g√©rt√©ket.
-  * Identifik√°l√°sn√°l csak ez a f√ºggv√©ny fusson
+  * @brief  Motor identifik·ciÛ
+  * A megadott tartom·nyon a megadott idıkˆzˆkkel gerjeszti a motort Ès elk¸ldi
+  * bluetoothon a sebessÈgÈrtÈket.
+  * Identifik·l·sn·l csak ez a f¸ggvÈny fusson
   */
 void MotorIdentification(){
 	int16_t output = 0;

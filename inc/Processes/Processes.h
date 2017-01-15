@@ -36,6 +36,19 @@ typedef enum{
 	Haromvonal_szagg
 }State_LineType;
 
+typedef enum{
+	Nincsfal,
+	Kapu,
+	Fal_jobb,
+	Fal_bal,
+	Simafal_jobb,
+	Simafal_bal,
+	Bordasfal_jobb,
+	Bordasfal_bal,
+	Korforgalom_jobb,
+	Korforgalom_bal
+}State_Wall;
+
 /* Message függvények */
 extern void SendDebugMessage_Text(const char* string);
 /*Get függvények*/
