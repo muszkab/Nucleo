@@ -8,12 +8,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "Encoder.h"
 
-/* Enkóder paraméterek
- * Az idõparamétereknek és a Callback Timernek ÖSSZHANGBAN kell lennie */
-#define METER_PER_INCR 					1.3459e-4f    /* m/inkrement */
-#define ENC_TIME_STEP 					0.01f		  /* mérési idõköz */
-#define ENC_FREQ						100			  /* mérési frekvencia */
-
 /* Callback Timer megszakítás beállítása a kívánt frekvenciára */
 #define Encoder_Callback_Timer_Freq  	40000
 #define Encoder_Callback_Timer_Period 	400

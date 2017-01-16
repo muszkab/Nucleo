@@ -14,6 +14,7 @@
 
 /* Számlálók 1ms-vel */
 uint16_t TimePositionControl=0;
+uint16_t TimePositionControl_AT=0;
 uint16_t TimeSpeedControl=0;
 uint16_t TimeLineType=0;
 uint16_t TimeAccelerate=0;
@@ -72,6 +73,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if(htim->Instance==TIM_SZABALYZO)
 	{
 		TimePositionControl++;
+		TimePositionControl_AT++;
 		TimeSpeedControl++;
 		TimeLineType++;
 		TimeAccelerate++;

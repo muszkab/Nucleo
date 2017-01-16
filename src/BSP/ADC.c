@@ -17,7 +17,7 @@ TIM_HandleTypeDef    Adc1_Tim_Handle;
 /***************** TIMER - ADC ****************/
 /**********************************************/
 #define ADC_TIM_FREQ			10000
-#define ADC_TIM_PERIOD			500
+#define ADC_TIM_PERIOD			200
 #define ADC_TIM_MAX_CLOCK		180				/* TIM8 max clock: 180MHz */
 #define ADC_TIM_PRESCALER		((ADC_TIM_MAX_CLOCK*1e6) / ADC_TIM_FREQ) - 1
 

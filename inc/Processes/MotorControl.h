@@ -14,23 +14,24 @@
 #include "Nucleo.h"
 #include "Processes.h"
 #include "Timers.h"
+#include "RemoteControl.h"
 
 /* IDENTIFIKÁCIÓ PARAMÉTEREK
  * pozitív tartományra mûködik
  * a CYCLE egész számra jöjjön ki */
-#define START_VALUE 	0	   		//a mérés kezdeti pontja
-#define END_VALUE 		300	   		//a mérés végpontja, a beavatkozó szerv telítésének közelében
-#define STEP 			50	   		//ebben a lépésközben fogja inkrementálni a beavatkozó jelet
+#define START_VALUE 	50	   		//a mérés kezdeti pontja
+#define END_VALUE 		50	   		//a mérés végpontja, a beavatkozó szerv telítésének közelében
+#define STEP 			1	   		//ebben a lépésközben fogja inkrementálni a beavatkozó jelet
 #define CYCLE			(END_VALUE - START_VALUE) / STEP
-#define TIME_RUN		5000   		//ms
-#define TIME_STEP_RUN	100     	//ennyi idõközönként küld adatot a bluetoothon
-#define TIME_WAIT		5000   	   	//ms
-#define TIME_STEP_WAIT  100
+#define TIME_RUN		3000   		//ms
+#define TIME_STEP_RUN	25     	//ennyi idõközönként küld adatot a bluetoothon
+#define TIME_WAIT		3000   	   	//ms
+#define TIME_STEP_WAIT  25
 
 /* Global variables */
 extern uint8_t IdentificationEnable;
 
-void MotorControl();
+void Do_MotorControl();
 void MotorControlSetVelocityRef(float Vref);
 float MotorControlSaturate(float u);
 float LookUpTable(float u);
