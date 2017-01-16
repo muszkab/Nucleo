@@ -18,9 +18,6 @@ extern uint8_t RearSensor_Data[8];	//CAN.c
 //vonaltípus meghatározás segédszámláló
 extern uint16_t TimeLineType;		//Timers.c
 
-/* Külsõ függvények */
-float Encoder_GetDistance_cm();    // cm ; Encoder.c
-
 /* Publikus saját függvények */
 void Do_LineType();
 lineType Get_LineNumber();

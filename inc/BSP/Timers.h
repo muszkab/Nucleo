@@ -27,6 +27,7 @@ extern uint16_t TimeAccelerate;				//gyorsításhoz segédszámláló
 extern uint16_t TimeBrake;					//lassításhoz segédszámláló
 extern uint16_t TimeSendMessage;			//üzenetküldéshez(bluetooth) segédszámláló
 extern uint16_t TimeMotorControl;			//Motor speed control
+extern uint16_t TimeWallType;				//faltípus felismerés segédszámláló
 
 extern TIM_HandleTypeDef TimHandle_Szabalyzo;
 

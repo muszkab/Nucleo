@@ -39,14 +39,16 @@ typedef enum{
 typedef enum{
 	Nincsfal,
 	Kapu,
-	Fal_jobb,
-	Fal_bal,
+	Fal,
+	Simafal,
 	Simafal_jobb,
 	Simafal_bal,
+	Bordasfal,
 	Bordasfal_jobb,
 	Bordasfal_bal,
 	Korforgalom_jobb,
-	Korforgalom_bal
+	Korforgalom_bal,
+	Hiba
 }State_Wall;
 
 /* Message függvények */
@@ -70,6 +72,8 @@ extern float GetLeftSharpDistance();
 /* Encoder.h */
 extern float Encoder_GetDistance_cm();	 	// cm
 extern float Encoder_GetVelocity(void); 	// m/s
+/* WallType.h */
+State_Wall Get_StateWall();
 
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;

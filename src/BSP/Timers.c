@@ -21,9 +21,34 @@ uint16_t TimeAccelerate=0;
 uint16_t TimeBrake=0;
 uint16_t TimeSendMessage=0;
 uint16_t TimeMotorControl=0;
+uint16_t TimeWallType=0;
 
 /* Timer handler declaration */
 TIM_HandleTypeDef    TimHandle_Szabalyzo;
+
+/* Timer megszakításkezezõ callback */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	/* TIM6: szabályzó timer, f=1kHZ */
+	if(htim->Instance==TIM_SZABALYZO)
+	{
+		TimePositionControl++;
+		TimePositionControl_AT++;
+		TimeSpeedControl++;
+		TimeLineType++;
+		TimeAccelerate++;
+		TimeBrake++;
+		TimeSendMessage++;
+		TimeMotorControl++;
+		TimeWallType++;
+	}
+	else if(htim->Instance == ENC_CALLBACK_TIM){
+		Encoder_Callback_Timer();
+	}
+	else if(htim->Instance==TIM8){
+
+	}
+}
 
 void Szabalyzo_TIM_Init()
 {
@@ -64,27 +89,4 @@ void Szabalyzo_TIM_Init()
 		/* PWM Generation Error */
 		Error_Handler();
 	  }
-}
-
-/* Timer megszakításkezezõ callback */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	/* TIM6: szabályzó timer, f=1kHZ */
-	if(htim->Instance==TIM_SZABALYZO)
-	{
-		TimePositionControl++;
-		TimePositionControl_AT++;
-		TimeSpeedControl++;
-		TimeLineType++;
-		TimeAccelerate++;
-		TimeBrake++;
-		TimeSendMessage++;
-		TimeMotorControl++;
-	}
-	else if(htim->Instance == ENC_CALLBACK_TIM){
-		Encoder_Callback_Timer();
-	}
-	else if(htim->Instance==TIM8){
-
-	}
 }

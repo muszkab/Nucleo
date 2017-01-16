@@ -18,8 +18,8 @@
 	//100% - 10ms (f=100Hz, T=10ms)
 	#define	PULSE_UNIT		(PERIOD+1)/100		//0.1ms, jelenleg nem használjuk
 	#define PULSE_MIN		1370				//1.370ms left
-	#define PULSE_MAX		1680				//1.680ms right
-	#define PULSE_CENTER	1525				//1.525ms
+	#define PULSE_MAX		1700				//1.700ms right
+	#define PULSE_CENTER	1535				//1.535ms
 
 	/* TIM10 channel1 - PC8 - PWM */
 	#define MAX_CLOCK		180				/* TIM10 max clock: 180MHz */

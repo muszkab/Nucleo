@@ -61,12 +61,12 @@ void Do_PositionControl_AT(){
 		TimePositionControl=0;
 
 		AT_Speed = Encoder_GetVelocity();
-		D5Percent = 0.3 + 0.5 * AT_Speed;
+		D5Percent = 0.5 + 0.5 * AT_Speed;
 		if(AT_Speed != 0){
 			/* Hibajelek: pozíció és szög */
 			if(FrontSensor_Data[1] != 0)
 				AT_Pos = -(int8_t)FrontSensor_Data[0];//*0.185)/128.0;
-			AT_Orient = 2*GetLineOrient();
+			AT_Orient = GetLineOrient();
 
 			AT_T5Percent = D5Percent/AT_Speed;
 			AT_TimeConst = (Ksi * AT_T5Percent)/3;		//Ksi-bõl és T5%-ból számolható a T

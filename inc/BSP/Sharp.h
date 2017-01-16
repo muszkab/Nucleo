@@ -21,4 +21,5 @@ float GetBatteryVoltage();
 float GetFrontSharpDistance();
 float GetRightSharpDistance();
 float GetLeftSharpDistance();
+
 #endif /* BSP_SHARP_H_ */

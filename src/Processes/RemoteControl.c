@@ -175,10 +175,15 @@ void SetSpeed_RemoteControl()
 	}
 }
 //TODO rakja stop állapotba is!
-void Is_StopCommand()
+int8_t Is_StopCommand()
 {
 	if((10 < uwDutyCycle) && (uwDutyCycle < 70))
+	{
 		SetSpeed(0);
+		return 1;
+	}
+	else
+		return 0;
 }
 
 void RemoteController_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)

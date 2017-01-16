@@ -8,7 +8,6 @@
 #ifndef REMOTECONTROL_H_
 #define REMOTECONTROL_H_
 
-#include "Nucleo.h"
 #include "Processes.h"
 
 /* Definition for TIMx clock resources */

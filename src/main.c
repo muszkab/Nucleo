@@ -70,13 +70,19 @@ int main(void)
 		Do_Send_ValueMessageArray();
 
 		//Vonaltípus meghatározás
-		Do_LineType();
+		//Do_LineType();
+
+		//Faltípus meghatározás
+		Do_WallType();
 
 		//vészleállítás távirányítóval
 		Is_StopCommand();
 
 		//Vonalkövetés: PD szabályzó
 		//Do_PositionControl();
+
+		//Vonalkövetés: Állapotteres szabályzó
+		//Do_PositionControl_AT();
 
 		//Sebesség: fix érték vonaltípus alapján, Q1
 		//Do_SpeedControl_FixSpeed();
