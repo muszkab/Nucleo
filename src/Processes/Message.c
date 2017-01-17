@@ -26,6 +26,10 @@ void Do_Send_ValueMessageArray()
 		TimeSendMessage = 0;
 
 		//amelyik változó gyakran változik(pl. LinePosition), azt itt állítjuk, amelyik ritkán, azt helyben, hogyha változott
+		SetValue_AtMessageArray(var_TrackElement,(float) Get_TrackElement());
+		SetValue_AtMessageArray(var_StateLineType,(float) Get_StateLineType());
+		SetValue_AtMessageArray(var_StateWall,	(float) Get_StateWall());
+
 		SetValue_AtMessageArray(var_LineNumber,	(float) Get_LineNumber());
 		SetValue_AtMessageArray(var_LinePos,	(float) Get_LinePosition());
 
@@ -60,7 +64,9 @@ void Do_Send_ValueMessageArray()
 void Message_Init()
 {
 	//tömb kitöltése a nevekkel, amik alapján a qt szoftver azonosítja az egyes üzeneteket
-	Value_MessageArray[var_State].Name			= "Value:State";
+	Value_MessageArray[var_TrackElement].Name	= "Value:TrackElement";
+	Value_MessageArray[var_StateLineType].Name	= "Value:StateLineType";
+	Value_MessageArray[var_StateWall].Name		= "Value:StateWall";
 
 	Value_MessageArray[var_LinePos].Name		= "Value:LinePos";
 	Value_MessageArray[var_LineNumber].Name		= "Value:LineNumber";

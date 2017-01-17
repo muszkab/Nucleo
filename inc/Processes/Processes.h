@@ -15,7 +15,8 @@ typedef enum{
 	NoLine = 0,
 	OneLine = 1,
 	TwoLine = 2,
-	ThreeLine =3
+	ThreeLine =3,
+	Full = 4
 }lineType;
 
 typedef enum{
@@ -33,7 +34,8 @@ typedef enum{
 	Ketvonal_szagg,
 	Haromvonal_x,
 	Haromvonal_folyt,
-	Haromvonal_szagg
+	Haromvonal_szagg,
+	Keresztvonal
 }State_LineType;
 
 typedef enum{
@@ -51,8 +53,22 @@ typedef enum{
 	Hiba
 }State_Wall;
 
+typedef enum{
+	Normal_E,
+	Start_E,
+	Finish_E,
+	Dron,
+	TrailerOn,
+	TrailerOff,
+	Zebra,
+	Teeter,
+	Barrel,
+	Roundabout
+}State_TrackElement;
+
 /* Message függvények */
 extern void SendDebugMessage_Text(const char* string);
+
 /*Get függvények*/
 /* LineType.h */
 extern lineType Get_LineNumber();
@@ -73,7 +89,9 @@ extern float GetLeftSharpDistance();
 extern float Encoder_GetDistance_cm();	 	// cm
 extern float Encoder_GetVelocity(void); 	// m/s
 /* WallType.h */
-State_Wall Get_StateWall();
+extern State_Wall Get_StateWall();
+/* TrackElement.h */
+extern State_TrackElement Get_TrackElement();
 
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;

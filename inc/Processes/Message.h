@@ -40,6 +40,9 @@ typedef enum{
 	var_LeftSharp,
 	var_Distance,
 	var_ThreeLineDistance,
+	var_StateLineType,
+	var_StateWall,
+	var_TrackElement,
 	VariableName_LastElement
 }VariableName;
 

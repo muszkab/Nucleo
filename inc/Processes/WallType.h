@@ -17,6 +17,7 @@ extern uint16_t TimeWallType;		//Timers.c
 /* Publikus saját függvények */
 void Do_WallType();
 State_Wall Get_StateWall();
+void Set_StateWall(State_Wall newStateWall);
 
 
 #endif /* PROCESSES_WALLTYPE_H_ */

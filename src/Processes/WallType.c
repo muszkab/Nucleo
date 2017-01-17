@@ -7,6 +7,7 @@
 
 #include "WallType.h"
 
+//ciklusidõ
 #define T_WALLTYPE			100//ms
 
 /********** Akadályfelismerés **********/
@@ -20,16 +21,16 @@
 #define WALLLENGTH			40	//névleges: 60cm
 #define SIMA_BORDA_SZORASHATAR	3	//sima: 0cm; bordas: 4cm a távolság szórása
 
-//jobb oldali sharp által mért távolság
-static float RightSharpDistance=NOWALLDISTANCE+10;
-//bal oldali sharp által mért távolság
-static float LeftSharpDistance=NOWALLDISTANCE+10;
 //állapotváltozó, mely mutatja milyen fal van globálisan az autó mellett
 static State_Wall StateWall_Global=Nincsfal;
 //állapotváltozó, mely mutatja milyen fal van jobb oldalt az autó mellett
 static State_Wall Right_StateWall=Nincsfal;
 //állapotváltozó, mely mutatja milyen fal van bal oldalt az autó mellett
 static State_Wall Left_StateWall=Nincsfal;
+//jobb oldali sharp által mért távolság
+static float RightSharpDistance=NOWALLDISTANCE+10;
+//bal oldali sharp által mért távolság
+static float LeftSharpDistance=NOWALLDISTANCE+10;
 //milyen távol volt a jobboldali fal minimum
 static float RightWall_Distance_Min=NOWALLDISTANCE+10;
 //milyen távol volt a baloldali fal minimum
@@ -75,6 +76,7 @@ void Do_WallType()
 		//teljes állapot összeállítása a két oldal állapota alapján
 		Is_Wall_Global();
 
+		//TODO: lehet h nem itt kell figyelni
 		//ha a szaggatott vonal jelzi a körforgalmat, figyeljük melyik oldalt van
 		if(Get_StateLineType() == Egyvonal_szagg)
 		{
@@ -241,4 +243,10 @@ static void Is_Korforgalom()
 State_Wall Get_StateWall()
 {
 	return StateWall_Global;
+}
+
+/* Set függvények */
+void Set_StateWall(State_Wall newStateWall)
+{
+	StateWall_Global = newStateWall;
 }

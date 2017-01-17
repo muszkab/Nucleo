@@ -22,6 +22,7 @@ extern uint16_t TimeLineType;		//Timers.c
 void Do_LineType();
 lineType Get_LineNumber();
 State_LineType Get_StateLineType();
+void Set_StateLineType(State_LineType newStateLineType);
 
 
 #endif /* LINETYPE_H_ */

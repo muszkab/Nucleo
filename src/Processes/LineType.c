@@ -68,18 +68,22 @@ void Do_LineType()
 		//új szenzoradat feldolgozása
 		NewSensorData();
 
-		//vonaltípus állapotváltozó(StateLineType) meghatározás: darabszám és folytonos/szaggatott
+		//vonaltípus állapotváltozó(StateLineType) meghatározás: darabszám és folytonos/szaggatott vagy keresztvonal
 		Is_EgyVonal();
 		Is_KetVonal();
 		Is_HaromVonal();
+		if(LineNumber == Full)
+		{
+			StateLineType = Keresztvonal;
+		}
 
 		//teszt
-		if(LineNumber == ThreeLine)
+		if(LineNumber == Full)
 			Led_On(Blue);
 		else
 			Led_Off(Blue);
 
-		if(LineNumber == TwoLine)
+		if(LineNumber == Full)
 			Led_On(Red);
 		else
 			Led_Off(Red);
@@ -267,4 +271,10 @@ State_LineType Get_StateLineType()
 float Get_ThreeLineDistance()
 {
 	return ThreeLineDistance;
+}
+
+/* Set függvények */
+void Set_StateLineType(State_LineType newStateLineType)
+{
+	StateLineType = newStateLineType;
 }

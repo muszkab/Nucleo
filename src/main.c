@@ -70,7 +70,7 @@ int main(void)
 		Do_Send_ValueMessageArray();
 
 		//Vonaltípus meghatározás
-		//Do_LineType();
+		Do_LineType();
 
 		//Faltípus meghatározás
 		Do_WallType();
@@ -82,7 +82,7 @@ int main(void)
 		//Do_PositionControl();
 
 		//Vonalkövetés: Állapotteres szabályzó
-		//Do_PositionControl_AT();
+		Do_PositionControl_AT();
 
 		//Sebesség: fix érték vonaltípus alapján, Q1
 		//Do_SpeedControl_FixSpeed();
