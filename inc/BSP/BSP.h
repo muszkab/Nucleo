@@ -5,12 +5,15 @@
  *      Author: Muszka
  */
 
-#ifndef NUCLEO_H_
-#define NUCLEO_H_
+#ifndef BSP_H_
+#define BSP_H_
 
 #include "stm32f4xx.h"
 #include "stm32f4xx_nucleo.h"
 #include "Leds.h"
+
+
+#define METER_PER_INCR 			1.3459e-4f    /* m/inkrement */
 
 /*Functions*/
 void Error_Handler(void);
@@ -20,4 +23,4 @@ void ProcessMessage(char* message);
 /* Teszt változók */
 extern int8_t ServoPos;
 
-#endif /* NUCLEO_H_ */
+#endif /* BSP_H_ */

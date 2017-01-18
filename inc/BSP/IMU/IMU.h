@@ -8,7 +8,7 @@
 #ifndef BSP_IMU_H_
 #define BSP_IMU_H_
 
-#include "Nucleo.h"
+#include <BSP.h>
 #include "LSM6DS3_ACC_GYRO_driver_HL.h"
 #include "Timers.h"
 

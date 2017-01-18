@@ -9,9 +9,6 @@
 #define POSITIONCONTROL_H_
 
 #include "Processes.h"
-#include "SpeedControl.h"
-#include "Encoder.h"
-#include "math.h"
 
 /* Külsõ változók */
 //elsõ byte a vonalpozíció (int8_t), a második a vonalak darabszáma(0,1,2,3)

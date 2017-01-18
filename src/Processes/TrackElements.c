@@ -52,7 +52,7 @@ void Do_SkillTrack()
 static void Do_Normal_TrackElement()
 {
 	//akadálykeresés
-	//Look_and_Set_TrackElement(Get_StateLineType(), Get_StateWall());
+	Look_and_Set_TrackElement(Get_StateLineType(), Get_StateWall());
 
 	//Vonaltípus meghatározás
 	Do_LineType();

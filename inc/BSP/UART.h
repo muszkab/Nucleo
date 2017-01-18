@@ -10,7 +10,7 @@
 #define UART_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "Nucleo.h"
+#include <BSP.h>
 
 /**********************************************/
 /*************** CABLE - USART2 ***************/
@@ -99,16 +99,6 @@ void UART_WaitForReadyToSend();
 void UART_RecvStringNonBlocking(UART_HandleTypeDef *UartHandle);
 
 void NumToChar(uint32_t number, unsigned char *result, uint16_t* lenght);
-
-//TODO ezek még kellenek?
-/* Muszka */
-/*
-HAL_StatusTypeDef UART_Send(uint8_t* data, uint8_t size);
-HAL_StatusTypeDef UART_PutC(const char c);
-HAL_StatusTypeDef UART_NewLine();
-void UART_SendString(const char* string);
-void UART_SendInt(const int number);
-*/
 
 /* Private function prototypes -----------------------------------------------*/
 #ifdef __GNUC__

@@ -10,7 +10,7 @@
 #define BSP_BUTTONS_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal_msp.h"
+#include "BSP.h"
 
 /* Definition for Buttons clock resources */
 #define USER_BUTTON0_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOH_CLK_ENABLE()

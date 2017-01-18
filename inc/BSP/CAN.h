@@ -8,7 +8,7 @@
 #ifndef CAN_H_
 #define CAN_H_
 
-#include "Nucleo.h"
+#include <BSP.h>
 
 /* Definition for CANx clock resources */
 #define CANx                            CAN1

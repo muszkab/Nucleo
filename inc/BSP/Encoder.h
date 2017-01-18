@@ -10,11 +10,10 @@
 #define BSP_ENCODER_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal_msp.h"
+#include "BSP.h"
 
 /* Enkóder paraméterek
  * Az idõparamétereknek és a Callback Timernek ÖSSZHANGBAN kell lennie */
-#define METER_PER_INCR 					1.3459e-4f    /* m/inkrement */
 #define ENC_TIME_STEP 					0.01f		  /* mérési idõköz */
 #define ENC_FREQ						100			  /* mérési frekvencia */
 
@@ -45,9 +44,9 @@
 
 /* Variables */
 /* Encoder Timer handler declaration */
-TIM_HandleTypeDef    Encoder_Handle;
+extern TIM_HandleTypeDef    Encoder_Handle;
 /* Timer Encoder Configuration Structure declaration */
-TIM_Encoder_InitTypeDef sEncoderConfig;
+extern TIM_Encoder_InitTypeDef sEncoderConfig;
 
 /* Global variables */
 /* Encoder Callback Timer handler declaration */

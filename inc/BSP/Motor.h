@@ -10,7 +10,7 @@
 #define MOTOR_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "Nucleo.h"
+#include <BSP.h>
 
 /* Itt beállítható, hogy melyik motorvezérlõt használjuk */
 #define HBRIDGE_HOMEMADE

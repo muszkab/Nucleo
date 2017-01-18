@@ -7,6 +7,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "Sharp.h"
+#include "ADC.h"
+#include "math.h"
 
 #define BATT_CONST (float)((0.292*256)/3.3) // (<ellenállás osztó érték> * <ADC felbontás>)/3.3V
 

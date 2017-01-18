@@ -10,7 +10,7 @@
 #define BSP_ADC_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal_msp.h"
+#include "BSP.h"
 
 /* ADC parameter */
 #define ADC_RESOLUTION ADC_RESOLUTION_8B

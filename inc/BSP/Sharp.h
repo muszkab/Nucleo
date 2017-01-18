@@ -10,8 +10,7 @@
 #define BSP_SHARP_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal_msp.h"
-#include "math.h"
+#include "BSP.h"
 
 /*Functions*/
 void SharpInit();

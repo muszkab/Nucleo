@@ -8,8 +8,7 @@
 #ifndef TIMERS_H_
 #define TIMERS_H_
 
-#include "Nucleo.h"
-#include "Encoder.h"
+#include <BSP.h>
 
 /*********************************/
 /******** SZABÁLYZÓ TIMER ********/
@@ -46,7 +45,10 @@ extern uint16_t TimeWallType;				//faltípus felismerés segédszámláló
 extern TIM_HandleTypeDef TimHandle_Szabalyzo;
 extern TIM_HandleTypeDef TimHandle_Gyro;
 
-/* Függvények */
+/* Külsõ függvények */
+extern void Gyro_Callback();			//IMU.c
+extern void Encoder_Callback_Timer();	//Encoder.c
+/* Saját függvények */
 void Szabalyzo_TIM_Init();
 void GYRO_TIM_Init();
 

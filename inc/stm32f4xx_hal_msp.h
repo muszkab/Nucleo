@@ -8,28 +8,31 @@
 #ifndef STM32F4XX_HAL_MSP_H_
 #define STM32F4XX_HAL_MSP_H_
 
-//TODO majd logikusabb sorrendben kéne meghívni
-#include "stm32f4xx.h"
-#include "stm32f4xx_nucleo.h" //TODO Ebben mi van, mi lesz? Neve alapján nem lehet behatárolni
-#include "Encoder.h"
+/* BSP */
+#include "IMU.h"
 #include "ADC.h"
-#include "Sharp.h"
-#include "UART.h"
+#include "BSP.h"
 #include "Buttons.h"
 #include "CAN.h"
-#include "Servo.h"
-#include "Motor.h"
-#include "RemoteControl.h"
-#include "Timers.h"
-#include "PositionControl.h"
-#include "SpeedControl.h"
+#include "Encoder.h"
 #include "Leds.h"
+#include "Motor.h"
+#include "Servo.h"
+#include "Sharp.h"
+#include "Timers.h"
+#include "UART.h"
+
+/* Processes */
 #include "LineType.h"
-#include "IMU.h"
-#include "LSM6DS3_ACC_GYRO_driver_HL.h"
 #include "Message.h"
 #include "MotorControl.h"
+#include "PositionControl.h"
+#include "Processes.h"
+#include "RemoteControl.h"
+#include "SpeedControl.h"
+#include "TrackElements.h"
 #include "WallType.h"
+
 
 void Periph_Init();
 void HAL_MspInit();

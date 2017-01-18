@@ -10,11 +10,7 @@
 #define PROCESSES_MOTORCONTROL_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "Encoder.h"
-#include "Nucleo.h"
 #include "Processes.h"
-#include "Timers.h"
-#include "RemoteControl.h"
 
 /* IDENTIFIKÁCIÓ PARAMÉTEREK
  * pozitív tartományra mûködik
@@ -24,12 +20,19 @@
 #define STEP 			1	   		//ebben a lépésközben fogja inkrementálni a beavatkozó jelet
 #define CYCLE			(END_VALUE - START_VALUE) / STEP
 #define TIME_RUN		3000   		//ms
-#define TIME_STEP_RUN	25     	//ennyi idõközönként küld adatot a bluetoothon
+#define TIME_STEP_RUN	25     		//ennyi idõközönként küld adatot a bluetoothon
 #define TIME_WAIT		3000   	   	//ms
 #define TIME_STEP_WAIT  25
 
 /* Global variables */
 extern uint8_t IdentificationEnable;
+
+/* Külsõ változók */
+//Motor speed control segédszámláló
+extern uint16_t TimeMotorControl;
+
+/* Külsõ függvények */
+extern void SetSpeed(int16_t Speed);	//motor.c
 
 void Do_MotorControl();
 void MotorControlSetVelocityRef(float Vref);

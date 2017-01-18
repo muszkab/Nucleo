@@ -10,7 +10,7 @@
 #define SERVO_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "Nucleo.h"
+#include <BSP.h>
 
 /**********************************************/
 /*********** Servo - Steering Wheel ***********/
@@ -44,7 +44,6 @@ extern TIM_HandleTypeDef    TimHandle_Servo;
 extern TIM_HandleTypeDef    TimHandle_Servo_Sharp;
 
 /*Functions*/
-//TODO neveket aktualizáni kell
 void Servo_TIM10_PWM_Init();
 void Servo_Sharp_TIM4_PWM_Init();
 void SetServoPWMPulse(const int8_t ServoPos);
