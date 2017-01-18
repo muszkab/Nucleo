@@ -6,6 +6,7 @@
  */
 
 #include "PositionControl.h"
+#include "math.h"
 
 //szabályzó paraméterek
 #define	P_CORNER	1.5f
@@ -99,16 +100,6 @@ void Do_PositionControl(){
 	{
 		//számláló nullázás a ciklus újrakezdéséhez
 		TimePositionControl=0;
-
-		//ha kanyarsebességet elérte és már csak egy vonal van, legyen nagyobb P
-		if((SpeedNow <= CornerSpeed) && (Get_LineNumber() != ThreeLine))
-		{
-			P=P_Corner;
-		}
-		else
-		{
-			P=P_Straight;
-		}
 
 		//hibajel
 		//-128..127

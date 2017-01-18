@@ -78,7 +78,7 @@ void Do_LineType()
 		}
 
 		//teszt
-		if(LineNumber == Full)
+		if(LineNumber == ThreeLine)
 			Led_On(Blue);
 		else
 			Led_Off(Blue);

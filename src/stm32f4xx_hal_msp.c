@@ -9,22 +9,25 @@
 
 /*Perifériák inicializálása */
 void Periph_Init(){
+	/* BSP */
 	IMU_Init();
-	Leds_Init();
-	SharpInit();
 	Buttons_Init(BUTTON_MODE_EXTI);
+	CAN_Init();
+	Encoder_Init();
+	Leds_Init();
+	Motor_Init();
+	Servo_TIM10_PWM_Init();
+	Servo_Sharp_TIM4_PWM_Init();
+	SharpInit();
+	Szabalyzo_TIM_Init();
 	UART_Cable_Init();
 	UART_Bluetooth_Init();
 	//UART_Radio_Init();	//rádiós modul 1.83V feszültséget ad az 5V-os körre, ha az 5V nincs is bekapcsolva, csak a Nucleo
-	CAN_Init();
-	Servo_TIM10_PWM_Init();
-	Servo_Sharp_TIM4_PWM_Init();
-	Encoder_Init();
-	Motor_Init();
-	RemoteController_Timer_Init();
-	Szabalyzo_TIM_Init();
 
+	/* Processes */
 	Message_Init();
+	RemoteController_Timer_Init();
+
 }
 
 void HAL_MspInit()

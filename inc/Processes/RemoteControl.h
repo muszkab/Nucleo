@@ -35,6 +35,7 @@ void RemoteController_Timer_Init();
 void RemoteController_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim);
 void SetSpeed_RemoteControl();
 int8_t Is_StopCommand();
-void SetSpeed(int16_t Speed);	//motor.c
+/* Külsõ függvények */
+extern void SetSpeed(int16_t Speed);	//motor.c
 
 #endif /* REMOTECONTROL_H_ */

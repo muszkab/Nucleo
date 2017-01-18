@@ -8,15 +8,15 @@
 #ifndef PROCESSES_PROCESSES_H_
 #define PROCESSES_PROCESSES_H_
 
-#include "Nucleo.h"
+#include <BSP.h>
 
 /*Global types*/
 typedef enum{
-	NoLine = 0,
-	OneLine = 1,
-	TwoLine = 2,
-	ThreeLine =3,
-	Full = 4
+	NoLine,
+	OneLine,
+	TwoLine,
+	ThreeLine,
+	Full
 }lineType;
 
 typedef enum{
@@ -27,7 +27,7 @@ typedef enum{
 }speedState;
 
 typedef enum{
-	Egyvonal_folyt = 0,
+	Egyvonal_folyt,
 	Egyvonal_szagg,
 	Ketvonal_x,
 	Ketvonal_folyt,
@@ -68,6 +68,8 @@ typedef enum{
 
 /* Message függvények */
 extern void SendDebugMessage_Text(const char* string);
+/* RemoteControl Stop */
+extern int8_t Is_StopCommand();
 
 /*Get függvények*/
 /* LineType.h */
@@ -88,6 +90,7 @@ extern float GetLeftSharpDistance();
 /* Encoder.h */
 extern float Encoder_GetDistance_cm();	 	// cm
 extern float Encoder_GetVelocity(void); 	// m/s
+extern float Encoder_GetVelocityRaw(void);	// inkrement/s
 /* WallType.h */
 extern State_Wall Get_StateWall();
 /* TrackElement.h */

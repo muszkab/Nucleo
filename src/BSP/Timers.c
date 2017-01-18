@@ -43,7 +43,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		TimeMotorControl++;
 		TimeWallType++;
 	}
-	else if(htim->Instance == ENC_CALLBACK_TIM){
+	else if(htim->Instance == TIM9){
 		Encoder_Callback_Timer();
 	}
 	else if(htim->Instance==TIM7){
