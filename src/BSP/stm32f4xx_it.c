@@ -131,3 +131,6 @@ void TIM_SZABALYZO_IRQHandler(void){
 void TIM8_UP_TIM13_IRQHandler(){
 	HAL_TIM_IRQHandler(&Adc1_Tim_Handle);
 }
+void TIM7_IRQHandler() {
+	HAL_TIM_IRQHandler(&TimHandle_Gyro);
+}

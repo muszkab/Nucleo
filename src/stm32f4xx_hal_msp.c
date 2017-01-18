@@ -9,6 +9,7 @@
 
 /*Perifériák inicializálása */
 void Periph_Init(){
+	IMU_Init();
 	Leds_Init();
 	SharpInit();
 	Buttons_Init(BUTTON_MODE_EXTI);
@@ -22,7 +23,7 @@ void Periph_Init(){
 	Motor_Init();
 	RemoteController_Timer_Init();
 	Szabalyzo_TIM_Init();
-	IMU_Init();
+
 	Message_Init();
 }
 
