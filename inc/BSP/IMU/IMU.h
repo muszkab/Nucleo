@@ -10,7 +10,6 @@
 
 #include <BSP.h>
 #include "LSM6DS3_ACC_GYRO_driver_HL.h"
-#include "Timers.h"
 
 /* Definition for SPI1 clock resources */
 #define	SPI_IMU							SPI2
@@ -45,9 +44,9 @@ extern ACCELERO_Drv_t* ACCELERO_Driver;
 
 /* Functions */
 void SPI_IMU_Init();
-void SPI_IMU_TransmitNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length);
-void SPI_IMU_TransmitReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* RxBuffer, uint8_t* TxBuffer, uint16_t length);
-void SPI_IMU_ReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length);
+void SPI_IMU_TransmitBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length);
+void SPI_IMU_TransmitReceiveBlocking(SPI_HandleTypeDef* handle, uint8_t* RxBuffer, uint8_t* TxBuffer, uint16_t length);
+void SPI_IMU_ReceiveBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length);
 ////ACC_GYRO driver
 uint8_t Sensor_IO_Write(void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint16_t nBytesToWrite);
 uint8_t Sensor_IO_Read(void *handle, uint8_t ReadAddr, uint8_t *pBuffer, uint16_t nBytesToRead);
@@ -59,9 +58,9 @@ void IMU_Init();
 
 void Calibrate_Gyro();
 void Gyro_Callback();
-void GetDegree_X(int32_t* degree_x);
-void GetDegree_Y(int32_t* degree_y);
-void GetDegree_Z(int32_t* degree_z);
+int32_t GetDegree_X();
+int32_t GetDegree_Y();
+int32_t GetDegree_Z();
 void ResetDegrees();
 void IMU_Degre_Calc_Start();
 void IMU_Degre_Calc_Stop();

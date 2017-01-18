@@ -82,6 +82,10 @@ extern int8_t Get_LinePosition();
 extern float Get_P_Corner();
 extern float Get_P_Straight();
 extern float Get_D();
+/* WallType.h */
+extern State_Wall Get_StateWall();
+/* TrackElement.h */
+extern State_TrackElement Get_TrackElement();
 /* Sharp.h */
 extern float GetBatteryVoltage();
 extern float GetFrontSharpDistance();
@@ -92,10 +96,10 @@ extern float Encoder_GetDistance_cm();	 	// cm
 extern float Encoder_GetVelocity(void); 	// m/s
 extern float Encoder_GetVelocityRaw(void);	// inkrement/s
 extern float Encoder_GetAcceleration(void);
-/* WallType.h */
-extern State_Wall Get_StateWall();
-/* TrackElement.h */
-extern State_TrackElement Get_TrackElement();
+/* IMU.h */
+extern int32_t GetDegree_X();
+extern int32_t GetDegree_Y();
+extern int32_t GetDegree_Z();
 
 //állapotváltozó: kanyar vagy egyenes van épp
 extern speedState StateQ1;

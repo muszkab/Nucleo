@@ -6,6 +6,7 @@
  */
 
 #include "IMU.h"
+#include "Timers.h"
 
 
 /**				    ELÕRE
@@ -18,12 +19,6 @@
  *            |/
  * <x----------
  * */
-typedef enum{
-	Write,
-	Read
-}IOState;
-//segédváltozó, hogy az IMU_CS_High() ne lépjen érvénybe túl hamar
-static IOState State;
 
 /*SPI1 handler declaration */
 SPI_HandleTypeDef SpiHandle_IMU;
@@ -70,16 +65,16 @@ void IMU_Degre_Calc_Stop(){
 
 /* Szöginformációk lekérdezése
  * X,Y,Z sorrendben*/
-void GetDegree_X(int32_t* degree_x){
-	*degree_x =  Degrees[0];
+int32_t GetDegree_X(){
+	return Degrees[0];
 }
 
-void GetDegree_Y(int32_t* degree_y){
-	*degree_y =  Degrees[1];
+int32_t GetDegree_Y(){
+	return Degrees[1];
 }
 
-void GetDegree_Z(int32_t* degree_z){
-	*degree_z =  Degrees[2];
+int32_t GetDegree_Z(){
+	return Degrees[2];
 }
 
 void ResetDegrees(){
@@ -143,7 +138,7 @@ void SPI_IMU_Init()
 
 
 //csak küldés
-void SPI_IMU_TransmitNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length)
+void SPI_IMU_TransmitBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length)
 {
 	if(HAL_SPI_Transmit(handle, pBuffer, length, 20) != HAL_OK)
 	{
@@ -152,7 +147,7 @@ void SPI_IMU_TransmitNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, ui
 }
 
 //csak fogadás
-void SPI_IMU_ReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length)
+void SPI_IMU_ReceiveBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length)
 {
 	if(HAL_SPI_Receive(handle, pBuffer, length, 20) != HAL_OK)
 	{
@@ -161,7 +156,7 @@ void SPI_IMU_ReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uin
 }
 
 //küldés és fogadás
-void SPI_IMU_TransmitReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* TxBuffer, uint8_t* RxBuffer, uint16_t length)
+void SPI_IMU_TransmitReceiveBlocking(SPI_HandleTypeDef* handle, uint8_t* TxBuffer, uint8_t* RxBuffer, uint16_t length)
 {
 	//length: küldött és fogadott byte-ok darabszáma fejenként
 	if(HAL_SPI_TransmitReceive(handle, TxBuffer, RxBuffer, length, 20) != HAL_OK)
@@ -184,11 +179,9 @@ uint8_t Sensor_IO_Write(void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint1
 
 	//szoftver chip select
 	IMU_CS_Low();
-	//TxCpltCallback-ben fusson le a IMU_CS_High(), ha a state==write, több kommunikáció már nem lesz
-	State = Write;
 	//küldés, a hossz eggyel nagyobb a cím miatt
-	SPI_IMU_TransmitNonBlocking(&SpiHandle_IMU, data, (nBytesToWrite+1));
-	//callback függvényben van az IMU_CS_High()
+	SPI_IMU_TransmitBlocking(&SpiHandle_IMU, data, (nBytesToWrite+1));
+
 	IMU_CS_High();
 
 	//ACC_GYRO driver miatt
@@ -206,40 +199,16 @@ uint8_t Sensor_IO_Read(void *handle, uint8_t ReadAddr, uint8_t *pBuffer, uint16_
 
 	//szoftver chip select
 	IMU_CS_Low();
-	//IMU_CS_High() jó helyen fusson le a callbackben, ne a sima transmit után
-	State = Read;
+
 	//cím küldése
-	SPI_IMU_TransmitNonBlocking(&SpiHandle_IMU, &Address, 1);
+	SPI_IMU_TransmitBlocking(&SpiHandle_IMU, &Address, 1);
 	//adat fogadása
-	SPI_IMU_TransmitReceiveNonBlocking(&SpiHandle_IMU, &DUMMY, pBuffer, nBytesToRead);
-	//callback függvényben van az IMU_CS_High()
+	SPI_IMU_TransmitReceiveBlocking(&SpiHandle_IMU, &DUMMY, pBuffer, nBytesToRead);
+
 	IMU_CS_High();
 
 	//ACC_GYRO driver miatt
 	return 0;
-}
-
-//TODO: ha nincs IT, a callback-eket törölni! (IOState State is)
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-	if(hspi->Instance == SPI_IMU)
-	{
-		//ha írás volt az spi-n, akkor csak egy transmit fgv fut le, olvasáskor csak a TxRxCpltCallback-ben kell a CS_High()
-		if(State == Write)
-			IMU_CS_High();
-	}
-}
-
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-	if(hspi->Instance == SPI_IMU)
-		IMU_CS_High();
-}
-
-
-void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
-{
-	Error_SendUart("SPI return callback error. \n\r");
 }
 
 void GYRO_SensorHandle_Init()
