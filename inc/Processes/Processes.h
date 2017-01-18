@@ -66,6 +66,13 @@ typedef enum{
 	Roundabout
 }State_TrackElement;
 
+typedef enum{
+	Go_WithLine,
+	Go_NoLine
+}Go_Type;
+
+/* Sebesség beállítás */
+void MotorControlSetVelocityRef(float Vref);
 /* Message függvények */
 extern void SendDebugMessage_Text(const char* string);
 /* RemoteControl Stop */

@@ -41,31 +41,11 @@ void Do_MotorControl(){
 
 		//enkóder által mért sebesség
 		Velocity = Encoder_GetVelocityRaw();
-		//szûrés nullára szabályozás esetén
-		//ZeroSpeedFilter_Vel(&Velocity, &VelocityRef);
-		//ZeroSpeedFilter_Acc(&Velocity, (int*)&VelocityRef, Encoder_GetAcceleration());
 		/* Algoritmus */
 		u2 = Zd * u2 + (1- Zd)*u;
 		u1 = Kc * (VelocityRef - Velocity);
 		u = MotorControlSaturate(u1+u2);
 		SetSpeed((int16_t)LookUpTable(u));
-	}
-}
-
-//nullára szabályozás esetén szûrés nagy sebességekre
-void ZeroSpeedFilter_Vel(float* EncoderVelocity, const int* VelocityRef)
-{
-	//ha nulla a referencia sebesség, és túl pozitív vagy túl negatív a mért sebesség, legyen nulla a mért sebesség
-	if((*VelocityRef == 0) && ((*EncoderVelocity > VELOCITY_LIMIT) || (*EncoderVelocity < -VELOCITY_LIMIT)))
-		*EncoderVelocity = 0;
-}
-//nullára szabályozás esetén szûrés nagy gyorsulásokra
-void ZeroSpeedFilter_Acc(float* EncoderVelocity, const int* VelocityRef, const float EncoderAcceleration)
-{
-	//ha nulla a referencia sebesség, és túl pozitív vagy túl negatív a mért gyorsulás, legyen nulla a mért sebesség
-	if((*VelocityRef == 0) && ((EncoderAcceleration > ACCELERATION_LIMIT) || (EncoderAcceleration < -ACCELERATION_LIMIT)))
-	{
-		*EncoderVelocity = 0;
 	}
 }
 

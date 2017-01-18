@@ -9,15 +9,19 @@
 #include "LineType.h"
 #include "WallType.h"
 #include "PositionControl.h"
-//TODO: átgondolni a rendszert, include-ok vagy 'Do_X'fgv-ek a processes.h-ban?
+#include "MotorControl.h"
+#include "stdlib.h"
 
 /* Változók */
-//milyen akadályt teljesít épp
+//állapotváltozó, milyen akadályt teljesít épp
 static State_TrackElement TrackElement;
 
 /*  Static függvények */
 static void Do_Normal_TrackElement();
+static void Do_Roundabout_TrackElement();
 static void Look_and_Set_TrackElement(State_LineType StateLineType, State_Wall StateWall);
+static void Go_Normal(const float Velocity, const Go_Type GoType);
+static void Go_Xcm(const float TotalDistance, const float Velocity, const Go_Type GoType);
 
 void Do_SkillTrack()
 {
@@ -43,9 +47,68 @@ void Do_SkillTrack()
 	case(Barrel):
 			break;
 	case(Roundabout):
+			Do_Roundabout_TrackElement();
 			break;
 	}
 
+}
+
+/* Csak megy a megadott sebességgel, és  követi a vonalat, ha azt kértük.
+ * Do_PositionControl_AT()-val és Do_MotorControl()-val implementálva */
+static void Go_Normal(const float Velocity, const Go_Type GoType)
+{
+	MotorControlSetVelocityRef(Velocity);
+	Do_MotorControl();
+	//ha be van kapcsolva a vonal, kövesse a vonalat is, egyébként meg ne
+	if(GoType == Go_WithLine)
+	{
+		Do_PositionControl_AT();
+	}
+}
+
+/* Annyi centimétert megy elõre(pozitív) vagy hátra(negatív), amennyit paraméterben megkap.
+ * Sebességet is lehet állítani paraméterben.
+ * TotalDistance: [cm] pozitív és negatív(elõre-hátra)
+ * Velocity: [m/s] csak pozitív
+ */
+static void Go_Xcm(const float TotalDistance, const float Velocity, const Go_Type GoType)
+{
+	//ha a sebesség negatív, ne csináljon semmit
+	if(Velocity < 0)
+		return;
+
+	//abszolút pont lekérése, ehhez fogunk viszonyítani
+	float StartPos = Encoder_GetDistance_cm();
+	//megtett távolság jelenleg
+	float CurrentDistance = 0;
+	//mekkora sebességgel menjen, ha TotalDistance negatív, ez is negatív kell legyen
+	float t_velocity;
+
+	//ha hátrafelé kell menni, negatív sebességet kell a szabályzónak beállítani
+	if(TotalDistance < 0)
+	{
+		t_velocity = -Velocity;
+	}
+	else
+	{
+		//pozitív sebességgel indítás
+		t_velocity = Velocity;
+	}
+
+	//amíg nem tette meg a kívánt távolságot
+	while(abs(CurrentDistance) < abs(TotalDistance))
+	{
+		//Vonalkövetés
+		Go_Normal(t_velocity, GoType);
+		//megtett út kiszámítása
+		CurrentDistance = Encoder_GetDistance_cm() - StartPos;
+	}
+
+	//elértük a kívánt távolságot, meg kell állni
+	while((int)Encoder_GetVelocity() != 0)
+	{
+		Go_Normal(0, GoType);
+	}
 }
 
 //Alap vonalkövetéshez tartozó algoritmusok
@@ -65,6 +128,12 @@ static void Do_Normal_TrackElement()
 
 	//Sebesség: fix érték vonaltípus alapján, Q1
 	//Do_SpeedControl_FixSpeed();
+}
+
+//Körforgalom algoritmus
+static void Do_Roundabout_TrackElement()
+{
+	Go_Xcm(20, 1, Go_WithLine);
 }
 
 /* figyeli az akadályt jelzõ állapotváltozókat(StateLineType és StateWall),

@@ -40,6 +40,5 @@ void MotorControlSetVelocityRef(float Vref);
 float MotorControlSaturate(float u);
 float LookUpTable(float u);
 void MotorIdentification();
-void ZeroSpeedFilter_Vel(float* EncoderVelocity, const int* VelocityRef);
-void ZeroSpeedFilter_Acc(float* EncoderVelocity, const int* VelocityRef, const float EncoderAcceleration);
+
 #endif /* PROCESSES_MOTORCONTROL_H_ */
