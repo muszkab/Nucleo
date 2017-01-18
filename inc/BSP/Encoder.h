@@ -62,6 +62,7 @@ float Encoder_GetDistance();     	// m
 float Encoder_GetDistance_cm();	 	// cm
 float Encoder_GetVelocity(void); 	// m/s
 float Encoder_GetVelocityRaw(void);	// inkrement/s
+float Encoder_GetAcceleration(void);
 void Encoder_Reset();
 
 #endif /* BSP_ENCODER_H_ */

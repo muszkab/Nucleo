@@ -34,9 +34,12 @@ extern uint16_t TimeMotorControl;
 /* Külsõ függvények */
 extern void SetSpeed(int16_t Speed);	//motor.c
 
+/* Saját függvények */
 void Do_MotorControl();
 void MotorControlSetVelocityRef(float Vref);
 float MotorControlSaturate(float u);
 float LookUpTable(float u);
 void MotorIdentification();
+void ZeroSpeedFilter_Vel(float* EncoderVelocity, const int* VelocityRef);
+void ZeroSpeedFilter_Acc(float* EncoderVelocity, const int* VelocityRef, const float EncoderAcceleration);
 #endif /* PROCESSES_MOTORCONTROL_H_ */

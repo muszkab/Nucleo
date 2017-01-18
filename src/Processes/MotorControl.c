@@ -8,11 +8,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "MotorControl.h"
 
+#define T_MOTORCONTROL	20
 #define MAX_OUTPUT	61200.0f //Az inverz függvényben a maximális megengedhetõ kimenet FOXBORO-hoz
 static float Zd = 0.96f;
 static float Kc = 1.0f;
 
-#define VELOCITYFILTER_LIMIT	4000 //nemtom mekkora szám kell
+#define VELOCITY_LIMIT			200
 #define ACCELERATION_LIMIT		10
 
 #define LOOKUP_MAX	10   //Identifikációs mérések száma
@@ -35,10 +36,14 @@ static float VelocityRef;
 uint8_t IdentificationEnable = 1;
 
 void Do_MotorControl(){
-	if(TimeMotorControl > 20){
+	if(TimeMotorControl > T_MOTORCONTROL){
 		TimeMotorControl = 0;
 
+		//enkóder által mért sebesség
 		Velocity = Encoder_GetVelocityRaw();
+		//szûrés nullára szabályozás esetén
+		//ZeroSpeedFilter_Vel(&Velocity, &VelocityRef);
+		//ZeroSpeedFilter_Acc(&Velocity, (int*)&VelocityRef, Encoder_GetAcceleration());
 		/* Algoritmus */
 		u2 = Zd * u2 + (1- Zd)*u;
 		u1 = Kc * (VelocityRef - Velocity);
@@ -47,17 +52,21 @@ void Do_MotorControl(){
 	}
 }
 
-//bele kell rakni a MotorControl()-ba
-void ZeroSpeedFilter_Vel(float* EncoderVelocity, const float* VelocityRef)
+//nullára szabályozás esetén szûrés nagy sebességekre
+void ZeroSpeedFilter_Vel(float* EncoderVelocity, const int* VelocityRef)
 {
-	if((*VelocityRef == 0) && (*EncoderVelocity > VELOCITYFILTER_LIMIT))
-		*EncoderVelocity = VELOCITYFILTER_LIMIT;
+	//ha nulla a referencia sebesség, és túl pozitív vagy túl negatív a mért sebesség, legyen nulla a mért sebesség
+	if((*VelocityRef == 0) && ((*EncoderVelocity > VELOCITY_LIMIT) || (*EncoderVelocity < -VELOCITY_LIMIT)))
+		*EncoderVelocity = 0;
 }
-
-void ZeroSpeedFilter_Acc(float* EncoderVelocity, const float* VelocityRef, const float* EncoderAcceleration)
+//nullára szabályozás esetén szûrés nagy gyorsulásokra
+void ZeroSpeedFilter_Acc(float* EncoderVelocity, const int* VelocityRef, const float EncoderAcceleration)
 {
-	if((*VelocityRef == 0) && (*EncoderVelocity > VELOCITYFILTER_LIMIT) && (*EncoderAcceleration > ACCELERATION_LIMIT))
-		*EncoderVelocity = VELOCITYFILTER_LIMIT;
+	//ha nulla a referencia sebesség, és túl pozitív vagy túl negatív a mért gyorsulás, legyen nulla a mért sebesség
+	if((*VelocityRef == 0) && ((EncoderAcceleration > ACCELERATION_LIMIT) || (EncoderAcceleration < -ACCELERATION_LIMIT)))
+	{
+		*EncoderVelocity = 0;
+	}
 }
 
 void MotorControlSetVelocityRef(float Vref){

@@ -12,9 +12,6 @@ void Error_Handler(void)
 {
   /* Turn LED2 on */
   BSP_LED_On(LED2);
-  while (1)
-  {
-  }
 }
 
 void Error_SendUart(char* string)

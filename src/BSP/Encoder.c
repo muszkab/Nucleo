@@ -21,6 +21,8 @@ TIM_HandleTypeDef    	Encoder_Callback_Handle;
 
 
 static float Velocity = 0;
+static float PrevVelocity = 0;
+static float Acceleration = 0;
 static float Distance = 0;
 static int32_t PrevCnt = 0;
 static int32_t CurrCnt = 0;
@@ -185,6 +187,14 @@ float Encoder_GetVelocityRaw(void){
 }
 
 /**
+ * Get the acceleration in raw dimension
+ * @return acceleration
+ */
+float Encoder_GetAcceleration(void){
+	return Acceleration;
+}
+
+/**
  * Reset the encoder.
  */
 void Encoder_Reset(){
@@ -192,6 +202,8 @@ void Encoder_Reset(){
 	CurrCnt = 0;
 	Distance = 0;
 	Velocity = 0;
+	PrevVelocity = 0;
+	Acceleration = 0;
 	ENC_TIM->CNT = 0;
 }
 
@@ -202,5 +214,7 @@ void Encoder_Callback_Timer(){
 	PrevCnt = CurrCnt;
 	CurrCnt = ENC_TIM->CNT;
 	Distance = METER_PER_INCR*CurrCnt;
+	PrevVelocity = Velocity;
 	Velocity = (CurrCnt - PrevCnt) * ENC_FREQ;
+	Acceleration = Velocity - PrevVelocity;
 }

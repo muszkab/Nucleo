@@ -43,24 +43,14 @@ int main(void)
 	/*UART */
 	UART_RecvStringNonBlocking(&UartHandle_Cable);
 
-
-	//teszt: IMU
-	static uint8_t who=3;
-	//static SensorAxes_t SensorAxes;
-	GYRO_Driver->Get_WhoAmI(&GYRO_SensorHandle, &who);
-	//if( GYRO_Driver->Init(&GYRO_SensorHandle) != COMPONENT_OK )
-		//Error_SendUart("GYRO Init error!");
-	//if( GYRO_Driver->Sensor_Enable(&GYRO_SensorHandle) != COMPONENT_OK )
-		//Error_SendUart("GYRO Enable error!");
+	SendDebugMessage_Text("A");
+	SendDebugMessage_Text("Itt lehet szoveget kuldeni.");
 
 
 	//teszt változók
 	//Messagetype messageGraph[1];
 	//messageGraph[0].Name="Graph:Linepos";
 	//messageGraph[0].Data=1;
-
-	SendDebugMessage_Text("A");
-	SendDebugMessage_Text("Itt lehet szoveget kuldeni.");
 
 	for(;;)
 	{
@@ -76,7 +66,7 @@ int main(void)
 		Do_WallType();
 
 		//vészleállítás távirányítóval
-		Is_StopCommand();
+		//Is_StopCommand();
 
 		//Vonalkövetés: PD szabályzó
 		//Do_PositionControl();
@@ -84,11 +74,15 @@ int main(void)
 		//Vonalkövetés: Állapotteres szabályzó
 		Do_PositionControl_AT();
 
+		//Sebességszabályozás
+		//MotorControlSetVelocityRef(0);
+		//Do_MotorControl();
+
 		//Sebesség: fix érték vonaltípus alapján, Q1
 		//Do_SpeedControl_FixSpeed();
 
 		//Sebesség: távirányító
-		//SetSpeed_RemoteControl();
+		SetSpeed_RemoteControl();
 
 		//SendDebugMessage_Array(messageGraph, 1);
 		//if(messageGraph[0].Data>-50)
