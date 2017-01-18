@@ -10,6 +10,7 @@
 
 #include "Nucleo.h"
 #include "LSM6DS3_ACC_GYRO_driver_HL.h"
+#include "Timers.h"
 
 /* Definition for SPI1 clock resources */
 #define	SPI_IMU							SPI2
@@ -55,5 +56,10 @@ void ACCELERO_SensorHandle_Init();
 void GYRO_SensorHandle_Init();
 
 void IMU_Init();
+
+void Calibrate_Gyro();
+void Gyro_Callback();
+void GetDegrees(int32_t* degree_buff);
+void ResetDegrees();
 
 #endif /* BSP_IMU_H_ */

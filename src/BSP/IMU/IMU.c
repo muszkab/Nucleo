@@ -23,6 +23,41 @@ DrvContextTypeDef ACCELERO_SensorHandle;
 GYRO_Drv_t* 	GYRO_Driver;
 ACCELERO_Drv_t* ACCELERO_Driver;
 
+/* GYRO*/
+#define TIME_CYCLE 			(GYRO_TIM_PERIOD/GYRO_TIM_FREQ)
+#define CAL_VALUE 			100
+SensorAxes_t GYRO_AXIS;
+SensorAxes_t GYRO_AXIS_CAL;  //value to calibration
+static int32_t Degrees[3];	 //X, Y, Z tengely körüli elfordulás
+
+
+/* Idõközönként szögámítás elvégzése */
+void Gyro_Callback(){
+	GYRO_Driver->Get_Axes(&GYRO_SensorHandle,&GYRO_AXIS);
+	GYRO_AXIS.AXIS_X -= GYRO_AXIS_CAL.AXIS_X;
+	GYRO_AXIS.AXIS_Y -= GYRO_AXIS_CAL.AXIS_Y;
+	GYRO_AXIS.AXIS_Z -= GYRO_AXIS_CAL.AXIS_Z;
+
+	Degrees[0] += GYRO_AXIS.AXIS_X * TIME_CYCLE;
+	Degrees[1] += GYRO_AXIS.AXIS_Y * TIME_CYCLE;
+	Degrees[2] += GYRO_AXIS.AXIS_Z * TIME_CYCLE;
+}
+
+/* Szöginformációk lekérdezése
+ * X,Y,Z sorrendben*/
+void GetDegrees(int32_t* degree_buff){
+	degree_buff[0] =  Degrees[0];
+	degree_buff[1] =  Degrees[1];
+	degree_buff[2] =  Degrees[2];
+}
+
+void ResetDegrees(){
+	Degrees[0] = 0;
+	Degrees[1] = 0;
+	Degrees[2] = 0;
+}
+
+
 void SPI_IMU_Init()
 {
 	GPIO_InitTypeDef  GPIO_InitStruct;
@@ -223,4 +258,31 @@ void IMU_Init()
 	SPI_IMU_Init();
 	ACCELERO_SensorHandle_Init();
 	GYRO_SensorHandle_Init();
+	GYRO_TIM_Init();
+}
+
+/* Az offszet kiszedése sok minta átlagával */
+void Calibrate_Gyro(){
+	if (HAL_TIM_Base_Stop_IT(&TimHandle_Gyro) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	GYRO_AXIS_CAL.AXIS_X = 0;
+	GYRO_AXIS_CAL.AXIS_Y = 0;
+	GYRO_AXIS_CAL.AXIS_Z = 0;
+	for(int i = 0; i<CAL_VALUE;i++){
+		GYRO_Driver->Get_Axes(&GYRO_SensorHandle,&GYRO_AXIS);
+		GYRO_AXIS_CAL.AXIS_X += GYRO_AXIS.AXIS_X;
+		GYRO_AXIS_CAL.AXIS_Y += GYRO_AXIS.AXIS_Y;
+		GYRO_AXIS_CAL.AXIS_Z += GYRO_AXIS.AXIS_Z;
+		HAL_Delay(10);
+	}
+
+	GYRO_AXIS_CAL.AXIS_X = GYRO_AXIS_CAL.AXIS_X/CAL_VALUE;
+	GYRO_AXIS_CAL.AXIS_Y = GYRO_AXIS_CAL.AXIS_Y/CAL_VALUE;
+	GYRO_AXIS_CAL.AXIS_Z = GYRO_AXIS_CAL.AXIS_Z/CAL_VALUE;
+	if (HAL_TIM_Base_Stop_IT(&TimHandle_Gyro) != HAL_OK)
+	{
+		Error_Handler();
+	}
 }

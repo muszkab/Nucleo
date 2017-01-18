@@ -10,7 +10,7 @@
 
 #define MAX_OUTPUT	61200.0f //Az inverz függvényben a maximális megengedhetõ kimenet FOXBORO-hoz
 static float Zd = 0.96f;
-static float Kc = 0.5f;
+static float Kc = 1.0f;
 
 #define VELOCITYFILTER_LIMIT	4000 //nemtom mekkora szám kell
 #define ACCELERATION_LIMIT		10
@@ -30,6 +30,7 @@ static float u2;
 static float u;
 static float Velocity;
 static float VelocityRef;
+
 /* Identifikációhoz */
 uint8_t IdentificationEnable = 1;
 
@@ -37,6 +38,7 @@ void Do_MotorControl(){
 	if(TimeMotorControl > 20){
 		TimeMotorControl = 0;
 
+		Velocity = Encoder_GetVelocityRaw();
 		/* Algoritmus */
 		u2 = Zd * u2 + (1- Zd)*u;
 		u1 = Kc * (VelocityRef - Velocity);
