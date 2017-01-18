@@ -19,12 +19,6 @@ SensorAxes_t ACC_AXIS;
 float ACC_Sensitivity;
 float ACC_FullScale;
 
-uint8_t GYR_Who=0;
-SensorAxes_t GYR_AXIS;
-SensorAxes_t GYR_AXIS_CAL;
-float GYR_Sensitivity;
-float GYR_FullScale;
-
 int main(void)
 {
 	/* STM32F4xx HAL library initialization:
@@ -54,17 +48,6 @@ int main(void)
 	/* UART */
 	UART_RecvStringNonBlocking(&UartHandle_Cable);
 
-	/* IMU */
-	ACCELERO_Driver->Get_WhoAmI(&ACCELERO_SensorHandle,&ACC_Who);
-	if( ACCELERO_Driver->Init(&ACCELERO_SensorHandle) != COMPONENT_OK )
-		Error_SendUart("ACC Init error!");
-	if( ACCELERO_Driver->Sensor_Enable(&ACCELERO_SensorHandle) != COMPONENT_OK )
-		Error_SendUart("GYRO Enable error!");
-	if( GYRO_Driver->Init(&GYRO_SensorHandle) != COMPONENT_OK )
-		Error_SendUart("GYRO Init error!");
-	if( GYRO_Driver->Sensor_Enable(&GYRO_SensorHandle) != COMPONENT_OK )
-		Error_SendUart("GYRO Enable error!");
-
 	//teszt változók
 	//Messagetype messageGraph[1];
 	//messageGraph[0].Name="Graph:Linepos";
@@ -74,11 +57,7 @@ int main(void)
 	SendDebugMessage_Text("Itt lehet szoveget kuldeni.");
 
 	Calibrate_Gyro();
-	/*##-3- Start timer #######################################*/
-	if (HAL_TIM_Base_Start_IT(&TimHandle_Gyro) != HAL_OK)
-	{
-		Error_Handler();
-	}
+	IMU_Degre_Calc_Start();
 
 	for(;;)
 	{
@@ -87,13 +66,6 @@ int main(void)
 		//ACCELERO_Driver->Get_Sensitivity(&ACCELERO_SensorHandle,&ACC_Sensitivity);
 		//ACCELERO_Driver->Get_FS(&ACCELERO_SensorHandle,&ACC_FullScale);
 
-		//GYRO_Driver->Get_WhoAmI(&GYRO_SensorHandle,&GYR_Who);
-		//GYRO_Driver->Get_Axes(&GYRO_SensorHandle,&GYR_AXIS);
-		//GYR_AXIS.AXIS_X -= GYR_AXIS_CAL.AXIS_X;
-		//GYR_AXIS.AXIS_Y -= GYR_AXIS_CAL.AXIS_Y;
-		//GYR_AXIS.AXIS_Z -= GYR_AXIS_CAL.AXIS_Z;
-		//GYRO_Driver->Get_Sensitivity(&GYRO_SensorHandle,&GYR_Sensitivity);
-		//GYRO_Driver->Get_FS(&GYRO_SensorHandle,&GYR_FullScale);
 
 		//Üzenetküldés Bluetooth-on
 		//Do_Send_ValueMessageArray();

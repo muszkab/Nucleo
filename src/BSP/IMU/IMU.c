@@ -7,6 +7,17 @@
 
 #include "IMU.h"
 
+
+/**				    ELÕRE
+ *            /\    /\
+ *            z     /
+ *            |    y
+ *            |   /
+ *   JOBB     |  /    BAL
+ *            | /
+ *            |/
+ * <x----------
+ * */
 typedef enum{
 	Write,
 	Read
@@ -24,12 +35,12 @@ GYRO_Drv_t* 	GYRO_Driver;
 ACCELERO_Drv_t* ACCELERO_Driver;
 
 /* GYRO*/
-#define TIME_CYCLE 			(GYRO_TIM_PERIOD/GYRO_TIM_FREQ)
-#define CAL_VALUE 			100
-SensorAxes_t GYRO_AXIS;
-SensorAxes_t GYRO_AXIS_CAL;  //value to calibration
+#define TIME_CYCLE 			((float)GYRO_TIM_PERIOD/(float)GYRO_TIM_FREQ)
+#define CAL_VALUE 			1000
+uint8_t GYRO_Who=0;
+static SensorAxes_t GYRO_AXIS;
+static SensorAxes_t GYRO_AXIS_CAL;  //value to calibration
 static int32_t Degrees[3];	 //X, Y, Z tengely körüli elfordulás
-
 
 /* Idõközönként szögámítás elvégzése */
 void Gyro_Callback(){
@@ -43,12 +54,32 @@ void Gyro_Callback(){
 	Degrees[2] += GYRO_AXIS.AXIS_Z * TIME_CYCLE;
 }
 
+void IMU_Degre_Calc_Start(){
+	/*##-1- Start timer #######################################*/
+	if (HAL_TIM_Base_Start_IT(&TimHandle_Gyro) != HAL_OK)	{
+		Error_Handler();
+	}
+}
+
+void IMU_Degre_Calc_Stop(){
+	/*##-1- Stop timer #######################################*/
+	if (HAL_TIM_Base_Stop_IT(&TimHandle_Gyro) != HAL_OK)	{
+		Error_Handler();
+	}
+}
+
 /* Szöginformációk lekérdezése
  * X,Y,Z sorrendben*/
-void GetDegrees(int32_t* degree_buff){
-	degree_buff[0] =  Degrees[0];
-	degree_buff[1] =  Degrees[1];
-	degree_buff[2] =  Degrees[2];
+void GetDegree_X(int32_t* degree_x){
+	*degree_x =  Degrees[0];
+}
+
+void GetDegree_Y(int32_t* degree_y){
+	*degree_y =  Degrees[1];
+}
+
+void GetDegree_Z(int32_t* degree_z){
+	*degree_z =  Degrees[2];
 }
 
 void ResetDegrees(){
@@ -114,7 +145,7 @@ void SPI_IMU_Init()
 //csak küldés
 void SPI_IMU_TransmitNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length)
 {
-	if(HAL_SPI_Transmit(handle, pBuffer, length, 10) != HAL_OK)
+	if(HAL_SPI_Transmit(handle, pBuffer, length, 20) != HAL_OK)
 	{
 		Error_SendUart("SPI IMU nonblocking transmit error. \n\r");
 	}
@@ -123,7 +154,7 @@ void SPI_IMU_TransmitNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, ui
 //csak fogadás
 void SPI_IMU_ReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uint16_t length)
 {
-	if(HAL_SPI_Receive(handle, pBuffer, length, 10) != HAL_OK)
+	if(HAL_SPI_Receive(handle, pBuffer, length, 20) != HAL_OK)
 	{
 		Error_SendUart("SPI IMU nonblocking receive error. \n\r");
 	}
@@ -133,7 +164,7 @@ void SPI_IMU_ReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* pBuffer, uin
 void SPI_IMU_TransmitReceiveNonBlocking(SPI_HandleTypeDef* handle, uint8_t* TxBuffer, uint8_t* RxBuffer, uint16_t length)
 {
 	//length: küldött és fogadott byte-ok darabszáma fejenként
-	if(HAL_SPI_TransmitReceive(handle, TxBuffer, RxBuffer, length, 10) != HAL_OK)
+	if(HAL_SPI_TransmitReceive(handle, TxBuffer, RxBuffer, length, 20) != HAL_OK)
 	{
 		Error_SendUart("SPI IMU nonblocking transmit-receive error. \n\r");
 	}
@@ -259,30 +290,40 @@ void IMU_Init()
 	ACCELERO_SensorHandle_Init();
 	GYRO_SensorHandle_Init();
 	GYRO_TIM_Init();
+
+	/* IMU */
+	GYRO_Driver->Get_WhoAmI(&GYRO_SensorHandle,&GYRO_Who);
+	if( ACCELERO_Driver->Init(&ACCELERO_SensorHandle) != COMPONENT_OK )
+		Error_SendUart("ACC Init error!");
+	if( ACCELERO_Driver->Sensor_Enable(&ACCELERO_SensorHandle) != COMPONENT_OK )
+		Error_SendUart("ACC Enable error!");
+	if( GYRO_Driver->Init(&GYRO_SensorHandle) != COMPONENT_OK )
+		Error_SendUart("GYRO Init error!");
+	if( GYRO_Driver->Sensor_Enable(&GYRO_SensorHandle) != COMPONENT_OK )
+		Error_SendUart("GYRO Enable error!");
+	GYRO_Driver->Set_FS(&GYRO_SensorHandle,FS_MID);
 }
 
 /* Az offszet kiszedése sok minta átlagával */
 void Calibrate_Gyro(){
-	if (HAL_TIM_Base_Stop_IT(&TimHandle_Gyro) != HAL_OK)
-	{
-		Error_Handler();
-	}
+	uint8_t status;
+	IMU_Degre_Calc_Stop();
 	GYRO_AXIS_CAL.AXIS_X = 0;
 	GYRO_AXIS_CAL.AXIS_Y = 0;
 	GYRO_AXIS_CAL.AXIS_Z = 0;
 	for(int i = 0; i<CAL_VALUE;i++){
+		while(status == LSM6DS3_ACC_GYRO_GDA_NO_DATA_AVAIL){
+			if(GYRO_Driver->Get_DRDY_Status(&GYRO_SensorHandle,&status ) != COMPONENT_OK)
+				Error_SendUart("IMU calibration error. \n\r");
+		}
 		GYRO_Driver->Get_Axes(&GYRO_SensorHandle,&GYRO_AXIS);
 		GYRO_AXIS_CAL.AXIS_X += GYRO_AXIS.AXIS_X;
 		GYRO_AXIS_CAL.AXIS_Y += GYRO_AXIS.AXIS_Y;
 		GYRO_AXIS_CAL.AXIS_Z += GYRO_AXIS.AXIS_Z;
-		HAL_Delay(10);
+		status = 0;
 	}
 
 	GYRO_AXIS_CAL.AXIS_X = GYRO_AXIS_CAL.AXIS_X/CAL_VALUE;
 	GYRO_AXIS_CAL.AXIS_Y = GYRO_AXIS_CAL.AXIS_Y/CAL_VALUE;
 	GYRO_AXIS_CAL.AXIS_Z = GYRO_AXIS_CAL.AXIS_Z/CAL_VALUE;
-	if (HAL_TIM_Base_Stop_IT(&TimHandle_Gyro) != HAL_OK)
-	{
-		Error_Handler();
-	}
 }

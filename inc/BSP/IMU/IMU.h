@@ -59,7 +59,12 @@ void IMU_Init();
 
 void Calibrate_Gyro();
 void Gyro_Callback();
-void GetDegrees(int32_t* degree_buff);
+void GetDegree_X(int32_t* degree_x);
+void GetDegree_Y(int32_t* degree_y);
+void GetDegree_Z(int32_t* degree_z);
 void ResetDegrees();
+void IMU_Degre_Calc_Start();
+void IMU_Degre_Calc_Stop();
+
 
 #endif /* BSP_IMU_H_ */
