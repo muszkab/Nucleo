@@ -14,12 +14,12 @@
 //sharp-sharp: 23cm
 //vonal-sharp: 10.5cm
 #define GATEDISTANCE		25	//vonal-kapu: 31cm; milyen messze van maximum a kapu a sharp szenzortól
-#define WALLDISTANCE		25	//vonal-fal: 30cm; milyen messze van maximum a fal a sharp szenzortól
+#define WALLDISTANCE		18	//vonal-fal: 30cm; milyen messze van maximum a fal a sharp szenzortól
 #define BORDADISTANCE		18	//vonal-borda: 26cm; milyen messze van maximum a borda a sharp szenzortól
 #define KORFORGALOMDISTANCE	22	//vonal-körforgalom: 30cm; milyen messze van maximum a körforgalom a sharp szenzortól
 #define NOWALLDISTANCE		30	//ha ennél nagyobb távolságot mérünk, akkor nincs fal
 #define WALLLENGTH			40	//névleges: 60cm
-#define SIMA_BORDA_SZORASHATAR	3	//sima: 0cm; bordas: 4cm a távolság szórása
+#define SIMA_BORDA_SZORASHATAR	4	//sima: 0cm; bordas: 4cm a távolság szórása
 
 //állapotváltozó, mely mutatja milyen fal van globálisan az autó mellett
 static State_Wall StateWall_Global=Nincsfal;

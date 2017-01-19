@@ -16,8 +16,8 @@
 #define DISTANCEDIFFERENCE_MAX			1	//cm	szaggatott háromvonalnál, az egy- és háromvonal szaggatás megengedett eltérése. Névleges méret: 8cm
 #define NOLINEDISTANCE_SZAGG_MIN		7	//cm	névleges hossz: 8cm
 #define NOLINEDISTANCE_SZAGG_MAX		9	//cm	névleges hossz: 8cm
-#define TWOLINEDISTANCE_SZAGG_LIMIT_TWOLINE	7//cm	névleges hossz: 8cm
-#define TWOLINEDISTANCE_SZAGG_LIMIT_ONELINE	15//cm	névleges hossz: 16cm
+#define TWOLINEDISTANCE_SZAGG_LIMIT_TWOLINE	6//cm	névleges hossz: 8cm
+#define TWOLINEDISTANCE_SZAGG_LIMIT_ONELINE	13//cm	névleges hossz: 16cm
 
 //vonaldarabszám szûréshez használt tömb mérete
 #define ARRAYSIZE	3
@@ -150,7 +150,7 @@ static void Is_EgyVonal()
 		}
 	}
 }
-
+//TODO átgondolni!
 //figyeli hogy két vonal van-e, és szaggatott
 static void Is_KetVonal()
 {
@@ -166,17 +166,19 @@ static void Is_KetVonal()
 			StateLineType = Ketvonal_x;
 			SendDebugMessage_Text("Ketvonal x");
 		}
-		//már kétvonal_x állapotban vagyunk, nem az elsõ kétvonal
-		else if(StateLineType == Ketvonal_x)
+	}
+
+	//már kétvonal_x állapotban vagyunk és egy vonal van
+	if(StateLineType == Ketvonal_x && LineNumber == OneLine)
+	{
+		//egyvonal hossz és kétvonal hossz ellenõrzés, hogy szaggatott állapot-e
+		if(OneLineDistance > TWOLINEDISTANCE_SZAGG_LIMIT_ONELINE && TwoLineDistance > TWOLINEDISTANCE_SZAGG_LIMIT_TWOLINE)
 		{
-			//egyvonal hossz és kétvonal hossz ellenõrzés, hogy szaggatott állapot-e
-			if(OneLineDistance > TWOLINEDISTANCE_SZAGG_LIMIT_ONELINE && TwoLineDistance > TWOLINEDISTANCE_SZAGG_LIMIT_TWOLINE)
-			{
-				StateLineType = Ketvonal_szagg;
-				SendDebugMessage_Text("Ketvonal szaggatott");
-			}
+			StateLineType = Ketvonal_szagg;
+			SendDebugMessage_Text("Ketvonal szaggatott");
 		}
 	}
+
 	//ha két vonalból másmilyen vonal lett
 	if(LineNumberPrev == TwoLine && LineNumber != TwoLine)
 	{

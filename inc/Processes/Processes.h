@@ -86,6 +86,8 @@ extern int8_t Is_StopCommand();
 /* LineType.h */
 extern lineType Get_LineNumber();
 extern State_LineType Get_StateLineType();
+extern float Get_OneLineDistance();
+extern float Get_TwoLineDistance();
 extern float Get_ThreeLineDistance();
 /* PositionControl.h */
 extern int8_t Get_ServoPosition();

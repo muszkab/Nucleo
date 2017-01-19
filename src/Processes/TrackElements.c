@@ -14,7 +14,7 @@
 #include "stdlib.h"
 
 /* Akadály paraméterek */
-#define LOW_SPEED			0.8f	//alacsony sebesség
+#define LOW_SPEED			0.6f	//alacsony sebesség
 #define DRON_DISTANCE		30
 #define NO_DRON_DISTANCE	100
 
@@ -41,8 +41,10 @@ void Do_SkillTrack()
 	switch(TrackElement){
 	case(Normal_E):
 			Do_Normal_TrackElement(LOW_SPEED);
+			//Go_Xcm(130, 1, Go_WithLine);
 			break;
 	case(Start_E):
+		Do_Normal_TrackElement(0);
 			break;
 	case(Finish_E):
 			Do_Normal_TrackElement(0);
@@ -51,17 +53,22 @@ void Do_SkillTrack()
 			Do_Dron_TrackElement(LOW_SPEED);
 			break;
 	case(TrailerOn):
+		Do_Normal_TrackElement(0);
 			break;
 	case(TrailerOff):
+		Do_Normal_TrackElement(0);
 			break;
 	case(Zebra):
+		Do_Normal_TrackElement(0);
 			break;
 	case(Teeter):
+		Do_Normal_TrackElement(0);
 			break;
 	case(Barrel):
+		Do_Normal_TrackElement(0);
 			break;
 	case(Roundabout):
-			Do_Roundabout_TrackElement();
+		Do_Normal_TrackElement(0);
 			break;
 	}
 
@@ -73,15 +80,17 @@ static void Go_Normal(const float Velocity, const Go_Type GoType)
 {
 	//Debug üzenetek
 	Do_Send_ValueMessageArray();
+
 	//sebességbeállítás
-	MotorControlSetVelocityRef(Velocity);
+	//ha nincs távirányitós vészleállítás
+	if(Is_StopCommand() == 0)
+		MotorControlSetVelocityRef(Velocity);
+
 	//sebességszabályozás
 	Do_MotorControl();
 
-	/* Ha be van kapcsolva a vonal(Go_WithLine), kövesse a vonalat is, ha Go_NoLine van,
-	 * vagy nulla beállított sebesség, ne legyen vonalszabályozás.
-	 */
-	if(GoType == Go_WithLine && Velocity != 0)
+	/* Ha be van kapcsolva a vonal(Go_WithLine), kövesse a vonalat is, ha Go_NoLine van, ne legyen vonalszabályozás. */
+	if(GoType == Go_WithLine)
 	{
 		Do_PositionControl();
 	}
@@ -125,6 +134,12 @@ static void Go_Xcm(const float TotalDistance, const float Velocity, const Go_Typ
 		CurrentDistance = Encoder_GetDistance_cm() - StartPos;
 	}
 
+	///TODO kiszedni
+	while(1)
+	{
+		Go_Normal(0, GoType);
+	}
+
 	//elértük a kívánt távolságot, meg kell állni
 	while((int)Encoder_GetVelocity() != 0)
 	{
@@ -135,8 +150,13 @@ static void Go_Xcm(const float TotalDistance, const float Velocity, const Go_Typ
 //Alap vonalkövetéshez tartozó algoritmusok
 static void Do_Normal_TrackElement(const float VelocityRef)
 {
-	//Sebességbeállítás
-	MotorControlSetVelocityRef(VelocityRef);
+	//vészleállítás esetén stop állapotba rakjuk
+	if(Is_StopCommand())
+		TrackElement = Finish_E;
+	//ha nincs távirányitós vészleállítás
+	else
+		//Sebességbeállítás
+		MotorControlSetVelocityRef(VelocityRef);
 
 	//Sebességszabályozás
 	Do_MotorControl();

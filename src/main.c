@@ -60,7 +60,7 @@ int main(void)
 		Do_SkillTrack();
 
 		//Üzenetküldés Bluetooth-on
-		//Do_Send_ValueMessageArray();
+		Do_Send_ValueMessageArray();
 
 		//Vonaltípus meghatározás
 		//Do_LineType();
@@ -79,7 +79,7 @@ int main(void)
 
 		//Sebességszabályozás
 		//MotorControlSetVelocityRef(0);
-		Do_MotorControl();
+		//Do_MotorControl();
 
 		//Sebesség: fix érték vonaltípus alapján, Q1
 		//Do_SpeedControl_FixSpeed();

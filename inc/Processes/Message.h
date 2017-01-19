@@ -39,6 +39,8 @@ typedef enum{
 	var_RightSharp,
 	var_LeftSharp,
 	var_Distance,
+	var_OneLineDistance,
+	var_TwoLineDistance,
 	var_ThreeLineDistance,
 	var_StateLineType,
 	var_StateWall,

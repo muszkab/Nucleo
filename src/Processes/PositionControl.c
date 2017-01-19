@@ -66,20 +66,10 @@ void Do_PositionControl_AT(){
 
 		AT_Speed = Encoder_GetVelocity();
 		D5Percent = 0.5 + 0.5 * AT_Speed;
-		if(AT_Speed != 0){
+
+		if(AT_Speed>0.3 || AT_Speed<-0.3){
 			/* Hibajelek: pozíció és szög */
 			Get_LineOrient_LinePos(&AT_Pos, &AT_Orient);
-
-			//ha jobbra van elágazás, kivonunk egy ofszetet
-			if(Get_StateLineType() == Elagazas_jobb)
-			{
-				AT_Pos -= ELAGAZAS_OFSZET;
-			}
-			//ha balra van elágazás, hozzáadunk egy ofszetet
-			if(Get_StateLineType() == Elagazas_bal)
-			{
-				AT_Pos += ELAGAZAS_OFSZET;
-			}
 
 			AT_T5Percent = D5Percent/AT_Speed;
 			AT_TimeConst = (Ksi * AT_T5Percent)/3;		//Ksi-bõl és T5%-ból számolható a T

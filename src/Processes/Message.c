@@ -51,7 +51,9 @@ void Do_Send_ValueMessageArray()
 		SetValue_AtMessageArray(var_DegreeY, 	(float) GetDegree_Y());
 		SetValue_AtMessageArray(var_DegreeZ, 	(float) GetDegree_Z());
 
-		//SetValue_AtMessageArray(var_ThreeLineDistance, (float) Get_ThreeLineDistance());
+		SetValue_AtMessageArray(var_OneLineDistance, (float) Get_OneLineDistance());
+		SetValue_AtMessageArray(var_TwoLineDistance, (float) Get_TwoLineDistance());
+		SetValue_AtMessageArray(var_ThreeLineDistance, (float) Get_ThreeLineDistance());
 
 		//SetValue_AtMessageArray(var_State, (float) StateQ1);
 
@@ -94,6 +96,8 @@ void Message_Init()
 	Value_MessageArray[var_DegreeY].Name		= "Value:DegreeY";
 	Value_MessageArray[var_DegreeZ].Name		= "Value:DegreeZ";
 
+	Value_MessageArray[var_OneLineDistance].Name = "Value:OneLineD";
+	Value_MessageArray[var_TwoLineDistance].Name = "Value:TwoLineD";
 	Value_MessageArray[var_ThreeLineDistance].Name = "Value:ThreeLineD";
 
 	//status és adat nullázása

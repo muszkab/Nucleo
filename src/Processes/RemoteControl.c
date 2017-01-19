@@ -183,7 +183,7 @@ void SetSpeed_RemoteControl()
 		temp=0;
 	}
 }
-//TODO rakja stop állapotba is!
+
 int8_t Is_StopCommand()
 {
 	if((10 < uwDutyCycle) && (uwDutyCycle < 70))
