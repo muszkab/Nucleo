@@ -35,10 +35,11 @@ void Do_Send_ValueMessageArray()
 
 		SetValue_AtMessageArray(var_Distance,	(float) Encoder_GetDistance_cm());
 		SetValue_AtMessageArray(var_SpeedNow,	(float) Encoder_GetVelocity());
+		//SetValue_AtMessageArray(var_VelocityRef),(float));
 
-		SetValue_AtMessageArray(var_P_Corner,	(float) Get_P_Corner());
-		SetValue_AtMessageArray(var_P_Straight,	(float) Get_P_Straight());
-		SetValue_AtMessageArray(var_D,			(float) Get_D());
+		//SetValue_AtMessageArray(var_P_Corner,	(float) Get_P_Corner());
+		//SetValue_AtMessageArray(var_P_Straight,	(float) Get_P_Straight());
+		//SetValue_AtMessageArray(var_D,			(float) Get_D());
 
 		SetValue_AtMessageArray(var_FrontSharp,	(float) GetFrontSharpDistance());
 		SetValue_AtMessageArray(var_RightSharp,	(float) GetRightSharpDistance());
@@ -46,7 +47,11 @@ void Do_Send_ValueMessageArray()
 
 		SetValue_AtMessageArray(var_BatteryVoltage, (float) GetBatteryVoltage());
 
-		SetValue_AtMessageArray(var_ThreeLineDistance, (float) Get_ThreeLineDistance());
+		SetValue_AtMessageArray(var_DegreeX, 	(float) GetDegree_X());
+		SetValue_AtMessageArray(var_DegreeY, 	(float) GetDegree_Y());
+		SetValue_AtMessageArray(var_DegreeZ, 	(float) GetDegree_Z());
+
+		//SetValue_AtMessageArray(var_ThreeLineDistance, (float) Get_ThreeLineDistance());
 
 		//SetValue_AtMessageArray(var_State, (float) StateQ1);
 
@@ -72,6 +77,7 @@ void Message_Init()
 	Value_MessageArray[var_LineNumber].Name		= "Value:LineNumber";
 
 	Value_MessageArray[var_SpeedNow].Name		= "Value:SpeedNow";
+	Value_MessageArray[var_VelocityRef].Name	= "Value:VelocityRef";
 	Value_MessageArray[var_Distance].Name		= "Value:Distance";
 
 	Value_MessageArray[var_P_Corner].Name		= "Value:P_Corner";
@@ -83,6 +89,10 @@ void Message_Init()
 	Value_MessageArray[var_FrontSharp].Name		= "Value:FrontSharp";
 	Value_MessageArray[var_RightSharp].Name		= "Value:RightSharp";
 	Value_MessageArray[var_LeftSharp].Name		= "Value:LeftSharp";
+
+	Value_MessageArray[var_DegreeX].Name		= "Value:DegreeX";
+	Value_MessageArray[var_DegreeY].Name		= "Value:DegreeY";
+	Value_MessageArray[var_DegreeZ].Name		= "Value:DegreeZ";
 
 	Value_MessageArray[var_ThreeLineDistance].Name = "Value:ThreeLineD";
 

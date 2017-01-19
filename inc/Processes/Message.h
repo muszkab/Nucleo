@@ -43,6 +43,10 @@ typedef enum{
 	var_StateLineType,
 	var_StateWall,
 	var_TrackElement,
+	var_DegreeX,
+	var_DegreeY,
+	var_DegreeZ,
+	var_VelocityRef,
 	VariableName_LastElement
 }VariableName;
 

@@ -10,15 +10,28 @@
 #include "WallType.h"
 #include "PositionControl.h"
 #include "MotorControl.h"
+#include "Message.h"
 #include "stdlib.h"
+
+/* Akadály paraméterek */
+#define LOW_SPEED			0.8f	//alacsony sebesség
+#define DRON_DISTANCE		30
+#define NO_DRON_DISTANCE	100
+
+//Pozíció szabályozás: PD vagy állapotteres TODO: PD behangolás!
+//#define Do_PositionControl()	Do_PositionControl_PD()
+#define Do_PositionControl()	Do_PositionControl_AT()
 
 /* Változók */
 //állapotváltozó, milyen akadályt teljesít épp
-static State_TrackElement TrackElement;
+static State_TrackElement TrackElement = Finish_E;
 
 /*  Static függvények */
-static void Do_Normal_TrackElement();
+/* Akadályok */
+static void Do_Normal_TrackElement(const float VelocityRef);
 static void Do_Roundabout_TrackElement();
+static void Do_Dron_TrackElement(const float VelocityRef);
+/* Segédfüggvények */
 static void Look_and_Set_TrackElement(State_LineType StateLineType, State_Wall StateWall);
 static void Go_Normal(const float Velocity, const Go_Type GoType);
 static void Go_Xcm(const float TotalDistance, const float Velocity, const Go_Type GoType);
@@ -27,14 +40,15 @@ void Do_SkillTrack()
 {
 	switch(TrackElement){
 	case(Normal_E):
-			Do_Normal_TrackElement();
+			Do_Normal_TrackElement(LOW_SPEED);
 			break;
-
 	case(Start_E):
 			break;
 	case(Finish_E):
+			Do_Normal_TrackElement(0);
 			break;
 	case(Dron):
+			Do_Dron_TrackElement(LOW_SPEED);
 			break;
 	case(TrailerOn):
 			break;
@@ -54,15 +68,22 @@ void Do_SkillTrack()
 }
 
 /* Csak megy a megadott sebességgel, és  követi a vonalat, ha azt kértük.
- * Do_PositionControl_AT()-val és Do_MotorControl()-val implementálva */
+ * Do_PositionControl()-val és Do_MotorControl()-val implementálva */
 static void Go_Normal(const float Velocity, const Go_Type GoType)
 {
+	//Debug üzenetek
+	Do_Send_ValueMessageArray();
+	//sebességbeállítás
 	MotorControlSetVelocityRef(Velocity);
+	//sebességszabályozás
 	Do_MotorControl();
-	//ha be van kapcsolva a vonal, kövesse a vonalat is, egyébként meg ne
-	if(GoType == Go_WithLine)
+
+	/* Ha be van kapcsolva a vonal(Go_WithLine), kövesse a vonalat is, ha Go_NoLine van,
+	 * vagy nulla beállított sebesség, ne legyen vonalszabályozás.
+	 */
+	if(GoType == Go_WithLine && Velocity != 0)
 	{
-		Do_PositionControl_AT();
+		Do_PositionControl();
 	}
 }
 
@@ -112,8 +133,14 @@ static void Go_Xcm(const float TotalDistance, const float Velocity, const Go_Typ
 }
 
 //Alap vonalkövetéshez tartozó algoritmusok
-static void Do_Normal_TrackElement()
+static void Do_Normal_TrackElement(const float VelocityRef)
 {
+	//Sebességbeállítás
+	MotorControlSetVelocityRef(VelocityRef);
+
+	//Sebességszabályozás
+	Do_MotorControl();
+
 	//akadálykeresés
 	Look_and_Set_TrackElement(Get_StateLineType(), Get_StateWall());
 
@@ -124,18 +151,36 @@ static void Do_Normal_TrackElement()
 	Do_WallType();
 
 	//Vonalkövetés: Állapotteres szabályzó
-	Do_PositionControl_AT();
+	Do_PositionControl();
 
-	//Sebesség: fix érték vonaltípus alapján, Q1
-	//Do_SpeedControl_FixSpeed();
+	//Sebességszabályozás
+	Do_MotorControl();
 }
 
 //Körforgalom algoritmus
 static void Do_Roundabout_TrackElement()
 {
-	Go_Xcm(20, 1, Go_WithLine);
+	Go_Xcm(20, LOW_SPEED, Go_WithLine);
 }
 
+//Dron algoritmus
+static void Do_Dron_TrackElement(const float VelocityRef)
+{
+	//amíg messze vagyunk a dróntól
+	while(GetFrontSharpDistance() > DRON_DISTANCE)
+	{
+		Go_Normal(VelocityRef, Go_WithLine);
+	}
+	//elõttünk van a drón, állunk
+	while(GetFrontSharpDistance() < NO_DRON_DISTANCE)
+	{
+		Go_Normal(0, Go_WithLine);
+	}
+	//min 2 másodperc várakozás
+	HAL_Delay(3000);
+	//minden állapotváltozó alapállapotba
+	Set_TrackElement_Normal();
+}
 /* figyeli az akadályt jelzõ állapotváltozókat(StateLineType és StateWall),
  * és azoknak megfelelõen állítja a TrackElement-et, ami mutatja milyen akadály van épp
  */
@@ -193,7 +238,7 @@ static void Look_and_Set_TrackElement(State_LineType StateLineType, State_Wall S
 
 }
 
-//minden állapotváltozót alapállapotba rak
+//Elindul a robot! Minden állapotváltozót alapállapotba rak
 void Set_TrackElement_Normal()
 {
 	//pályaelem

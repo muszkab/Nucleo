@@ -24,13 +24,13 @@ extern uint16_t TimePositionControl_AT;	//Timers.c
 void SetServoPWMPulse(const int8_t ServoPos);	//Servo.c
 
 /* Publikus saját függvények */
-void Do_PositionControl();
+void Do_PositionControl_PD();
 void Do_PositionControl_AT();
 int8_t Get_ServoPosition();
 int8_t Get_LinePosition();
 float Get_P_Corner();
 float Get_P_Straight();
 float Get_D();
-float GetLineOrient();
+void Get_LineOrient_LinePos(float* Pos, float* Orient);
 
 #endif /* POSITIONCONTROL_H_ */

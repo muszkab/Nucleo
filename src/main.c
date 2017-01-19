@@ -56,14 +56,17 @@ int main(void)
 	{
 		//HAL_Delay(1000);
 
+		//Ügyességi pálya
+		Do_SkillTrack();
+
 		//Üzenetküldés Bluetooth-on
-		Do_Send_ValueMessageArray();
+		//Do_Send_ValueMessageArray();
 
 		//Vonaltípus meghatározás
-		Do_LineType();
+		//Do_LineType();
 
 		//Faltípus meghatározás
-		Do_WallType();
+		//Do_WallType();
 
 		//vészleállítás távirányítóval
 		//Is_StopCommand();
@@ -72,7 +75,7 @@ int main(void)
 		//Do_PositionControl();
 
 		//Vonalkövetés: Állapotteres szabályzó
-		Do_PositionControl_AT();
+		//Do_PositionControl_AT();
 
 		//Sebességszabályozás
 		//MotorControlSetVelocityRef(0);
@@ -82,7 +85,7 @@ int main(void)
 		//Do_SpeedControl_FixSpeed();
 
 		//Sebesség: távirányító
-		SetSpeed_RemoteControl();
+		//SetSpeed_RemoteControl();
 
 		//SendDebugMessage_Array(messageGraph, 1);
 		//if(messageGraph[0].Data>-50)

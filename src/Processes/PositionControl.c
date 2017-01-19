@@ -8,6 +8,9 @@
 #include "PositionControl.h"
 #include "math.h"
 
+//elágazás
+#define ELAGAZAS_OFSZET		20
+
 //szabályzó paraméterek
 #define	P_CORNER	1.5f
 #define	P_STRAIGHT	1.0f
@@ -65,9 +68,18 @@ void Do_PositionControl_AT(){
 		D5Percent = 0.5 + 0.5 * AT_Speed;
 		if(AT_Speed != 0){
 			/* Hibajelek: pozíció és szög */
-			if(FrontSensor_Data[1] != 0)
-				AT_Pos = -(int8_t)FrontSensor_Data[0];//*0.185)/128.0;
-			AT_Orient = GetLineOrient();
+			Get_LineOrient_LinePos(&AT_Pos, &AT_Orient);
+
+			//ha jobbra van elágazás, kivonunk egy ofszetet
+			if(Get_StateLineType() == Elagazas_jobb)
+			{
+				AT_Pos -= ELAGAZAS_OFSZET;
+			}
+			//ha balra van elágazás, hozzáadunk egy ofszetet
+			if(Get_StateLineType() == Elagazas_bal)
+			{
+				AT_Pos += ELAGAZAS_OFSZET;
+			}
 
 			AT_T5Percent = D5Percent/AT_Speed;
 			AT_TimeConst = (Ksi * AT_T5Percent)/3;		//Ksi-bõl és T5%-ból számolható a T
@@ -94,7 +106,7 @@ void Do_PositionControl_AT(){
 }
 
 /* PD szabályozó a vonalkövetésre */
-void Do_PositionControl(){
+void Do_PositionControl_PD(){
 	//ciklusidõ ellenõrzés és ha nincs vonal, nincs szabályzás, tartsa az elõzõ kormányszöget
 	if((TimePositionControl > T) && (Get_LineNumber() != NoLine))
 	{
@@ -153,12 +165,16 @@ float Get_D()
 
 /* @brief Vonal orientáció lekérdezése
  * @retval Szöginformáció fokban */
-float GetLineOrient(){
+void Get_LineOrient_LinePos(float* Pos, float* Orient){
 	float temp;
 	if(FrontSensor_Data[1] != 0)
+	{
 		FrontSensorLinePos = (int8_t)FrontSensor_Data[0];
+		*Pos = -(int8_t)FrontSensor_Data[0];//*0.185)/128.0;
+	}
 	if(RearSensor_Data[1] != 0)
 		RearSensorLinePos = (int8_t)RearSensor_Data[0] + LINE_POS_OFFSET;
+
 	temp = (FrontSensorLinePos - RearSensorLinePos)/ORIENTATION_CONST;
-	return atan(temp)*180/3.1415;
+	*Orient = atan(temp)*180/3.1415;
 }

@@ -35,6 +35,8 @@ typedef enum{
 	Haromvonal_x,
 	Haromvonal_folyt,
 	Haromvonal_szagg,
+	Elagazas_jobb,
+	Elagazas_bal,
 	Keresztvonal
 }State_LineType;
 
@@ -71,8 +73,10 @@ typedef enum{
 	Go_NoLine
 }Go_Type;
 
+/* Normal állapotba állítás. Elindul a robot! */
+extern void Set_TrackElement_Normal();
 /* Sebesség beállítás */
-void MotorControlSetVelocityRef(float Vref);
+extern void MotorControlSetVelocityRef(float Vref);
 /* Message függvények */
 extern void SendDebugMessage_Text(const char* string);
 /* RemoteControl Stop */
