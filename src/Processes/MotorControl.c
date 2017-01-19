@@ -9,9 +9,9 @@
 #include "MotorControl.h"
 
 #define T_MOTORCONTROL	20
-#define MAX_OUTPUT	61200.0f //Az inverz függvényben a maximális megengedhetõ kimenet FOXBORO-hoz
+#define MAX_OUTPUT	47000//61200.0f //Az inverz függvényben a maximális megengedhetõ kimenet FOXBORO-hoz
 static float Zd = 0.96f;
-static float Kc = 1.0f;
+static float Kc = 1.5f;
 
 #define VELOCITY_LIMIT			200
 #define ACCELERATION_LIMIT		10
@@ -23,7 +23,7 @@ static float Kc = 1.0f;
 //Inverz karakterisztika x tengelye
 static const float LookUpY[LOOKUP_MAX] = {
 		0,	0,	0,	0,	0,	0,	0,	0,	0,	0}; */
-static const float Offset = 30;
+static float Offset = 30;
 static const float m      = 0.0067;
 /* Szabályzó változók FOXBORO PI */
 static float u1;
@@ -31,6 +31,7 @@ static float u2;
 static float u;
 static float Velocity;
 static float VelocityRef;
+static int8_t VelocityPolarity = 1;
 
 /* Identifikációhoz */
 uint8_t IdentificationEnable = 1;
@@ -41,9 +42,47 @@ void Do_MotorControl(){
 
 		//enkóder által mért sebesség
 		Velocity = Encoder_GetVelocityRaw();
+
+		if(VelocityRef == 0){
+			if(Velocity < 1700 && Velocity > -1700){
+				Offset = 0;
+				if(Velocity < - 1100){
+					VelocityPolarity = -1;
+				}
+				if(Velocity > 1100){
+					VelocityPolarity = 1;
+				}
+				Zd = 0.6;
+				Kc = 3;
+			}
+
+		}
+		else{
+			Offset = 30.0;
+			Zd = 0.96;
+			Kc = 1.5;
+		}
+
 		/* Algoritmus */
 		u2 = Zd * u2 + (1- Zd)*u;
 		u1 = Kc * (VelocityRef - Velocity);
+		if(VelocityRef == 0){
+			if(Velocity < 1700 && Velocity > -1700){
+				if(VelocityPolarity == 1){
+					if(u2+u1 > 0){
+						u2=0;
+						u1=0;
+					}
+				}
+				if(VelocityPolarity == -1){
+					if(u2+u1 < 0){
+						u2=0;
+						u1=0;
+					}
+				}
+			}
+		}
+
 		u = MotorControlSaturate(u1+u2);
 		SetSpeed((int16_t)LookUpTable(u));
 	}
@@ -52,6 +91,11 @@ void Do_MotorControl(){
 void MotorControlSetVelocityRef(float Vref){
 	VelocityRef = Vref/METER_PER_INCR;
 }
+
+float MotorControlGetVelocityRef(){
+	return VelocityRef*METER_PER_INCR;
+}
+
 float MotorControlSaturate(float u){
 	if(u > MAX_OUTPUT)
 		return MAX_OUTPUT;

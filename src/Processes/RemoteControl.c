@@ -10,6 +10,13 @@
 #define PRESCALER	(180-1)
 #define PERIOD		0xFFFF
 
+#define SPEEDCONTROL //a sebességszabályzónak adja az alapjelet
+#ifdef SPEEDCONTROL
+	#define RemoteSetSpeed(__SPEED__) MotorControlSetVelocityRef((float)__SPEED__/4.0)
+#else
+	#define RemoteSetSpeed(__SPEED__) SetSpeed(20*__SPEED__)
+#endif //SPEEDCONTROL
+
 /* Timer handler declaration */
 TIM_HandleTypeDef    TimHandle_Remote;
 
@@ -170,7 +177,9 @@ void SetSpeed_RemoteControl()
 	//de a nulla értéket mindig küldeni kell neki, hogy ne az elõzõ érték ragadjon be, mivel value==0 esetén temp is nulla
 	if(temp>5 || value==0)
 	{
-		SetSpeed(20*value);
+		RemoteSetSpeed(value);
+		//SetSpeed(20*value);
+		//MotorControlSetVelocityRef((float)value/4.0);
 		temp=0;
 	}
 }
@@ -179,7 +188,7 @@ int8_t Is_StopCommand()
 {
 	if((10 < uwDutyCycle) && (uwDutyCycle < 70))
 	{
-		SetSpeed(0);
+		RemoteSetSpeed(0);
 		return 1;
 	}
 	else

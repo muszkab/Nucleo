@@ -27,6 +27,12 @@ static float Distance = 0;
 static int32_t PrevCnt = 0;
 static int32_t CurrCnt = 0;
 
+#define VelocityBuffLength 1
+static float VelocityBuff[VelocityBuffLength];
+static float VelocitySortedBuff[VelocityBuffLength];
+
+static float suly = 1;
+static float avg;
 /**
   * @brief Encoder Initialization
   * 	- Configure the Encoder handle and callback Timers
@@ -183,7 +189,7 @@ float Encoder_GetVelocity(void){
  * @return velocity
  */
 float Encoder_GetVelocityRaw(void){
-	return Velocity;
+	return MedianFilter(VelocitySortedBuff, VelocityBuffLength); //Velocity;
 }
 
 /**
@@ -217,4 +223,38 @@ void Encoder_Callback_Timer(){
 	PrevVelocity = Velocity;
 	Velocity = (CurrCnt - PrevCnt) * ENC_FREQ;
 	Acceleration = Velocity - PrevVelocity;
+	avg = suly * Velocity + (1-suly)* avg;
+	WriteBuffer(avg,VelocityBuff,VelocityBuffLength);
+	bubble(VelocitySortedBuff,VelocityBuffLength);
+}
+
+void bubble( float *arr, uint8_t size ) {
+   float tmp;
+   uint8_t i = size - 1;
+   uint8_t uj_i;
+   while (i >= 1) {
+       uj_i = 0;
+       for (uint8_t j = 0; j < i; j++) {
+         if (arr[j] > arr[j + 1]) {
+            // csere
+            tmp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = tmp;
+            uj_i = j;
+          }
+       }
+       i = uj_i;
+    }
+}
+void WriteBuffer(float NewData, float *Buff, uint8_t lenght){
+	int i;
+	for(i = 0; i < lenght - 1; i++){
+		Buff[i] = Buff[i+1];
+		VelocitySortedBuff[i] = Buff[i+1];
+	}
+	Buff[lenght - 1] = NewData;
+	VelocitySortedBuff[lenght - 1] = NewData;
+}
+float MedianFilter(float *Buff, uint8_t lenght){
+	return Buff[(lenght-1)/2];
 }

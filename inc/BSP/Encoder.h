@@ -65,4 +65,8 @@ float Encoder_GetVelocityRaw(void);	// inkrement/s
 float Encoder_GetAcceleration(void);
 void Encoder_Reset();
 
+void bubble( float *arr, uint8_t size );
+void WriteBuffer(float NewData, float *Buff, uint8_t lenght);
+float MedianFilter(float *Buff, uint8_t lenght);
+
 #endif /* BSP_ENCODER_H_ */

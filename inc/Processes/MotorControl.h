@@ -37,6 +37,7 @@ extern void SetSpeed(int16_t Speed);	//motor.c
 /* Saját függvények */
 void Do_MotorControl();
 void MotorControlSetVelocityRef(float Vref);
+float MotorControlGetVelocityRef();
 float MotorControlSaturate(float u);
 float LookUpTable(float u);
 void MotorIdentification();

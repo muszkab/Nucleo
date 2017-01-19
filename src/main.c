@@ -76,7 +76,7 @@ int main(void)
 
 		//Sebességszabályozás
 		//MotorControlSetVelocityRef(0);
-		//Do_MotorControl();
+		Do_MotorControl();
 
 		//Sebesség: fix érték vonaltípus alapján, Q1
 		//Do_SpeedControl_FixSpeed();
